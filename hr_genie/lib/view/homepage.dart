@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
       label: 'Leave',
     ),
     BottomNavigationBarRoute(
-      initialLocation: PAGES.account.screenName,
+      initialLocation: PAGES.account.screenPath,
       icon: const Icon(Icons.account_box_rounded),
       label: 'Account',
     ),
