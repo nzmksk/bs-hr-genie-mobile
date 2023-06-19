@@ -1,0 +1,67 @@
+enum PAGES {
+  login,
+  home,
+  leave,
+  leaveDetails,
+  account,
+  error,
+}
+
+extension AppRouteExtension on PAGES {
+  String get screenPath {
+    switch (this) {
+      case PAGES.home:
+        return "/";
+      case PAGES.login:
+        return "/login";
+      case PAGES.leave:
+        return "/leave";
+      case PAGES.leaveDetails:
+        return "details";
+      case PAGES.account:
+        return "/account";
+      case PAGES.error:
+        return "/error";
+      default:
+        return "/";
+    }
+  }
+
+  String get screenName {
+    switch (this) {
+      case PAGES.home:
+        return "HOME";
+      case PAGES.login:
+        return "LOGIN";
+      case PAGES.leave:
+        return "LEAVE";
+      case PAGES.leaveDetails:
+        return "LEAVE DETAILS";
+      case PAGES.account:
+        return "ACCOUNT";
+      case PAGES.error:
+        return "ERROR";
+      default:
+        return "HOME";
+    }
+  }
+
+  String get screenTitle {
+    switch (this) {
+      case PAGES.home:
+        return "Home";
+      case PAGES.login:
+        return "Login";
+      case PAGES.leave:
+        return "Leave";
+      case PAGES.leaveDetails:
+        return "Leave Details";
+      case PAGES.account:
+        return "Account";
+      case PAGES.error:
+        return "Error";
+      default:
+        return "Home";
+    }
+  }
+}
