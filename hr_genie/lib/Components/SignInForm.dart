@@ -13,16 +13,31 @@ class CustomFormState extends StatefulWidget {
 
 class _CustomFormStateState extends State<CustomFormState> {
   final _formKey = GlobalKey<FormState>();
-
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   bool isObscure = true;
   bool _rememberMe = false;
   bool isValid = false;
+  @override
+  void initState() {
+    context.read<AuthCubit>().loadUserEmailPassword();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {
-        } else if (state.status == AuthStatus.initial) {}
+        } else if (state.status == AuthStatus.initial) {
+          setState(() {
+            _emailController.text = state.email;
+            _passwordController.text = state.password;
+          });
+
+          print(_emailController.text);
+          print(_passwordController.text);
+        }
       },
       builder: (context, state) {
         return Form(
@@ -37,7 +52,6 @@ class _CustomFormStateState extends State<CustomFormState> {
                 icon: const Icon(Icons.email_sharp),
                 onchanged: (value) {
                   context.read<AuthCubit>().emailChanged(value);
-                  // print("your state is ${isValid}");
                 },
                 errorStyle: state.validEmail
                     ? null
@@ -45,21 +59,21 @@ class _CustomFormStateState extends State<CustomFormState> {
                 errorText: state.validEmail ? null : "Your input is not valid",
               ),
               PasswordField(
-                  obscurePassword: isObscure,
-                  onpress: () {
-                    setState(() {
-                      isObscure = !isObscure;
-                    });
-                  },
-                  onchanged: (value) {
-                    context.read<AuthCubit>().passwordChanged(value);
-                  },
-                  errorStyle: state.validPass
-                      ? null
-                      : const TextStyle(color: Colors.red),
-                  errorText:
-                      state.validPass ? null : "Your password is not valid!",
-                  hintText: "Password"),
+                obscurePassword: isObscure,
+                onpress: () {
+                  setState(() {
+                    isObscure = !isObscure;
+                  });
+                },
+                onchanged: (value) {
+                  context.read<AuthCubit>().passwordChanged(value);
+                },
+                errorStyle:
+                    state.validPass ? null : const TextStyle(color: Colors.red),
+                errorText:
+                    state.validPass ? null : "Your password is not valid!",
+                hintText: "Password",
+              ),
               CheckboxListTile(
                 value: _rememberMe,
                 onChanged: (value) {
@@ -85,9 +99,8 @@ class _CustomFormStateState extends State<CustomFormState> {
                                     borderRadius: BorderRadius.circular(20)))),
                     onPressed: state.isNotNull
                         ? () {
-                            context
-                                .read<AuthCubit>()
-                                .signIn(state.email, state.password, context);
+                            context.read<AuthCubit>().signIn(state.email,
+                                state.password, context, _rememberMe);
                           }
                         : null,
                     child: const Text("Login")),

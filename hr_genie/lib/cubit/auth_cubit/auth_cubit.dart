@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hr_genie/cubit/auth_cubit/auth_state.dart';
 import 'package:hr_genie/routes/app_routes.dart';
 import 'package:hr_genie/routes/routes_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:meta/meta.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -29,8 +30,15 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(password: value, status: AuthStatus.initial));
   }
 
-  void signIn(String email, String password, context) {
+  void signIn(String email, String password, context, bool rememberMe) {
     if (email == "test@gmail.com" && password == "123456") {
+      if (rememberMe) {
+        emit(state.copyWith(
+            email: state.email,
+            password: state.password,
+            rememberMe: rememberMe));
+      }
+
       AppRouter.router.go(PAGES.leave.screenPath);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -40,6 +48,49 @@ class AuthCubit extends Cubit<AuthState> {
       );
     } else if (password != "123456") {
       emit(state.copyWith(validPass: false));
+    }
+  }
+
+  void handleRememberMe(bool value) {
+    print("Handle Remember Me");
+    // _isChecked = value;
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        prefs.setBool("remember_me", state.rememberMe);
+        prefs.setString('email', state.email);
+        prefs.setString('password', state.password);
+      },
+    );
+    emit(state.copyWith(rememberMe: value));
+    // setState(() {
+    //   _isChecked = value;
+    // });
+  }
+
+  void loadUserEmailPassword() async {
+    print("Load Email");
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var email = prefs.getString("email") ?? "";
+      var password = prefs.getString("password") ?? "";
+      var rememberMe = prefs.getBool("remember_me") ?? false;
+
+      print(rememberMe);
+      print(email);
+      print(password);
+      if (rememberMe) {
+        emit(state.copyWith(
+          rememberMe: true,
+        ));
+
+        // setState(() {
+        //   _isChecked = true;
+        // });
+        // _emailController.text = _email ?? "";
+        // _passwordController.text = _password ?? "";
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

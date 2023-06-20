@@ -7,12 +7,14 @@ class AuthState extends Equatable {
   final bool loading;
   final bool validEmail;
   final bool validPass;
+  final bool rememberMe;
   final String email;
   final String password;
   final AuthStatus status;
 
   const AuthState(
-      {this.validEmail = true,
+      {this.rememberMe = false,
+      this.validEmail = true,
       this.validPass = true,
       required this.email,
       required this.password,
@@ -28,6 +30,7 @@ class AuthState extends Equatable {
 
   AuthState copyWith(
       {bool? loading,
+      bool? rememberMe,
       String? email,
       String? password,
       AuthStatus? status,
@@ -39,12 +42,21 @@ class AuthState extends Equatable {
         password: password ?? this.password,
         status: status ?? this.status,
         validEmail: validEmail ?? this.validEmail,
-        validPass: validPass ?? this.validPass);
+        validPass: validPass ?? this.validPass,
+        rememberMe: rememberMe ?? this.rememberMe);
   }
 
   bool get isNotNull => email.isNotEmpty && password.isNotEmpty;
 
   @override
-  List<Object?> get props =>
-      [email, password, status, loading, validEmail, validPass, isNotNull];
+  List<Object?> get props => [
+        email,
+        password,
+        status,
+        loading,
+        validEmail,
+        validPass,
+        rememberMe,
+        isNotNull
+      ];
 }
