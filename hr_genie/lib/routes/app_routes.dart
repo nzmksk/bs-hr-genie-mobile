@@ -10,6 +10,7 @@ import 'package:hr_genie/view/leavepage.dart';
 // import 'package:hr_genie/view/leavePage.dart';
 import 'package:hr_genie/view/loginpage.dart';
 import 'package:hr_genie/view/notfound.dart';
+import 'package:hr_genie/view/splashScreen.dart';
 import 'package:hr_genie/view/testPage.dart';
 
 class AppRouter {
@@ -26,9 +27,17 @@ class AppRouter {
         path: PAGES.home.screenPath,
         name: PAGES.home.screenName,
         builder: (context, state) {
-          return const TestPage();
+          return const SplashScreen();
         },
       ),
+      // GoRoute(
+      //   parentNavigatorKey: _rootNavigatorKey,
+      //   path: PAGES.home.screenPath,
+      //   name: PAGES.home.screenName,
+      //   builder: (context, state) {
+      //     return const TestPage();
+      //   },
+      // ),
       ShellRoute(
           navigatorKey: _shellNavigatorKey,
           builder: (context, state, child) {
