@@ -1,6 +1,6 @@
-part of 'routes_cubit.dart';
+part of 'RoutesCubit.dart';
 
-enum BottomNavItems { leaveScreen, payrollScreen, accountScreen }
+enum BottomNavItems { leaveScreen, accountScreen }
 
 class RoutesCubitState extends Equatable {
   final String bottomNavItems;

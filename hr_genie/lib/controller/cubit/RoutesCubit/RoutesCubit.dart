@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-part 'routes_state.dart';
+part 'RoutesState.dart';
 
 class RoutesCubit extends Cubit<RoutesCubitState> {
   RoutesCubit()

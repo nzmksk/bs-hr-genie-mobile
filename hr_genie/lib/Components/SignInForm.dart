@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_genie/Components/customTextField.dart';
-import 'package:hr_genie/cubit/auth_cubit/auth_cubit.dart';
-import 'package:hr_genie/cubit/auth_cubit/auth_state.dart';
+import 'package:hr_genie/Components/CustomTextField.dart';
+import 'package:hr_genie/Components/SubmitButton.dart';
+import 'package:hr_genie/controller/cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/controller/cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/routes/AppRoutes.dart';
+import 'package:hr_genie/routes/RoutesUtils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomFormState extends StatefulWidget {
   const CustomFormState({super.key});
@@ -13,8 +17,6 @@ class CustomFormState extends StatefulWidget {
 
 class _CustomFormStateState extends State<CustomFormState> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
   bool isObscure = true;
   bool _rememberMe = false;
   bool isValid = false;
@@ -24,19 +26,22 @@ class _CustomFormStateState extends State<CustomFormState> {
     super.initState();
   }
 
+  Future<String> _getRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rememberMeStatus = prefs.getString("");
+    if (rememberMeStatus == null) {
+      return "";
+    }
+    return rememberMeStatus;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {
         } else if (state.status == AuthStatus.initial) {
-          setState(() {
-            _emailController.text = state.email;
-            _passwordController.text = state.password;
-          });
-
-          print(_emailController.text);
-          print(_passwordController.text);
+          setState(() {});
         }
       },
       builder: (context, state) {
@@ -49,6 +54,7 @@ class _CustomFormStateState extends State<CustomFormState> {
               Image.asset("assets/logo.jpeg"),
               CustomTextField(
                 hintText: "Your Working email",
+                autofillHints: const [AutofillHints.email],
                 icon: const Icon(Icons.email_sharp),
                 onchanged: (value) {
                   context.read<AuthCubit>().emailChanged(value);
@@ -74,36 +80,33 @@ class _CustomFormStateState extends State<CustomFormState> {
                     state.validPass ? null : "Your password is not valid!",
                 hintText: "Password",
               ),
-              CheckboxListTile(
-                value: _rememberMe,
-                onChanged: (value) {
-                  setState(() {
-                    _rememberMe = !_rememberMe;
-                  });
+              InkWell(
+                onTap: () {
+                  AppRouter.router.push(
+                      "${PAGES.login.screenPath}/${PAGES.forgotPassword.screenPath}");
                 },
-                title: const Text("Remember me"),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: const EdgeInsets.fromLTRB(10, 0, 2, 0),
-                splashRadius: 20.0,
-                enableFeedback: true,
+                child: Container(
+                  height: 40,
+                  margin: const EdgeInsets.fromLTRB(240, 10, 20, 0),
+                  child: const Text(
+                    "Forgot Password ?",
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ),
               ),
-              Container(
+              SubmitButton(
+                label: 'Login',
                 margin: const EdgeInsets.fromLTRB(0, 200, 0, 40),
-                height: 46,
-                width: 300,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)))),
-                    onPressed: state.isNotNull
-                        ? () {
-                            context.read<AuthCubit>().signIn(state.email,
-                                state.password, context, _rememberMe);
-                          }
-                        : null,
-                    child: const Text("Login")),
+                onPressed: state.isNotNull
+                    ? () {
+                        context
+                            .read<AuthCubit>()
+                            .signIn(state.email, state.password, context);
+                      }
+                    : null,
               )
             ],
           )),

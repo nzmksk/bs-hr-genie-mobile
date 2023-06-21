@@ -1,5 +1,6 @@
 enum PAGES {
   login,
+  forgotPassword,
   home,
   leave,
   leaveDetails,
@@ -14,6 +15,8 @@ extension AppRouteExtension on PAGES {
         return "/";
       case PAGES.login:
         return "/login";
+      case PAGES.forgotPassword:
+        return "forgotPassword";
       case PAGES.leave:
         return "/leave";
       case PAGES.leaveDetails:
@@ -33,6 +36,8 @@ extension AppRouteExtension on PAGES {
         return "HOME";
       case PAGES.login:
         return "LOGIN";
+      case PAGES.forgotPassword:
+        return "FORGOT PASSWORD";
       case PAGES.leave:
         return "LEAVE";
       case PAGES.leaveDetails:
@@ -52,6 +57,8 @@ extension AppRouteExtension on PAGES {
         return "Home";
       case PAGES.login:
         return "Login";
+      case PAGES.forgotPassword:
+        return "Forgot Password";
       case PAGES.leave:
         return "Leave";
       case PAGES.leaveDetails:
