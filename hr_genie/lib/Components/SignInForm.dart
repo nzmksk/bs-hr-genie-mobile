@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomTextField.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 
 class SigninForm extends StatefulWidget {
   const SigninForm({super.key});

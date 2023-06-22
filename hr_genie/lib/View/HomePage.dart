@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hr_genie/Components/BottomNavBarWithRoute.dart';
+import 'package:hr_genie/Components/BottomNavBarWithRoutes.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 
