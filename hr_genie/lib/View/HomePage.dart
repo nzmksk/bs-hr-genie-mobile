@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hr_genie/Components/BottomNavBarWithRoutes.dart';
-import 'package:hr_genie/cubit/RoutesCubit/RoutesCubit.dart';
-import 'package:hr_genie/routes/AppRoutes.dart';
-import 'package:hr_genie/routes/RoutesUtils.dart';
+import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class HomePage extends StatelessWidget {
   final Widget screen;

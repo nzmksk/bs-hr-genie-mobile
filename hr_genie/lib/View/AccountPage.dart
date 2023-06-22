@@ -10,6 +10,16 @@ class AccountPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Your Account"),
       ),
+      body: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              child: Card(
+            color: Colors.grey[200],
+          ))
+        ],
+      )),
     );
   }
 }

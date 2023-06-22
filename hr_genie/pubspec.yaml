@@ -43,6 +43,7 @@ dependencies:
   cached_network_image: ^3.2.3
   email_validator: ^2.1.17
   shared_preferences: ^2.1.2
+  intl: ^0.18.1
 
 flutter_native_splash:
   color: "#FFFFFF"

@@ -1,24 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomTextField.dart';
-import 'package:hr_genie/cubit/AuthCubit/AuthCubit.dart';
-import 'package:hr_genie/cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 
-class CustomFormState extends StatefulWidget {
-  const CustomFormState({super.key});
+class SigninForm extends StatefulWidget {
+  const SigninForm({super.key});
 
   @override
-  State<CustomFormState> createState() => _CustomFormStateState();
+  State<SigninForm> createState() => _SigninFormState();
 }
 
-class _CustomFormStateState extends State<CustomFormState> {
+class _SigninFormState extends State<SigninForm> {
   final _formKey = GlobalKey<FormState>();
   bool isObscure = true;
   bool _rememberMe = false;
   bool isValid = false;
   @override
   void initState() {
-    context.read<AuthCubit>().loadUserEmailPassword();
     super.initState();
   }
 
@@ -38,6 +38,47 @@ class _CustomFormStateState extends State<CustomFormState> {
             children: [
               Image.asset("assets/logo.jpeg"),
               CustomTextField(
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.info),
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Basic dialog title'),
+                          content: const Text(
+                            'A dialog is a type of modal window that\n'
+                            'appears in front of app content to\n'
+                            'provide critical information, or prompt\n'
+                            'for a decision to be made.',
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle:
+                                    Theme.of(context).textTheme.labelLarge,
+                              ),
+                              child: const Text('Disable'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle:
+                                    Theme.of(context).textTheme.labelLarge,
+                              ),
+                              child: const Text('Enable'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
                 hintText: "Your Working email",
                 icon: const Icon(Icons.email_sharp),
                 onchanged: (value) {
@@ -89,8 +130,9 @@ class _CustomFormStateState extends State<CustomFormState> {
                                     borderRadius: BorderRadius.circular(20)))),
                     onPressed: state.isNotNull
                         ? () {
-                            context.read<AuthCubit>().signIn(state.email,
-                                state.password, context, _rememberMe);
+                            context
+                                .read<AuthCubit>()
+                                .signIn(state.email, state.password, context);
                           }
                         : null,
                     child: const Text("Login")),

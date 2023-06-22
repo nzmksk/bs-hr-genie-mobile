@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_genie/cubit/AuthCubit/AuthCubit.dart';
-import 'package:hr_genie/cubit/RoutesCubit/RoutesCubit.dart';
-import 'package:hr_genie/routes/AppRoutes.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
