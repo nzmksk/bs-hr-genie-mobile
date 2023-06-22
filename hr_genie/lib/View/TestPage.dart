@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_genie/routes/AppRoutes.dart';
-import 'package:hr_genie/routes/RoutesUtils.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class TestPage extends StatelessWidget {
   const TestPage({super.key});

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
-import 'package:hr_genie/controller/cubit/AuthCubit/AuthCubit.dart';
-import 'package:hr_genie/controller/cubit/AuthCubit/AuthState.dart';
-import 'package:hr_genie/routes/AppRoutes.dart';
-import 'package:hr_genie/routes/RoutesUtils.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomFormState extends StatefulWidget {

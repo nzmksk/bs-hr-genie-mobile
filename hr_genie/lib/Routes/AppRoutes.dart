@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hr_genie/routes/RoutesUtils.dart';
-import 'package:hr_genie/view/AccountDetailPage.dart';
-import 'package:hr_genie/view/AccountPage.dart';
-import 'package:hr_genie/view/ForgotPassword.dart';
-import 'package:hr_genie/view/HomePage.dart';
-import 'package:hr_genie/view/LeavePage.dart';
-import 'package:hr_genie/view/LoginPage.dart';
-import 'package:hr_genie/view/NotFoundPage.dart';
-import 'package:hr_genie/view/SplashScreen.dart';
-
-import '../controller/cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
+import 'package:hr_genie/View/AccountDetailPage.dart';
+import 'package:hr_genie/View/AccountPage.dart';
+import 'package:hr_genie/View/ForgotPassword.dart';
+import 'package:hr_genie/View/HomePage.dart';
+import 'package:hr_genie/View/LeavePage.dart';
+import 'package:hr_genie/View/LoginPage.dart';
+import 'package:hr_genie/View/NotFoundPage.dart';
+import 'package:hr_genie/View/SplashScreen.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();

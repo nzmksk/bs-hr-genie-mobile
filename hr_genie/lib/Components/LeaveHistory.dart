@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hr_genie/model/LeaveModel.dart';
+import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:intl/intl.dart';
 
 class LeaveHistory extends StatefulWidget {

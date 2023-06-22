@@ -3,9 +3,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_genie/controller/cubit/AuthCubit/AuthState.dart';
-import 'package:hr_genie/routes/AppRoutes.dart';
-import 'package:hr_genie/routes/RoutesUtils.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:meta/meta.dart';
 
@@ -30,15 +30,8 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(password: value, status: AuthStatus.initial));
   }
 
-  void signIn(String email, String password, context, bool rememberMe) {
+  void signIn(String email, String password, context) {
     if (email == "test@gmail.com" && password == "123456") {
-      if (rememberMe) {
-        emit(state.copyWith(
-            email: state.email,
-            password: state.password,
-            rememberMe: rememberMe));
-      }
-
       AppRouter.router.go(PAGES.leave.screenPath);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -82,12 +75,6 @@ class AuthCubit extends Cubit<AuthState> {
         emit(state.copyWith(
           rememberMe: true,
         ));
-
-        // setState(() {
-        //   _isChecked = true;
-        // });
-        // _emailController.text = _email ?? "";
-        // _passwordController.text = _password ?? "";
       }
     } catch (e) {
       print(e);
