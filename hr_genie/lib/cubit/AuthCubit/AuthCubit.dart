@@ -3,9 +3,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_genie/cubit/auth_cubit/auth_state.dart';
-import 'package:hr_genie/routes/app_routes.dart';
-import 'package:hr_genie/routes/routes_utils.dart';
+import 'package:hr_genie/cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/routes/AppRoutes.dart';
+import 'package:hr_genie/routes/RoutesUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:meta/meta.dart';
 

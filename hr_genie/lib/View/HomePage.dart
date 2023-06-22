@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hr_genie/Components/botNavBarRoute.dart';
-import 'package:hr_genie/routes/app_routes.dart';
-import 'package:hr_genie/routes/routes_utils.dart';
-
-import '../cubit/routes_cubit/routes_cubit.dart';
+import 'package:hr_genie/Components/BottomNavBarWithRoutes.dart';
+import 'package:hr_genie/cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/routes/AppRoutes.dart';
+import 'package:hr_genie/routes/RoutesUtils.dart';
 
 class HomePage extends StatelessWidget {
   final Widget screen;

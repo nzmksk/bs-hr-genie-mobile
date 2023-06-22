@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_genie/Components/customTextField.dart';
-import 'package:hr_genie/cubit/auth_cubit/auth_cubit.dart';
-import 'package:hr_genie/cubit/auth_cubit/auth_state.dart';
+import 'package:hr_genie/Components/CustomTextField.dart';
+import 'package:hr_genie/cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/cubit/AuthCubit/AuthState.dart';
 
 class CustomFormState extends StatefulWidget {
   const CustomFormState({super.key});
@@ -13,8 +13,6 @@ class CustomFormState extends StatefulWidget {
 
 class _CustomFormStateState extends State<CustomFormState> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
   bool isObscure = true;
   bool _rememberMe = false;
   bool isValid = false;
@@ -29,15 +27,7 @@ class _CustomFormStateState extends State<CustomFormState> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {
-        } else if (state.status == AuthStatus.initial) {
-          setState(() {
-            _emailController.text = state.email;
-            _passwordController.text = state.password;
-          });
-
-          print(_emailController.text);
-          print(_passwordController.text);
-        }
+        } else if (state.status == AuthStatus.initial) {}
       },
       builder: (context, state) {
         return Form(

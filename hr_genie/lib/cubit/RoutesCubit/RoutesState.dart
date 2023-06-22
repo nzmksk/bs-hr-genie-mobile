@@ -1,4 +1,4 @@
-part of 'routes_cubit.dart';
+part of 'RoutesCubit.dart';
 
 enum BottomNavItems { leaveScreen, payrollScreen, accountScreen }
 
