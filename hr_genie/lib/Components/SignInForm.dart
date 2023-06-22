@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomTextField.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/Controller/Services/StatusMessage.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class SigninForm extends StatefulWidget {
   const SigninForm({super.key});
@@ -15,7 +18,6 @@ class SigninForm extends StatefulWidget {
 class _SigninFormState extends State<SigninForm> {
   final _formKey = GlobalKey<FormState>();
   bool isObscure = true;
-  bool _rememberMe = false;
   bool isValid = false;
   @override
   void initState() {
@@ -24,6 +26,9 @@ class _SigninFormState extends State<SigninForm> {
 
   @override
   Widget build(BuildContext context) {
+    //development variables area
+    const bool autoFocus = true;
+    //development variables area
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {
@@ -38,6 +43,7 @@ class _SigninFormState extends State<SigninForm> {
             children: [
               Image.asset("assets/logo.jpeg"),
               CustomTextField(
+                autoFocus: autoFocus,
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.info),
                   onPressed: () {
@@ -80,7 +86,7 @@ class _SigninFormState extends State<SigninForm> {
                   },
                 ),
                 hintText: "Your Working email",
-                icon: const Icon(Icons.email_sharp),
+                prefixIcon: const Icon(Icons.email_sharp),
                 onchanged: (value) {
                   context.read<AuthCubit>().emailChanged(value);
                 },
@@ -90,6 +96,7 @@ class _SigninFormState extends State<SigninForm> {
                 errorText: state.validEmail ? null : "Your input is not valid",
               ),
               PasswordField(
+                autoFocus: autoFocus,
                 obscurePassword: isObscure,
                 onpress: () {
                   setState(() {
@@ -101,22 +108,21 @@ class _SigninFormState extends State<SigninForm> {
                 },
                 errorStyle:
                     state.validPass ? null : const TextStyle(color: Colors.red),
-                errorText:
-                    state.validPass ? null : "Your password is not valid!",
+                errorText: state.validPass ? null : MSG.loginPassword.errorMsg,
                 hintText: "Password",
               ),
-              CheckboxListTile(
-                value: _rememberMe,
-                onChanged: (value) {
-                  setState(() {
-                    _rememberMe = !_rememberMe;
-                  });
-                },
-                title: const Text("Remember me"),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: const EdgeInsets.fromLTRB(10, 0, 2, 0),
-                splashRadius: 20.0,
-                enableFeedback: true,
+              Container(
+                margin: const EdgeInsets.fromLTRB(200, 5, 0, 0),
+                child: GestureDetector(
+                    child: Text("Forgot Password?",
+                        style: TextStyle(
+                            // decoration: TextDecoration.underline,
+                            color: Colors.blue[200],
+                            fontSize: 15)),
+                    onTap: () {
+                      AppRouter.router.go(
+                          "${PAGES.login.screenPath}/${PAGES.forgotPassword.screenPath}");
+                    }),
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 200, 0, 40),

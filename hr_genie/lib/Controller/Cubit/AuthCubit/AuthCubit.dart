@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
@@ -26,7 +25,12 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void passwordChanged(String value) {
-    emit(state.copyWith(password: value, status: AuthStatus.initial));
+    if (value == "") {
+      emit(state.copyWith(validPass: true));
+      print("password is empty");
+    } else {
+      emit(state.copyWith(password: value, status: AuthStatus.initial));
+    }
   }
 
   void signIn(String email, String password, context) {
@@ -40,43 +44,6 @@ class AuthCubit extends Cubit<AuthState> {
       );
     } else if (password != "123456") {
       emit(state.copyWith(validPass: false));
-    }
-  }
-
-  void handleRememberMe(bool value) {
-    print("Handle Remember Me");
-    // _isChecked = value;
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        prefs.setBool("remember_me", state.rememberMe);
-        prefs.setString('email', state.email);
-        prefs.setString('password', state.password);
-      },
-    );
-    emit(state.copyWith(rememberMe: value));
-    // setState(() {
-    //   _isChecked = value;
-    // });
-  }
-
-  void loadUserEmailPassword() async {
-    print("Load Email");
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var email = prefs.getString("email") ?? "";
-      var password = prefs.getString("password") ?? "";
-      var rememberMe = prefs.getBool("remember_me") ?? false;
-
-      print(rememberMe);
-      print(email);
-      print(password);
-      if (rememberMe) {
-        emit(state.copyWith(
-          rememberMe: true,
-        ));
-      }
-    } catch (e) {
-      print(e);
     }
   }
 }
