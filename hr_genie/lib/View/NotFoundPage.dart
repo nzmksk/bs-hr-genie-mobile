@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
 
 class NotFoundPage extends StatelessWidget {
   const NotFoundPage({super.key});

@@ -7,7 +7,6 @@ import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:meta/meta.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());

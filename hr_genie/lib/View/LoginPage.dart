@@ -7,7 +7,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        resizeToAvoidBottomInset: false, body: CustomFormState());
+    return const Scaffold(resizeToAvoidBottomInset: false, body: SigninForm());
   }
 }

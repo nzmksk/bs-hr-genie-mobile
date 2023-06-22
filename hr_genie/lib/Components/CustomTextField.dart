@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final Function(String) onchanged;
   final Iterable<String>? autofillHints;
 
+  final IconButton? suffixIcon;
   const CustomTextField({
     super.key,
     this.icon,
@@ -16,6 +17,7 @@ class CustomTextField extends StatelessWidget {
     required this.onchanged,
     required this.errorStyle,
     required this.errorText,
+    this.suffixIcon,
   });
 
   @override
@@ -32,6 +34,7 @@ class CustomTextField extends StatelessWidget {
             errorStyle: errorStyle,
             errorText: errorText,
             prefixIcon: icon,
+            suffixIcon: suffixIcon,
             hintText: hintText),
       ),
     );
