@@ -1,13 +1,24 @@
 // ignore_for_file: avoid_print
 
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
+  Future<bool> isLogged() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString("email");
+
+    if (email != null) {
+      return true;
+    }
+    return false;
+  }
 
   void emailChanged(String value) {
     bool emailValid = EmailValidator.validate(value);
@@ -33,15 +44,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void signIn(String email, String password, context) {
+  void signIn(String email, String password, BuildContext context) async {
     if (email == "test@gmail.com" && password == "123456") {
       AppRouter.router.go(PAGES.leave.screenPath);
-
       emit(state.copyWith(
           isExist: true,
           validPass: true,
           validEmail: true,
           status: AuthStatus.success));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('username', email);
     } else {
       emit(state.copyWith(
           validPass: false,
@@ -49,5 +61,10 @@ class AuthCubit extends Cubit<AuthState> {
           isExist: false,
           status: AuthStatus.error));
     }
+  }
+
+  void signOut(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('email');
   }
 }

@@ -4,7 +4,7 @@ class Leave {
     required this.employeeId,
     required this.leaveTypeId,
     required this.startDate,
-    required this.duration,
+    required this.endDate,
     required this.reason,
     required this.attachment,
     required this.applicationStatus,
@@ -14,7 +14,7 @@ class Leave {
   late final String employeeId;
   late final String leaveTypeId;
   late final DateTime startDate;
-  late final double duration;
+  late final DateTime endDate;
   late final String reason;
   late final String attachment;
   late final String applicationStatus;
@@ -25,7 +25,7 @@ class Leave {
     employeeId = json['employee_id'];
     leaveTypeId = json['leave_type_id'];
     startDate = json['start_date'];
-    duration = json['duration'];
+    endDate = json['duration'];
     reason = json['reason'];
     attachment = json['attachment'];
     applicationStatus = json['application_status'];
@@ -38,7 +38,7 @@ class Leave {
     _data['employee_id'] = employeeId;
     _data['leave_type_id'] = leaveTypeId;
     _data['start_date'] = startDate;
-    _data['duration'] = duration;
+    _data['duration'] = endDate;
     _data['reason'] = reason;
     _data['attachment'] = attachment;
     _data['application_status'] = applicationStatus;

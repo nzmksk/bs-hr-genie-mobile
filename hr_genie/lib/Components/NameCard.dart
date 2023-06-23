@@ -24,27 +24,24 @@ class ProfileCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(0.8),
-                child: Expanded(
-                  child: ListTile(
-                    title: const Text(
-                      "Mark Wien",
-                      style:
-                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                child: ListTile(
+                  title: const Text(
+                    "Mark Wien",
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: const Text(
+                    "Talent Acquisition",
+                    style: TextStyle(fontSize: 15, color: Colors.black45),
+                  ),
+                  trailing: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(10),
+                      backgroundColor: Colors.indigo, // <-- Button color
+                      foregroundColor: Colors.white, // <-- Splash color
                     ),
-                    subtitle: const Text(
-                      "Talent Acquisition",
-                      style: TextStyle(fontSize: 15, color: Colors.black45),
-                    ),
-                    trailing: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(10),
-                        backgroundColor: Colors.indigo, // <-- Button color
-                        foregroundColor: Colors.white, // <-- Splash color
-                      ),
-                      child: const Icon(Icons.add_rounded),
-                    ),
+                    child: const Icon(Icons.add_rounded),
                   ),
                 ),
               ),
