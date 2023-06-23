@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
@@ -12,6 +11,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   void emailChanged(String value) {
     bool emailValid = EmailValidator.validate(value);
+    emit(state.copyWith(validPass: true));
     if (emailValid) {
       emit(state.copyWith(
           email: value,
@@ -20,7 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
           loading: true));
     } else {
       emit(state.copyWith(
-          email: value, validEmail: false, status: AuthStatus.error));
+          email: value, validEmail: false, status: AuthStatus.initial));
     }
   }
 
@@ -36,14 +36,18 @@ class AuthCubit extends Cubit<AuthState> {
   void signIn(String email, String password, context) {
     if (email == "test@gmail.com" && password == "123456") {
       AppRouter.router.go(PAGES.leave.screenPath);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("You're logged as test@gmail.com"),
-          backgroundColor: Colors.green,
-        ),
-      );
+
+      emit(state.copyWith(
+          isExist: true,
+          validPass: true,
+          validEmail: true,
+          status: AuthStatus.success));
     } else {
-      emit(state.copyWith(validPass: false, validEmail: false));
+      emit(state.copyWith(
+          validPass: false,
+          validEmail: false,
+          isExist: false,
+          status: AuthStatus.error));
     }
   }
 }

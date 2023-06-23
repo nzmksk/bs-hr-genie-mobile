@@ -32,7 +32,21 @@ class _SigninFormState extends State<SigninForm> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {
-        } else if (state.status == AuthStatus.initial) {}
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("This ${state.email} is not exist!"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        } else if (state.status == AuthStatus.initial) {
+        } else if (state.status == AuthStatus.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("You're logged as ${state.email}"),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
       },
       builder: (context, state) {
         return Center(
@@ -95,11 +109,12 @@ class _SigninFormState extends State<SigninForm> {
                   ? null
                   : state.email == "" || state.email.isEmpty
                       ? null
-                      : MSG.loginEmail.errorMsg,
+                      : MSG.invalidEmail.errorMsg,
+              //need to put the Data exist error here
             ),
             PasswordField(
               controller: passwordController,
-              enabled: state.email == "" ? false : true,
+              enabled: state.email == "" || state.email.isEmpty ? false : true,
               autoFocus: autoFocus,
               obscurePassword: isObscure,
               onpress: () {
@@ -112,11 +127,7 @@ class _SigninFormState extends State<SigninForm> {
               },
               errorStyle:
                   state.validPass ? null : const TextStyle(color: Colors.red),
-              errorText: state.validPass
-                  ? null
-                  : state.email == "" || state.email.isEmpty
-                      ? null
-                      : MSG.loginPassword.errorMsg,
+              errorText: state.validPass ? null : MSG.loginPassword.errorMsg,
               hintText: "Password",
             ),
             Container(
@@ -133,7 +144,7 @@ class _SigninFormState extends State<SigninForm> {
                   }),
             ),
             Container(
-              margin: const EdgeInsets.fromLTRB(0, 200, 0, 40),
+              margin: const EdgeInsets.fromLTRB(0, 200, 0, 90),
               height: 46,
               width: 300,
               child: ElevatedButton(

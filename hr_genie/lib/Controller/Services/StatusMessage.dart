@@ -1,5 +1,6 @@
 enum MSG {
-  loginEmail,
+  invalidEmail,
+  emailNotExisted,
   loginPassword,
   newPassword,
   repeatPassword,
@@ -8,7 +9,9 @@ enum MSG {
 extension StatusMessage on MSG {
   String? get initialMsg {
     switch (this) {
-      case MSG.loginEmail:
+      case MSG.invalidEmail:
+        return "";
+      case MSG.emailNotExisted:
         return "";
       case MSG.loginPassword:
         return "";
@@ -23,8 +26,10 @@ extension StatusMessage on MSG {
 
   String get errorMsg {
     switch (this) {
-      case MSG.loginEmail:
+      case MSG.invalidEmail:
         return "Your Email is Invalid";
+      case MSG.emailNotExisted:
+        return "Email Does not Exist” & “(i) Please Contact Admin";
       case MSG.loginPassword:
         return "Your password is invalid!";
       case MSG.newPassword:
@@ -38,7 +43,7 @@ extension StatusMessage on MSG {
 
   String get successMsg {
     switch (this) {
-      case MSG.loginEmail:
+      case MSG.invalidEmail:
         return "";
       case MSG.loginPassword:
         return "";
