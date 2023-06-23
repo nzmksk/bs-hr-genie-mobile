@@ -9,7 +9,7 @@ extension StatusMessage on MSG {
   String? get initialMsg {
     switch (this) {
       case MSG.loginEmail:
-        return null;
+        return "";
       case MSG.loginPassword:
         return "";
       case MSG.newPassword:
@@ -24,13 +24,13 @@ extension StatusMessage on MSG {
   String get errorMsg {
     switch (this) {
       case MSG.loginEmail:
-        return "";
+        return "Your Email is Invalid";
       case MSG.loginPassword:
         return "Your password is invalid!";
       case MSG.newPassword:
-        return "Your new password invalid";
+        return "Password should be between 8 - 14 Characters.\n(Including numbers, Special Characters, Uppercase \n& Lowercase letters)";
       case MSG.repeatPassword:
-        return "";
+        return "Password does not matched";
       default:
         return "";
     }

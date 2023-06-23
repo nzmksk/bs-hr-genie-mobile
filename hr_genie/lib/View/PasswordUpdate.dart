@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_genie/Components/CustomTextField.dart';
+import 'package:hr_genie/Components/TextField/CustomTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordCubit.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordState.dart';
@@ -13,7 +13,6 @@ class PasswordUpdateForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController repeatController = TextEditingController();
-
     return BlocBuilder<UpdatePasswordCubit, UpdatePasswordState>(
       builder: (context, state) {
         return BlocBuilder<UpdatePasswordCubit, UpdatePasswordState>(
@@ -33,7 +32,7 @@ class PasswordUpdateForm extends StatelessWidget {
                     ),
                     color: Colors.grey[200],
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const Icon(
                           Icons.key,
@@ -49,11 +48,10 @@ class PasswordUpdateForm extends StatelessWidget {
                                 TextStyle(color: Colors.black38, fontSize: 13),
                           ),
                         ),
-                        CustomTextField(
-                            obscureText: true,
+                        NewPasswordField(
                             hintText: "New Password",
                             onchanged: (value) {
-                              if (value == "") {
+                              if (value == "" || value.isEmpty) {
                                 repeatController.clear();
                               }
                               // _textFieldFocusNode.requestFocus();
@@ -67,22 +65,32 @@ class PasswordUpdateForm extends StatelessWidget {
                             errorText: state.newPassValid
                                 ? null
                                 : MSG.newPassword.errorMsg),
-                        CustomTextField(
+                        RepeatPasswordField(
                             controller: repeatController,
                             obscureText: true,
-                            enabled: state.newPassword == "" ? false : true,
+                            enabled: state.newPassword != "" ||
+                                    state.newPassword.isNotEmpty &&
+                                        state.newPassValid
+                                ? true
+                                : false,
                             hintText: "Repeat Password",
                             onchanged: (value) {
                               context
                                   .read<UpdatePasswordCubit>()
                                   .repeatPasswordChanged(value);
                             },
-                            errorStyle: null,
-                            errorText: null),
+                            errorStyle: state.isMatched
+                                ? null
+                                : TextStyleStore().failed(),
+                            errorText: state.isMatched
+                                ? null
+                                : state.repeatPassEmpty
+                                    ? null
+                                    : MSG.repeatPassword.errorMsg),
                         SubmitButton(
                             label: "Update",
-                            margin: const EdgeInsets.fromLTRB(0, 150, 0, 40),
-                            onPressed: !state.isMatched ? null : () {})
+                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 40),
+                            onPressed: state.isMatched ? () {} : null)
                       ],
                     ),
                   ),

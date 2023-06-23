@@ -2,7 +2,7 @@ class PasswordValidatorService {
   static final RegExp _upperCaseRegExp = RegExp(r'[A-Z]');
   static final RegExp _lowerCaseRegExp = RegExp(r'[a-z]');
   static final RegExp _digitRegExp = RegExp(r'\d');
-  static final RegExp _specialCharRegExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+  static final RegExp _specialCharRegExp = RegExp(r'[-_!@#$%^&*(),.?":{}|<>]');
 
   static bool isStrongPassword(String password) {
     if (password == "" || password.isEmpty) {

@@ -7,7 +7,7 @@ class UpdatePasswordState extends Equatable {
   final String repeatPassword;
   final bool isMatched;
   final bool newPassValid;
-  final bool repeatPassValid;
+  final bool repeatPassEmpty;
   final UpdatePasswordStatus status;
 
   const UpdatePasswordState({
@@ -16,7 +16,7 @@ class UpdatePasswordState extends Equatable {
     required this.repeatPassword,
     this.isMatched = false,
     this.newPassValid = true,
-    this.repeatPassValid = true,
+    this.repeatPassEmpty = true,
   });
 
   factory UpdatePasswordState.initial() {
@@ -32,7 +32,7 @@ class UpdatePasswordState extends Equatable {
     String? repeatPassword,
     bool? isMatched,
     bool? newPassValid,
-    bool? repeatPassValid,
+    bool? repeatPassEmpty,
     UpdatePasswordStatus? status,
   }) {
     return UpdatePasswordState(
@@ -40,11 +40,11 @@ class UpdatePasswordState extends Equatable {
         repeatPassword: repeatPassword ?? this.repeatPassword,
         isMatched: isMatched ?? this.isMatched,
         newPassValid: newPassValid ?? this.newPassValid,
-        repeatPassValid: repeatPassValid ?? this.newPassValid,
+        repeatPassEmpty: repeatPassEmpty ?? this.newPassValid,
         status: status ?? this.status);
   }
 
   @override
   List<Object?> get props =>
-      [newPassword, repeatPassword, isMatched, newPassValid, repeatPassValid];
+      [newPassword, repeatPassword, isMatched, newPassValid, repeatPassEmpty];
 }

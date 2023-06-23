@@ -20,7 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
           loading: true));
     } else {
       emit(state.copyWith(
-          email: "", validEmail: false, status: AuthStatus.error));
+          email: value, validEmail: false, status: AuthStatus.error));
     }
   }
 
@@ -42,8 +42,8 @@ class AuthCubit extends Cubit<AuthState> {
           backgroundColor: Colors.green,
         ),
       );
-    } else if (password != "123456") {
-      emit(state.copyWith(validPass: false));
+    } else {
+      emit(state.copyWith(validPass: false, validEmail: false));
     }
   }
 }

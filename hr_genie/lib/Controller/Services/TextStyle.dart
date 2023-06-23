@@ -6,6 +6,8 @@ class TextStyleStore {
   }
 
   TextStyle failed() {
-    return const TextStyle(color: Colors.red);
+    return const TextStyle(
+      color: Colors.red,
+    );
   }
 }
