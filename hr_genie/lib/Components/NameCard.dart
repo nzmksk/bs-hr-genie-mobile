@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CountLeaveCompo.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
@@ -34,7 +37,9 @@ class ProfileCard extends StatelessWidget {
                     style: TextStyle(fontSize: 15, color: Colors.black45),
                   ),
                   trailing: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      AppRouter.router.go(PAGES.leaveApp.screenPath);
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),
                       padding: const EdgeInsets.all(10),
