@@ -12,6 +12,7 @@ import 'package:hr_genie/View/LoginPage.dart';
 import 'package:hr_genie/View/NotFoundPage.dart';
 import 'package:hr_genie/View/PasswordUpdate.dart';
 import 'package:hr_genie/View/SplashScreen.dart';
+import 'package:hr_genie/View/TestPage2.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -27,7 +28,7 @@ class AppRouter {
         path: PAGES.home.screenPath,
         name: PAGES.home.screenName,
         builder: (context, state) {
-          return const SplashScreen();
+          return const TestPage2();
         },
       ),
       ShellRoute(

@@ -38,7 +38,7 @@ class ProfileCard extends StatelessWidget {
                   ),
                   trailing: ElevatedButton(
                     onPressed: () {
-                      AppRouter.router.go(PAGES.leaveApp.screenPath);
+                      AppRouter.router.push(PAGES.leaveApp.screenPath);
                     },
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),

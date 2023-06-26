@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordCubit.dart';
+import 'package:hr_genie/Controller/cubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 
 Future main() async {
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthCubit(),
         ),
-        BlocProvider(create: (context) => UpdatePasswordCubit())
+        BlocProvider(create: (context) => UpdatePasswordCubit()),
+        BlocProvider(create: (context) => ApiServiceCubit())
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

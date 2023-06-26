@@ -21,7 +21,7 @@ extension AppRouteExtension on PAGES {
       case PAGES.leave:
         return "/leave";
       case PAGES.leaveApp:
-        return "/leave/application";
+        return "application";
       case PAGES.leaveDetails:
         return "details";
       case PAGES.account:
