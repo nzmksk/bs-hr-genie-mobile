@@ -10,9 +10,12 @@ class Department {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['department_id'] = this.departmentId;
-    data['department_name'] = this.departmentName;
+    final Map<String, dynamic> data = <String, dynamic>{
+      'department_id': departmentId,
+      'department_name': departmentName
+    };
+    // data['department_id'] = this.departmentId;
+    // data['department_name'] = this.departmentName;
     return data;
   }
 }

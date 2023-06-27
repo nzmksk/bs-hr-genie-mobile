@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print
 
-import 'package:bloc/bloc.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
@@ -10,9 +10,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
+  Future<bool> isLogged() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString("email");
+    if (email != null) {
+      print("You Logged as $email");
+      return true;
+    }
+    return false;
+  }
 
   void emailChanged(String value) {
     bool emailValid = EmailValidator.validate(value);
+    emit(state.copyWith(validPass: true));
     if (emailValid) {
       emit(state.copyWith(
           email: value,
@@ -21,62 +31,42 @@ class AuthCubit extends Cubit<AuthState> {
           loading: true));
     } else {
       emit(state.copyWith(
-          email: "", validEmail: false, status: AuthStatus.error));
+          email: value, validEmail: false, status: AuthStatus.initial));
     }
   }
 
   void passwordChanged(String value) {
-    emit(state.copyWith(password: value, status: AuthStatus.initial));
+    if (value == "") {
+      emit(state.copyWith(validPass: true));
+    } else {
+      emit(state.copyWith(password: value, status: AuthStatus.initial));
+    }
   }
 
-  void signIn(String email, String password, context) {
+  void signIn(String email, String password, BuildContext context) async {
     if (email == "test@gmail.com" && password == "123456") {
       AppRouter.router.go(PAGES.leave.screenPath);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("You're logged as test@gmail.com"),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else if (password != "123456") {
-      emit(state.copyWith(validPass: false));
-    }
-  }
-
-  void handleRememberMe(bool value) {
-    print("Handle Remember Me");
-    // _isChecked = value;
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        prefs.setBool("remember_me", state.rememberMe);
-        prefs.setString('email', state.email);
-        prefs.setString('password', state.password);
-      },
-    );
-    emit(state.copyWith(rememberMe: value));
-    // setState(() {
-    //   _isChecked = value;
-    // });
-  }
-
-  void loadUserEmailPassword() async {
-    print("Load Email");
-    try {
+      emit(state.copyWith(
+          isExist: true,
+          validPass: true,
+          validEmail: true,
+          status: AuthStatus.success));
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var email = prefs.getString("email") ?? "";
-      var password = prefs.getString("password") ?? "";
-      var rememberMe = prefs.getBool("remember_me") ?? false;
-
-      print(rememberMe);
-      print(email);
-      print(password);
-      if (rememberMe) {
-        emit(state.copyWith(
-          rememberMe: true,
-        ));
-      }
-    } catch (e) {
-      print(e);
+      prefs.setString('email', state.email);
+    } else if (email != "test@gmail.com") {
+      emit(state.copyWith(
+          validEmail: false, isExist: false, status: AuthStatus.error));
+    } else if (password != "123456") {
+      emit(state.copyWith(
+          validPass: false,
+          validEmail: true,
+          isExist: true,
+          status: AuthStatus.error));
     }
+  }
+
+  void signOut(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('email');
   }
 }

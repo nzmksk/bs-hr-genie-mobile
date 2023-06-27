@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CountLeaveCompo.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
@@ -24,27 +27,27 @@ class ProfileCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(0.8),
-                child: Expanded(
-                  child: ListTile(
-                    title: const Text(
-                      "Mark Wien",
-                      style:
-                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                child: ListTile(
+                  title: const Text(
+                    "Mark Wien",
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: const Text(
+                    "Talent Acquisition",
+                    style: TextStyle(fontSize: 15, color: Colors.black45),
+                  ),
+                  trailing: ElevatedButton(
+                    onPressed: () {
+                      AppRouter.router.push(
+                          "${PAGES.leave.screenPath}/${PAGES.leaveApp.screenPath}");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(10),
+                      backgroundColor: Colors.indigo, // <-- Button color
+                      foregroundColor: Colors.white, // <-- Splash color
                     ),
-                    subtitle: const Text(
-                      "Talent Acquisition",
-                      style: TextStyle(fontSize: 15, color: Colors.black45),
-                    ),
-                    trailing: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(10),
-                        backgroundColor: Colors.indigo, // <-- Button color
-                        foregroundColor: Colors.white, // <-- Splash color
-                      ),
-                      child: const Icon(Icons.add_rounded),
-                    ),
+                    child: const Icon(Icons.add_rounded),
                   ),
                 ),
               ),
