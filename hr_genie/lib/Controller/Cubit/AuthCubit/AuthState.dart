@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum AuthStatus { initial, filling, loading, success, error }
+enum AuthStatus { initial, loading, success, error }
 
 class AuthState extends Equatable {
   // final User? user;

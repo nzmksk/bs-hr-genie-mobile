@@ -34,7 +34,9 @@ class _SigninFormState extends State<SigninForm> {
         if (state.status == AuthStatus.error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("This ${state.email} is not exist!"),
+              content: Text(state.validEmail
+                  ? "Your password is invalid"
+                  : "This ${state.email} is not exist!"),
               backgroundColor: Colors.red,
             ),
           );

@@ -7,11 +7,14 @@ class UpdatePasswordCubit extends Cubit<UpdatePasswordState> {
 
   void newPasswordChanged(String value) {
     emit(state.copyWith(
-        newPassword: value, status: UpdatePasswordStatus.initial));
+      newPassword: value,
+      status: UpdatePasswordStatus.initial,
+      repeatPassEmpty: true,
+    ));
     bool isValidated =
         PasswordValidatorService.isStrongPassword(state.newPassword);
-    if (!isValidated && state.newPassword != "" ||
-        state.newPassword.isNotEmpty) {
+
+    if (!isValidated && state.newPassword != "") {
       emit(state.copyWith(newPassValid: false));
     } else {
       emit(state.copyWith(newPassValid: true));
@@ -23,8 +26,6 @@ class UpdatePasswordCubit extends Cubit<UpdatePasswordState> {
       state.copyWith(
           repeatPassword: value, status: UpdatePasswordStatus.initial),
     );
-    print("isMatched = ${state.isMatched}");
-
     if (state.newPassword == state.repeatPassword) {
       emit(
         state.copyWith(isMatched: true),
@@ -37,7 +38,5 @@ class UpdatePasswordCubit extends Cubit<UpdatePasswordState> {
         emit(state.copyWith(repeatPassEmpty: false));
       }
     }
-    print(
-        "New Password = ${state.newPassword}\n Repeat Password = ${state.repeatPassword} \nisMatched = ${state.isMatched}");
   }
 }

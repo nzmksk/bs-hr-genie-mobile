@@ -14,7 +14,7 @@ class UpdatePasswordState extends Equatable {
     required this.status,
     required this.newPassword,
     required this.repeatPassword,
-    this.isMatched = false,
+    this.isMatched = true,
     this.newPassValid = true,
     this.repeatPassEmpty = true,
   });
@@ -44,7 +44,14 @@ class UpdatePasswordState extends Equatable {
         status: status ?? this.status);
   }
 
+  bool get isNotEmpty => newPassword.isNotEmpty && repeatPassword.isNotEmpty;
   @override
-  List<Object?> get props =>
-      [newPassword, repeatPassword, isMatched, newPassValid, repeatPassEmpty];
+  List<Object?> get props => [
+        newPassword,
+        repeatPassword,
+        isMatched,
+        newPassValid,
+        repeatPassEmpty,
+        isNotEmpty
+      ];
 }

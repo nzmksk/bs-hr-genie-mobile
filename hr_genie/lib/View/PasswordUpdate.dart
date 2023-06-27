@@ -34,8 +34,8 @@ class PasswordUpdateForm extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Icon(
-                          Icons.key,
+                        Icon(
+                          state.newPassValid ? Icons.key : Icons.error,
                           size: 170,
                         ),
                         Container(
@@ -68,11 +68,10 @@ class PasswordUpdateForm extends StatelessWidget {
                         RepeatPasswordField(
                             controller: repeatController,
                             obscureText: true,
-                            enabled: state.newPassword != "" ||
-                                    state.newPassword.isNotEmpty &&
-                                        state.newPassValid
-                                ? true
-                                : false,
+                            enabled:
+                                state.newPassword != "" && state.newPassValid
+                                    ? true
+                                    : false,
                             hintText: "Repeat Password",
                             onchanged: (value) {
                               context
@@ -90,7 +89,9 @@ class PasswordUpdateForm extends StatelessWidget {
                         SubmitButton(
                             label: "Update",
                             margin: const EdgeInsets.fromLTRB(0, 20, 0, 40),
-                            onPressed: state.isMatched ? () {} : null)
+                            onPressed: state.isNotEmpty && state.isMatched
+                                ? () {}
+                                : null)
                       ],
                     ),
                   ),

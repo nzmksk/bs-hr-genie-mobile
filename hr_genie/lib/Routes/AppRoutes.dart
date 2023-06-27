@@ -28,7 +28,7 @@ class AppRouter {
         path: PAGES.home.screenPath,
         name: PAGES.home.screenName,
         builder: (context, state) {
-          return const TestPage2();
+          return const SplashScreen();
         },
       ),
       ShellRoute(
