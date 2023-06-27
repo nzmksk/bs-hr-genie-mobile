@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
+import 'package:hr_genie/Components/CustomListTile.dart';
+import 'package:hr_genie/Components/LeaveTypeRadio.dart';
+import 'package:hr_genie/Components/SubmitButton.dart';
+import 'package:hr_genie/Components/UploadAttach.dart';
 
 class LeaveAppForm extends StatelessWidget {
   const LeaveAppForm({super.key});
@@ -11,84 +14,22 @@ class LeaveAppForm extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("New Application"),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            height: 600,
-            child: Card(
-              color: Colors.grey[200],
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    const Text("Type of leave"),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: RadioListTile(
-                            title:
-                                Text(LEAVES.annual.leaveTypeName.leaveTitle!),
-                            value: "male",
-                            groupValue: "male",
-                            onChanged: (value) {},
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: RadioListTile(
-                            title:
-                                Text(LEAVES.medical.leaveTypeName.leaveTitle!),
-                            value: "male",
-                            groupValue: "male",
-                            onChanged: (value) {},
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: RadioListTile(
-                            title:
-                                Text(LEAVES.parental.leaveTypeName.leaveTitle!),
-                            value: "male",
-                            groupValue: "male",
-                            onChanged: (value) {},
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: RadioListTile(
-                            title: Text(
-                                LEAVES.emergency.leaveTypeName.leaveTitle!),
-                            value: "male",
-                            groupValue: "male",
-                            onChanged: (value) {},
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: RadioListTile(
-                            title:
-                                Text(LEAVES.unpaid.leaveTypeName.leaveTitle!),
-                            value: "male",
-                            groupValue: "male",
-                            onChanged: (value) {},
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
+          const Text(
+            "New Application",
+          ),
+          const LeaveTypeRadio(),
+          CustomListTile(
+            title: const Text("Date"),
+            trailing: const Icon(Icons.add_circle),
+            onTap: () {},
+          ),
+          CustomListTile(
+            title: const Text("Reason"),
+            trailing: const Icon(Icons.edit),
+            onTap: () {},
+          ),
+          const UploadAttachment(),
+          SubmitButton(label: "Submit", onPressed: () {})
         ],
       ),
     );

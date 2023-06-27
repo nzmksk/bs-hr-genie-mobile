@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthCubit(),
         ),
         BlocProvider(create: (context) => UpdatePasswordCubit()),
-        BlocProvider(create: (context) => ApiServiceCubit())
+        BlocProvider(create: (context) => ApiServiceCubit()),
+        BlocProvider(create: (context) => LeaveFormCubit()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
