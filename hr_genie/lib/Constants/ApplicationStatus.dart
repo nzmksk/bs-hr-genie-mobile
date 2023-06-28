@@ -1,1 +1,1 @@
-enum AppStatus { pending, approved, rejected }
+enum AppStatus { pending, approved, rejected, canceled }

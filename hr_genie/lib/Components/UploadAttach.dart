@@ -1,18 +1,24 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class UploadAttachment extends StatelessWidget {
+class UploadAttachment extends StatefulWidget {
   const UploadAttachment({
     super.key,
   });
 
   @override
+  State<UploadAttachment> createState() => _UploadAttachmentState();
+}
+
+class _UploadAttachmentState extends State<UploadAttachment> {
+  @override
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        height: 250,
+        height: 150,
         child: InkWell(
-          onTap: () {},
+          onTap: () async {},
           child: Card(
               color: Colors.grey[200],
               child: const Center(
@@ -21,7 +27,7 @@ class UploadAttachment extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.upload_file,
-                      size: 100,
+                      size: 70,
                     ),
                     Text(
                       "Upload Your File",

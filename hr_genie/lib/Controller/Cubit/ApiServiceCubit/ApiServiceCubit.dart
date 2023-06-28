@@ -8,7 +8,9 @@ import 'package:http/http.dart' as http;
 
 class ApiServiceCubit extends Cubit<ApiServiceState> {
   ApiServiceCubit() : super(ApiServiceState.initial());
-  final String localhost = "172.20.10.12";
+  // final String localhost = "172.20.10.12";
+  final String localhost = "192.168.18.46";
+
   Future<List<Department>> fetchDepartments() async {
     final response =
         await http.get(Uri.parse('http://$localhost:2000/departments'));

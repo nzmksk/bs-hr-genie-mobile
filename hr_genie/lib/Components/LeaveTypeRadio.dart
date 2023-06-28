@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +16,10 @@ class LeaveTypeRadio extends StatefulWidget {
 }
 
 class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
+  String? _leaveType;
+  TextStyle radioTextStyle = const TextStyle(
+    fontSize: 15,
+  );
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LeaveFormCubit, LeaveFormState>(
@@ -39,15 +45,55 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                     Expanded(
                       child: Column(
                         children: [
-                          RadioType(
-                            title: LEAVES.annual.leaveTypeName.leaveTitle!,
-                            subtitle: LEAVES.annual.quota,
-                            value: TYPE.annual.values,
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              listTileTheme: const ListTileThemeData(
+                                horizontalTitleGap:
+                                    0, //here adjust based on your need
+                              ),
+                            ),
+                            child: RadioListTile(
+                              title: Text(
+                                LEAVES.annual.leaveTypeName.leaveTitle!,
+                                style: radioTextStyle,
+                              ),
+                              subtitle: Text(
+                                LEAVES.annual.quota!,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              value: TYPE.annual.values,
+                              groupValue: _leaveType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _leaveType = value;
+                                });
+                              },
+                            ),
                           ),
-                          RadioType(
-                            title: LEAVES.medical.leaveTypeName.leaveTitle!,
-                            subtitle: LEAVES.medical.quota,
-                            value: TYPE.medical.values,
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              listTileTheme: const ListTileThemeData(
+                                horizontalTitleGap:
+                                    0, //here adjust based on your need
+                              ),
+                            ),
+                            child: RadioListTile(
+                              title: Text(
+                                LEAVES.emergency.leaveTypeName.leaveTitle!,
+                                style: radioTextStyle,
+                              ),
+                              subtitle: Text(
+                                LEAVES.emergency.quota!,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              value: TYPE.emergency.values,
+                              groupValue: _leaveType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _leaveType = value;
+                                });
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -55,15 +101,55 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                     Expanded(
                       child: Column(
                         children: [
-                          RadioType(
-                            title: LEAVES.emergency.leaveTypeName.leaveTitle!,
-                            subtitle: LEAVES.emergency.quota,
-                            value: TYPE.emergency.values,
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              listTileTheme: const ListTileThemeData(
+                                horizontalTitleGap:
+                                    0, //here adjust based on your need
+                              ),
+                            ),
+                            child: RadioListTile(
+                              title: Text(
+                                LEAVES.medical.leaveTypeName.leaveTitle!,
+                                style: radioTextStyle,
+                              ),
+                              subtitle: Text(
+                                LEAVES.medical.quota!,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              value: TYPE.medical.values,
+                              groupValue: _leaveType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _leaveType = value;
+                                });
+                              },
+                            ),
                           ),
-                          RadioType(
-                            title: LEAVES.parental.leaveTypeName.leaveTitle!,
-                            subtitle: LEAVES.parental.quota,
-                            value: TYPE.parental.values,
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              listTileTheme: const ListTileThemeData(
+                                horizontalTitleGap:
+                                    0, //here adjust based on your need
+                              ),
+                            ),
+                            child: RadioListTile(
+                              title: Text(
+                                LEAVES.parental.leaveTypeName.leaveTitle!,
+                                style: radioTextStyle,
+                              ),
+                              subtitle: Text(
+                                LEAVES.parental.quota!,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              value: TYPE.parental.values,
+                              groupValue: _leaveType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _leaveType = value;
+                                });
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -73,10 +159,30 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                 Row(
                   children: [
                     Expanded(
-                      child: RadioType(
-                        title: LEAVES.unpaid.leaveTypeName.leaveTitle!,
-                        subtitle: LEAVES.unpaid.quota,
-                        value: TYPE.unpaid.values,
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          listTileTheme: const ListTileThemeData(
+                            horizontalTitleGap:
+                                0, //here adjust based on your need
+                          ),
+                        ),
+                        child: RadioListTile(
+                          title: Text(
+                            LEAVES.unpaid.leaveTypeName.leaveTitle!,
+                            style: radioTextStyle,
+                          ),
+                          subtitle: Text(
+                            LEAVES.unpaid.quota!,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          value: TYPE.unpaid.values,
+                          groupValue: _leaveType,
+                          onChanged: (value) {
+                            setState(() {
+                              _leaveType = value;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -86,50 +192,6 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
           ),
         );
       },
-    );
-  }
-}
-
-class RadioType extends StatefulWidget {
-  final String? title;
-  final String? subtitle;
-  final String? value;
-  const RadioType({super.key, this.title, this.subtitle, this.value});
-
-  @override
-  State<RadioType> createState() => _RadioTypeState();
-}
-
-class _RadioTypeState extends State<RadioType> {
-  String? _leaveType;
-  TextStyle radioTextStyle = const TextStyle(
-    fontSize: 15,
-  );
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        listTileTheme: const ListTileThemeData(
-          horizontalTitleGap: 0, //here adjust based on your need
-        ),
-      ),
-      child: RadioListTile(
-        title: Text(
-          widget.title!,
-          style: radioTextStyle,
-        ),
-        subtitle: Text(
-          widget.subtitle!,
-          style: const TextStyle(fontSize: 12),
-        ),
-        value: widget.value!,
-        groupValue: _leaveType,
-        onChanged: (value) {
-          setState(() {
-            _leaveType = value;
-          });
-        },
-      ),
     );
   }
 }
