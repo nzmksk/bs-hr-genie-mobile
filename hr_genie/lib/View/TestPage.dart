@@ -1,130 +1,144 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(MyApp());
+class FormPage extends StatefulWidget {
+  const FormPage({Key? key}) : super(key: key);
+
+  @override
+  _FormPageState createState() => _FormPageState();
 }
 
-class MyApp extends StatelessWidget {
+class _FormPageState extends State<FormPage> {
+  int currentStep = 0;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Stepper Widget ",
+          ),
+          centerTitle: true,
+        ),
+        body: Container(
+            padding: const EdgeInsets.all(20),
+            child: Stepper(
+              type: StepperType.vertical,
+              currentStep: currentStep,
+              onStepCancel: () => currentStep == 0
+                  ? null
+                  : setState(() {
+                      currentStep -= 1;
+                    }),
+              onStepContinue: () {
+                bool isLastStep = (currentStep == getSteps().length - 1);
+                if (isLastStep) {
+                  //Do something with this information
+                } else {
+                  setState(() {
+                    currentStep += 1;
+                  });
+                }
+              },
+              onStepTapped: (step) => setState(() {
+                currentStep = step;
+              }),
+              steps: getSteps(),
+            )),
+      ),
     );
   }
-}
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  String _errorMessage = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Page'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'Username',
-              ),
+  List<Step> getSteps() {
+    return <Step>[
+      Step(
+        state: currentStep > 0 ? StepState.complete : StepState.indexed,
+        isActive: currentStep >= 0,
+        title: const Text("Account Info"),
+        content: Column(
+          children: const [
+            CustomInput(
+              hint: "First Name",
+              inputBorder: OutlineInputBorder(),
             ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Password',
-              ),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            Text(
-              _errorMessage,
-              style: TextStyle(color: Colors.red),
-            ),
-            ElevatedButton(
-              onPressed: _login,
-              child: Text('Login'),
+            CustomInput(
+              hint: "Last Name",
+              inputBorder: OutlineInputBorder(),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  void _login() async {
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-
-    // Perform validation (replace with your own logic)
-    if (username.isNotEmpty && password.isNotEmpty) {
-      // Save the username in SharedPreferences
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', username);
-
-      // Navigate to the home page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-    } else {
-      setState(() {
-        _errorMessage = 'Please enter valid credentials.';
-      });
-    }
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      Step(
+        state: currentStep > 1 ? StepState.complete : StepState.indexed,
+        isActive: currentStep >= 1,
+        title: const Text("Address"),
+        content: Column(
+          children: const [
+            CustomInput(
+              hint: "City and State",
+              inputBorder: OutlineInputBorder(),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _logout,
-              child: Text('Logout'),
+            CustomInput(
+              hint: "Postal Code",
+              inputBorder: OutlineInputBorder(),
             ),
           ],
         ),
       ),
+      Step(
+        state: currentStep > 2 ? StepState.complete : StepState.indexed,
+        isActive: currentStep >= 2,
+        title: const Text("Misc"),
+        content: Column(
+          children: const [
+            CustomInput(
+              hint: "Bio",
+              inputBorder: OutlineInputBorder(),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+}
+
+class CustomInput extends StatelessWidget {
+  final ValueChanged<String>? onChanged;
+  final String? hint;
+  final InputBorder? inputBorder;
+  const CustomInput({Key? key, this.onChanged, this.hint, this.inputBorder})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: TextField(
+        onChanged: (v) => onChanged!(v),
+        decoration: InputDecoration(hintText: hint!, border: inputBorder),
+      ),
     );
   }
+}
 
-  void _logout() async {
-    // Clear the username from SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('email');
+class CustomBtn extends StatelessWidget {
+  final Function? callback;
+  final Widget? title;
+  CustomBtn({Key? key, this.title, this.callback}) : super(key: key);
 
-    // Navigate back to the login page
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => LoginPage(),
-    //   ),
-    // );
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: SizedBox(
+        width: double.infinity,
+        child: Container(
+          color: Colors.blue,
+          child: TextButton(
+            onPressed: () => callback!(),
+            child: title!,
+          ),
+        ),
+      ),
+    );
   }
 }

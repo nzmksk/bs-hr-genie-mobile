@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 enum TYPE { annual, medical, parental, emergency, unpaid }
 
 extension CategoriesString on TYPE {

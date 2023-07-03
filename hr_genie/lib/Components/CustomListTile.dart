@@ -5,17 +5,21 @@ class CustomListTile extends StatelessWidget {
   final Widget? title;
   final Widget? trailing;
   final Function()? onTap;
-  const CustomListTile({
-    super.key,
-    this.title,
-    this.trailing,
-    this.onTap,
-  });
+  final EdgeInsetsGeometry? margin;
+  final Color? color;
+  const CustomListTile(
+      {super.key,
+      this.title,
+      this.trailing,
+      this.onTap,
+      this.margin = const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      // color: color,
+      margin: margin,
       child: InkWell(
         onTap: onTap,
         customBorder:
@@ -26,7 +30,7 @@ class CustomListTile extends StatelessWidget {
           child: ListTile(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            tileColor: Colors.grey[200],
+            tileColor: color,
             title: title,
             trailing: trailing,
           ),

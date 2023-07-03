@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, avoid_print
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +67,10 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 setState(() {
                                   _leaveType = value;
                                 });
+                                context
+                                    .read<LeaveFormCubit>()
+                                    .typeOnChanged(_leaveType);
+                                print("You have chosen ${state.leaveType}");
                               },
                             ),
                           ),
@@ -92,6 +96,9 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 setState(() {
                                   _leaveType = value;
                                 });
+                                context
+                                    .read<LeaveFormCubit>()
+                                    .typeOnChanged(_leaveType);
                               },
                             ),
                           ),
@@ -123,6 +130,10 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 setState(() {
                                   _leaveType = value;
                                 });
+                                context
+                                    .read<LeaveFormCubit>()
+                                    .typeOnChanged(_leaveType);
+                                print("You have chosen ${state.leaveType}");
                               },
                             ),
                           ),
@@ -148,6 +159,10 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 setState(() {
                                   _leaveType = value;
                                 });
+                                context
+                                    .read<LeaveFormCubit>()
+                                    .typeOnChanged(_leaveType);
+                                print("You have chosen ${state.leaveType}");
                               },
                             ),
                           ),
@@ -181,6 +196,10 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                             setState(() {
                               _leaveType = value;
                             });
+                            context
+                                .read<LeaveFormCubit>()
+                                .typeOnChanged(_leaveType);
+                            print("You have chosen ${state.leaveType}");
                           },
                         ),
                       ),

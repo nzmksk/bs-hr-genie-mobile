@@ -20,22 +20,23 @@ class _UploadAttachmentState extends State<UploadAttachment> {
         child: InkWell(
           onTap: () async {},
           child: Card(
-              color: Colors.grey[200],
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.upload_file,
-                      size: 70,
-                    ),
-                    Text(
-                      "Upload Your File",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
-                ),
-              )),
+            color: Colors.grey[200],
+            child: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.file_upload,
+                    size: 50,
+                  ),
+                  Text(
+                    "Upload Your File",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ));
   }
 }

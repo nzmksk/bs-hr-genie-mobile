@@ -2,40 +2,47 @@ import 'package:flutter/material.dart';
 
 class LimitedTextField extends StatefulWidget {
   final int maxLength;
+  final Function(String) onchanged;
+  final TextEditingController controller;
 
-  const LimitedTextField({Key? key, this.maxLength = 255}) : super(key: key);
+  LimitedTextField(
+      {Key? key,
+      this.maxLength = 255,
+      required this.onchanged,
+      required this.controller})
+      : super(key: key);
 
   @override
   _LimitedTextFieldState createState() => _LimitedTextFieldState();
 }
 
 class _LimitedTextFieldState extends State<LimitedTextField> {
-  TextEditingController _controller = TextEditingController();
   int _remainingChars = 255;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_updateRemainingChars);
+    widget.controller.addListener(_updateRemainingChars);
   }
 
   void _updateRemainingChars() {
     setState(() {
-      _remainingChars = widget.maxLength - _controller.text.length;
+      _remainingChars = widget.maxLength - widget.controller.text.length;
     });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    // widget.controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: widget.onchanged,
       expands: true,
-      controller: _controller,
+      controller: widget.controller,
       maxLength: widget.maxLength,
       maxLines: null, // Allow multiline input
       decoration: InputDecoration(

@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_genie/Components/CustomListTile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/LeaveTypeRadio.dart';
-import 'package:hr_genie/Components/LimitedTextField.dart';
+import 'package:hr_genie/Components/PickDate_Reason.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/UploadAttach.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
+import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
+import 'package:intl/intl.dart';
 
 class LeaveAppForm extends StatefulWidget {
   const LeaveAppForm({super.key});
@@ -16,9 +18,13 @@ class LeaveAppForm extends StatefulWidget {
 
 class _LeaveAppFormState extends State<LeaveAppForm> {
   String? dateTitle = "Pick Date";
-  List<DateTime>? dates = [];
-  int? _selectedValue = 1;
+  int? _selectedDuration = 0;
+  int? _selectedHalf = 1;
   List<DateTime>? selectedDateList;
+
+  static String dateFormat(DateTime dateTime) {
+    return DateFormat('dd, MMMM yyyy').format(dateTime).toString();
+  }
 
   @override
   void initState() {
@@ -27,175 +33,145 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
 
   @override
   Widget build(BuildContext context) {
-    List<DateTime>? filteredDates = dates?.where((date) {
-      return date.weekday != DateTime.saturday &&
-          date.weekday != DateTime.sunday;
-    }).toList();
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            "New Application",
-          ),
-          const LeaveTypeRadio(),
-          CustomListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedValue = 1;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          _selectedValue == 1 ? Colors.blue : Colors.grey,
-                    ),
-                    child: Text('Full Day'),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 1,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedValue = 2;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          _selectedValue == 2 ? Colors.blue : Colors.grey,
-                    ),
-                    child: Text('Half Day'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _selectedValue == 1
-              ? CustomListTile(
-                  title: Text(dateTitle!),
-                  trailing: const Icon(Icons.add_circle),
-                  onTap: () async {
-                    pickFullDays(context, filteredDates);
-                  },
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+    return BlocBuilder<LeaveFormCubit, LeaveFormState>(
+      builder: (context, state) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "New Application",
+              ),
+              const LeaveTypeRadio(),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 13),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomListTile(
-                      title: Text(dateTitle!),
-                      trailing: const Icon(Icons.add_circle),
-                      onTap: () {
-                        pickFullDays(context, filteredDates);
-                      },
+                    Expanded(
+                      flex: 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.read<LeaveFormCubit>().durationSelected(
+                              1, 1); // by default half-day will be first half
+
+                          setState(() {
+                            _selectedDuration = 1;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _selectedDuration == 1
+                              ? Colors.blue
+                              : Colors.grey,
+                        ),
+                        child: const Text('Full Day'),
+                      ),
                     ),
-                    CustomListTile(
-                      title: const Text("Cajndkjad"),
-                      onTap: () {},
+                    const SizedBox(width: 10),
+                    Expanded(
+                      flex: 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.read<LeaveFormCubit>().durationSelected(
+                              2, 1); // by default half-day will be first half
+                          setState(() {
+                            _selectedDuration = 2;
+                            _selectedHalf = 1;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _selectedDuration == 2
+                              ? Colors.blue
+                              : Colors.grey,
+                        ),
+                        child: const Text('Half Day'),
+                      ),
                     ),
                   ],
                 ),
-          CustomListTile(
-            title: const Text("Reason"),
-            trailing: const Icon(Icons.edit),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 300),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              ),
+              _selectedDuration == 1 || _selectedDuration == 0
+                  ? PickDateReasonRow(
+                      dateTitle: dateTitle,
+                      isFullDay: true, // the calendar input will be range
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        PickDateReasonRow(
+                          dateTitle: dateTitle,
+                          isFullDay:
+                              false, // the calendar input only for single day
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 13),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Expanded(
-                                flex: 2,
-                                child: LimitedTextField(),
+                              Expanded(
+                                flex: 1,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    context.read<LeaveFormCubit>().durationSelected(
+                                        2,
+                                        1); // by default half-day will be first half
+
+                                    setState(() {
+                                      _selectedHalf = 1;
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _selectedHalf == 1
+                                        ? Colors.blue
+                                        : Colors.grey,
+                                  ),
+                                  child: const Text('First half'),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
                               ),
                               Expanded(
-                                  flex: 1,
-                                  child: SubmitButton(
-                                      margin: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
-                                      label: "ADD",
-                                      onPressed: () {}))
+                                flex: 1,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    context.read<LeaveFormCubit>().durationSelected(
+                                        2,
+                                        2); // by default half-day will be first half
+
+                                    setState(() {
+                                      _selectedHalf = 2;
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _selectedHalf == 2
+                                        ? Colors.blue
+                                        : Colors.grey,
+                                  ),
+                                  child: const Text('Second Half'),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ));
-                },
-              );
-            },
-          ),
-          const UploadAttachment(),
-          SubmitButton(label: "Submit", onPressed: () {})
-        ],
-      ),
-    );
-  }
-
-  Future<void> pickFullDays(
-      BuildContext context, List<DateTime>? filteredDates) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 200),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SfDateRangePicker(
-                // allowViewNavigation: true,
-                showNavigationArrow: true,
-                onSelectionChanged: (args) {
-                  if (args.value is DateTime) {
-                    print("Selected Date: ${args.value.toString()}");
-                  } else if (args.value is List<DateTime>) {
-                    print("Chosen Date: ${args.value.toString()}");
-                  }
-                },
-                enablePastDates: false,
-                monthCellStyle: monthCellStyle(),
-                monthViewSettings: const DateRangePickerMonthViewSettings(
-                  firstDayOfWeek: 1,
-                  weekendDays: [6, 7],
-                ),
-                selectionMode: DateRangePickerSelectionMode.extendableRange,
+                      ],
+                    ),
+              Text('Duration: ${state.duration ?? "No duration added"}'),
+              // Text(
+              //     'Single Date: ${DateFormat('dd, MMMM yyyy').format(state.startDate!).toString() ?? "No date added"}'),
+              Text(
+                  'How many Day: ${state.dateRange?.length ?? "No date added"}'),
+              Text('Reason: ${state.reason ?? "No reason added"}'),
+              // const UploadAttachment(),
+              const SizedBox(
+                height: 10,
               ),
-            ),
+              SubmitButton(label: "Submit", onPressed: () {})
+            ],
           ),
         );
       },
-    );
-  }
-
-  DateRangePickerMonthCellStyle monthCellStyle() {
-    return DateRangePickerMonthCellStyle(
-      blackoutDatesDecoration: BoxDecoration(
-          color: Colors.red,
-          border: Border.all(color: const Color(0xFFF44436), width: 1),
-          shape: BoxShape.circle),
-      weekendDatesDecoration: BoxDecoration(
-          color: const Color(0xFFDFDFDF),
-          border: Border.all(color: const Color(0xFFF1F1F1), width: 1),
-          shape: BoxShape.rectangle),
-      specialDatesDecoration: BoxDecoration(
-          color: Colors.green,
-          border: Border.all(color: const Color(0xFF2B732F), width: 1),
-          shape: BoxShape.circle),
-      blackoutDateTextStyle: const TextStyle(
-          color: Colors.white, decoration: TextDecoration.lineThrough),
-      specialDatesTextStyle: const TextStyle(color: Colors.white),
     );
   }
 }
