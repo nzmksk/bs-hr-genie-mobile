@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
-import 'package:hr_genie/Components/LimitedTextField.dart';
-import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:intl/intl.dart';
@@ -13,10 +11,14 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PickDateReasonRow extends StatefulWidget {
   final bool isFullDay;
+  final Color? updatedColor;
+  final dynamic Function()? addFunction;
   const PickDateReasonRow({
     super.key,
     required this.dateTitle,
     required this.isFullDay,
+    this.addFunction,
+    this.updatedColor,
   });
 
   final String? dateTitle;
@@ -73,7 +75,7 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                             .setRangeDate(selectedDates);
                         print("Selected Date: $selectedDates");
                         print("Start Date: ${_startDate}");
-                        print("Start Date: ${_endDate}");
+                        print("End Date: ${_endDate}");
                       }
                     },
                     enablePastDates: false,
@@ -114,6 +116,8 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
     //     PickerDateRange(today, today.add(const Duration(days: 2)));
     // selectedDates = getSelectedDates(today, today.add(const Duration(days: 3)));
     super.initState();
+    context.read<LeaveFormCubit>().setDateTime(null);
+    context.read<LeaveFormCubit>().setRangeDate(null);
   }
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {
@@ -146,153 +150,33 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
       return date.weekday != DateTime.saturday &&
           date.weekday != DateTime.sunday;
     }).toList();
-    TextEditingController reasonController = TextEditingController();
     return BlocBuilder<LeaveFormCubit, LeaveFormState>(
       builder: (context, state) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 1,
-              child: CustomListTile(
-                margin: const EdgeInsets.fromLTRB(10, 1, 1, 1),
-                title: Text(widget.dateTitle!),
-                trailing: const Icon(Icons.date_range),
-                onTap: () async {
-                  pickFullDays(context, filteredDates);
-                },
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: CustomListTile(
-                color: state.reason != null ? Colors.indigo : Colors.grey[200],
-                margin: const EdgeInsets.fromLTRB(1, 1, 10, 1),
-                title: Text(
-                  "Reason",
-                  style: TextStyle(
-                      color:
-                          state.reason != null ? Colors.white : Colors.black),
-                ),
-                trailing: Icon(
-                  Icons.edit,
-                  color: state.reason != null ? Colors.white : Colors.black,
-                ),
-                onTap: () {
-                  insertReason(context, reasonController);
-                },
-              ),
-            )
-          ],
+        return CustomListTile(
+          color: widget.updatedColor,
+          margin: const EdgeInsets.fromLTRB(10, 1, 1, 1),
+          title: Text(
+            widget.dateTitle!,
+            style: TextStyle(color: checkTextColor(state)),
+          ),
+          trailing: Icon(
+            Icons.date_range,
+            color: checkTextColor(state),
+          ),
+          onTap: () async {
+            await pickFullDays(context, filteredDates);
+            widget.addFunction;
+          },
         );
       },
     );
   }
 
-  Future<dynamic> insertReason(
-      BuildContext context, TextEditingController reasonController) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return BlocBuilder<LeaveFormCubit, LeaveFormState>(
-          builder: (context, state) {
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 300),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: LimitedTextField(
-                          onchanged: (value) {
-                            context.read<LeaveFormCubit>().inputChecking(value);
-                          },
-                          controller: reasonController,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: SubmitButton(
-                              textColor: Colors.grey.shade600,
-                              buttonColor:
-                                  MaterialStateProperty.all(Colors.white),
-                              margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                              label: "CANCEL",
-                              onPressed: () {
-                                setState(() {
-                                  reasonController.clear();
-                                });
-
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: state.reason == null
-                                ? SubmitButton(
-                                    margin:
-                                        const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                    label: "ADD",
-                                    onPressed: state.isValidReason
-                                        ? () {
-                                            context
-                                                .read<LeaveFormCubit>()
-                                                .submitReason(reasonController
-                                                    .text
-                                                    .trim());
-
-                                            Navigator.pop(context);
-                                          }
-                                        : null)
-                                : state.isValidReason
-                                    ? SubmitButton(
-                                        buttonColor: MaterialStateProperty.all(
-                                            Colors.red),
-                                        margin: const EdgeInsets.fromLTRB(
-                                            0, 10, 0, 0),
-                                        label: "REMOVE",
-                                        onPressed: () {
-                                          context
-                                              .read<LeaveFormCubit>()
-                                              .resetReason();
-                                          Navigator.pop(context);
-                                        })
-                                    : SubmitButton(
-                                        margin: const EdgeInsets.fromLTRB(
-                                            0, 10, 0, 0),
-                                        label: "EDIT",
-                                        onPressed: state.isValidReason
-                                            ? () {
-                                                context
-                                                    .read<LeaveFormCubit>()
-                                                    .submitReason(
-                                                        reasonController.text
-                                                            .trim());
-
-                                                Navigator.pop(context);
-                                              }
-                                            : null),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+  Color checkTextColor(LeaveFormState state) {
+    if (state.duration == "Full-Day") {
+      return state.dateRange != null ? Colors.white : Colors.black;
+    } else {
+      return state.startDate != null ? Colors.white : Colors.black;
+    }
   }
 }

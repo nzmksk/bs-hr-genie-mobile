@@ -18,28 +18,21 @@ class LeaveTypeRadio extends StatefulWidget {
 class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
   String? _leaveType;
   TextStyle radioTextStyle = const TextStyle(
-    fontSize: 15,
+    fontSize: 12,
   );
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LeaveFormCubit, LeaveFormState>(
       builder: (context, state) {
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 5),
           height: 260,
           child: Card(
             color: Colors.grey[200],
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                    width: 200,
-                    margin: const EdgeInsets.fromLTRB(15, 0, 150, 0),
-                    // padding: const EdgeInsets.all(5),
-                    child: const Text(
-                      "Type of leave",
-                      style: TextStyle(fontSize: 20),
-                    )),
                 Row(
                   children: [
                     Expanded(
@@ -70,7 +63,6 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 context
                                     .read<LeaveFormCubit>()
                                     .typeOnChanged(_leaveType);
-                                print("You have chosen ${state.leaveType}");
                               },
                             ),
                           ),
@@ -133,7 +125,6 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 context
                                     .read<LeaveFormCubit>()
                                     .typeOnChanged(_leaveType);
-                                print("You have chosen ${state.leaveType}");
                               },
                             ),
                           ),
@@ -162,7 +153,6 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 context
                                     .read<LeaveFormCubit>()
                                     .typeOnChanged(_leaveType);
-                                print("You have chosen ${state.leaveType}");
                               },
                             ),
                           ),
@@ -199,7 +189,6 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                             context
                                 .read<LeaveFormCubit>()
                                 .typeOnChanged(_leaveType);
-                            print("You have chosen ${state.leaveType}");
                           },
                         ),
                       ),

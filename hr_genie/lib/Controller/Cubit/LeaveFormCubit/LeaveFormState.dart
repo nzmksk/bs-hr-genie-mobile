@@ -26,10 +26,18 @@ class LeaveFormState extends Equatable {
   final String? approvedBy;
   final String? rejectReason;
   final bool isValidReason;
+  final bool isValidLeaveType;
+  final bool firstStepDone;
+  final bool secStepDone;
+  final bool thirdStepDone;
+  final bool dateStored;
   final LeaveStatus? status;
 
   const LeaveFormState(
-      {this.leaveType,
+      {this.firstStepDone = false,
+      this.secStepDone = false,
+      this.thirdStepDone = false,
+      this.leaveType,
       this.reason,
       this.attachment,
       this.approvedBy,
@@ -39,6 +47,8 @@ class LeaveFormState extends Equatable {
       this.startDate,
       this.dateRange,
       this.isValidReason = false,
+      this.isValidLeaveType = false,
+      this.dateStored = false,
       this.status});
 
   factory LeaveFormState.initial() {
@@ -47,8 +57,8 @@ class LeaveFormState extends Equatable {
 
   LeaveFormState copyWith({
     String? leaveType,
-    DateTime? startDate,
-    List<DateTime>? dateRange,
+    ValueGetter<DateTime?>? startDate,
+    ValueGetter<List<DateTime>?>? dateRange,
     String? duration,
     ValueGetter<String?>? reason,
     Uint8List? attachment,
@@ -56,12 +66,17 @@ class LeaveFormState extends Equatable {
     String? approvedBy,
     String? rejectReason,
     bool? isValidReason,
+    bool? isValidLeaveType,
+    bool? firstStepDone,
+    bool? secStepDone,
+    bool? thirdStepDone,
+    bool? dateStored,
     LeaveStatus? status,
   }) {
     return LeaveFormState(
         leaveType: leaveType ?? this.leaveType,
-        startDate: startDate ?? this.startDate,
-        dateRange: dateRange ?? this.dateRange,
+        startDate: startDate != null ? startDate() : this.startDate,
+        dateRange: dateRange != null ? dateRange() : this.dateRange,
         duration: duration ?? this.duration,
         reason: reason != null ? reason() : this.reason,
         attachment: attachment ?? this.attachment,
@@ -69,10 +84,13 @@ class LeaveFormState extends Equatable {
         approvedBy: approvedBy ?? this.approvedBy,
         rejectReason: rejectReason ?? this.rejectReason,
         isValidReason: isValidReason ?? this.isValidReason,
+        isValidLeaveType: isValidLeaveType ?? this.isValidLeaveType,
+        firstStepDone: firstStepDone ?? this.firstStepDone,
+        secStepDone: secStepDone ?? this.secStepDone,
+        thirdStepDone: thirdStepDone ?? this.thirdStepDone,
+        dateStored: dateStored ?? this.dateStored,
         status: status ?? this.status);
   }
-
-  bool get reasonIsNotNull => reason!.isNotEmpty;
 
   @override
   List<Object?> get props => [
@@ -86,6 +104,11 @@ class LeaveFormState extends Equatable {
         approvedBy,
         rejectReason,
         isValidReason,
+        isValidLeaveType,
+        firstStepDone,
+        secStepDone,
+        thirdStepDone,
+        dateStored,
         status
       ];
 }

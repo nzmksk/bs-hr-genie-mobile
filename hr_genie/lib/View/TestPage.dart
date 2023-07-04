@@ -20,30 +20,33 @@ class _FormPageState extends State<FormPage> {
           centerTitle: true,
         ),
         body: Container(
-            padding: const EdgeInsets.all(20),
-            child: Stepper(
-              type: StepperType.vertical,
-              currentStep: currentStep,
-              onStepCancel: () => currentStep == 0
-                  ? null
-                  : setState(() {
-                      currentStep -= 1;
-                    }),
-              onStepContinue: () {
-                bool isLastStep = (currentStep == getSteps().length - 1);
-                if (isLastStep) {
-                  //Do something with this information
-                } else {
-                  setState(() {
-                    currentStep += 1;
-                  });
-                }
-              },
-              onStepTapped: (step) => setState(() {
+          padding: const EdgeInsets.all(20),
+          child: Stepper(
+            type: StepperType.vertical,
+            currentStep: currentStep,
+            onStepCancel: () => currentStep == 0
+                ? null
+                : setState(() {
+                    currentStep -= 1;
+                  }),
+            onStepContinue: () {
+              bool isLastStep = (currentStep == getSteps().length - 1);
+              if (isLastStep) {
+                //Do something with this information
+              } else {
+                setState(() {
+                  currentStep += 1;
+                });
+              }
+            },
+            onStepTapped: (step) => setState(
+              () {
                 currentStep = step;
-              }),
-              steps: getSteps(),
-            )),
+              },
+            ),
+            steps: getSteps(),
+          ),
+        ),
       ),
     );
   }

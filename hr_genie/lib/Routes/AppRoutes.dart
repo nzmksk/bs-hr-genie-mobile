@@ -29,7 +29,7 @@ class AppRouter {
         path: PAGES.home.screenPath,
         name: PAGES.home.screenName,
         builder: (context, state) {
-          return const FormPage();
+          return const SplashScreen();
         },
       ),
       ShellRoute(

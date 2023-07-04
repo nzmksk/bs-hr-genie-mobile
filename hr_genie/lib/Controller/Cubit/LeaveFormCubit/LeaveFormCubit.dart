@@ -6,19 +6,25 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
   LeaveFormCubit() : super(LeaveFormState.initial());
 
   void typeOnChanged(String? type) {
-    emit(state.copyWith(leaveType: type));
+    emit(state.copyWith(firstStepDone: false));
+    if (type == null) {
+      emit(state.copyWith(leaveType: "initial", isValidLeaveType: false));
+    } else {
+      emit(state.copyWith(leaveType: type, isValidLeaveType: true));
+    }
+    print("Running type changed: ${state.leaveType}");
   }
 
   void inputChecking(String reason) {
     if (!RegExp(r"\s").hasMatch(reason) && reason.isNotEmpty) {
       emit(state.copyWith(isValidReason: true));
-    } else if (reason.isEmpty) {
+    } else {
       emit(state.copyWith(isValidReason: false));
     }
   }
 
   void submitReason(String reason) {
-    emit(state.copyWith(reason: () => reason));
+    emit(state.copyWith(reason: () => reason, isValidReason: false));
   }
 
   void resetReason() {
@@ -38,11 +44,23 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
     }
   }
 
+  void firstStepDone() => emit(state.copyWith(firstStepDone: true));
+  void secStepDone() => emit(state.copyWith(secStepDone: true));
+  void thirdStepDone() => emit(state.copyWith(thirdStepDone: true));
+
   void setDateTime(DateTime? startDate) {
-    emit(state.copyWith(startDate: startDate));
+    if (startDate == null) {
+      emit(state.copyWith(startDate: () => null));
+    } else {
+      emit(state.copyWith(startDate: () => startDate));
+    }
   }
 
   void setRangeDate(List<DateTime>? dateRange) {
-    emit(state.copyWith(dateRange: dateRange));
+    if (dateRange == null) {
+      emit(state.copyWith(dateRange: () => null));
+    } else {
+      emit(state.copyWith(dateRange: () => dateRange));
+    }
   }
 }
