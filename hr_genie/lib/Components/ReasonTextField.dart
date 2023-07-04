@@ -18,21 +18,21 @@ class _ReasonFieldState extends State<ReasonField> {
 
   TextEditingController reasonController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _focus.addListener(() {
-      reasonController.clear();
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // _focus.addListener(() {
+  //   //   reasonController.clear();
+  //   // });
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _focus.removeListener(() {
-      reasonController.clear();
-    });
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   // _focus.removeListener(() {
+  //   //   reasonController.clear();
+  //   // });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +60,6 @@ class _ReasonFieldState extends State<ReasonField> {
 
   Future<dynamic> insertReason(
       BuildContext context, TextEditingController reasonController) {
-    setState(() {
-      reasonController.clear();
-    });
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -79,7 +76,6 @@ class _ReasonFieldState extends State<ReasonField> {
                       Expanded(
                         flex: 2,
                         child: LimitedTextField(
-                          focus: _focus,
                           onchanged: (value) {
                             context.read<LeaveFormCubit>().inputChecking(value);
                           },
@@ -90,7 +86,7 @@ class _ReasonFieldState extends State<ReasonField> {
                         height: 10,
                       ),
                       Text(
-                        "Once you add a reason, you can remove by tap on remove button without filling the field or you can edit by filling the text field and tap on edit",
+                        "Add a reason by filling the field and tapping Add, remove by tapping Remove without filling, or edit by filling a new reason and tapping Edit.",
                         style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                       ),
                       const SizedBox(
@@ -108,10 +104,7 @@ class _ReasonFieldState extends State<ReasonField> {
                               margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                               label: "CANCEL",
                               onPressed: () {
-                                setState(() {
-                                  reasonController.clear();
-                                });
-
+                                reasonController.clear();
                                 Navigator.pop(context);
                               },
                             ),
@@ -120,9 +113,13 @@ class _ReasonFieldState extends State<ReasonField> {
                             width: 10,
                           ),
                           Expanded(
-                              flex: 1,
-                              child: reasonModify(
-                                  state, context, reasonController)),
+                            flex: 1,
+                            child: reasonModify(
+                              state,
+                              context,
+                              reasonController,
+                            ),
+                          ),
                         ],
                       )
                     ],
@@ -148,10 +145,10 @@ class _ReasonFieldState extends State<ReasonField> {
                         .read<LeaveFormCubit>()
                         .submitReason(reasonController.text.trim());
 
-                    Navigator.pop(context);
                     setState(() {
                       reasonController.clear();
                     });
+                    Navigator.pop(context);
                   }
                 : null)
         : state.isValidReason
@@ -163,10 +160,10 @@ class _ReasonFieldState extends State<ReasonField> {
                       .read<LeaveFormCubit>()
                       .submitReason(reasonController.text.trim());
 
-                  Navigator.pop(context);
                   setState(() {
                     reasonController.clear();
                   });
+                  Navigator.pop(context);
                 })
             : SubmitButton(
                 buttonColor: MaterialStateProperty.all(Colors.red),
@@ -174,10 +171,10 @@ class _ReasonFieldState extends State<ReasonField> {
                 label: "REMOVE",
                 onPressed: () {
                   context.read<LeaveFormCubit>().resetReason();
-                  Navigator.pop(context);
                   setState(() {
                     reasonController.clear();
                   });
+                  Navigator.pop(context);
                 });
   }
 }

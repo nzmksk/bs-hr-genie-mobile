@@ -35,7 +35,8 @@ class _LimitedTextFieldState extends State<LimitedTextField> {
 
   @override
   void dispose() {
-    // widget.controller.dispose();
+    widget.controller.removeListener(_updateRemainingChars);
+    // widget.controller.dispose();s
     super.dispose();
   }
 
