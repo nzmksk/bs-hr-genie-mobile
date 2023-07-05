@@ -22,35 +22,37 @@ class AuthCubit extends Cubit<AuthState> {
 
   void emailChanged(String value) {
     bool emailValid = EmailValidator.validate(value);
-    emit(state.copyWith(validPass: true));
+    emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
     if (emailValid) {
       emit(state.copyWith(
           email: value,
           validEmail: true,
-          status: AuthStatus.initial,
+          status: AuthStatus.notLogged,
           loading: true));
     } else {
       emit(state.copyWith(
-          email: value, validEmail: false, status: AuthStatus.initial));
+          email: value, validEmail: false, status: AuthStatus.notLogged));
     }
   }
 
   void passwordChanged(String value) {
     if (value == "") {
-      emit(state.copyWith(validPass: true));
+      emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
     } else {
-      emit(state.copyWith(password: value, status: AuthStatus.initial));
+      emit(state.copyWith(password: value, status: AuthStatus.notLogged));
     }
   }
 
   void signIn(String email, String password, BuildContext context) async {
+    emit(state.copyWith(status: AuthStatus.loading));
+    // await Future.delayed(Duration(seconds: 3));
     if (email == "test@gmail.com" && password == "123456") {
       AppRouter.router.go(PAGES.leave.screenPath);
       emit(state.copyWith(
           isExist: true,
           validPass: true,
           validEmail: true,
-          status: AuthStatus.success));
+          status: AuthStatus.loggedIn));
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('email', state.email);
     } else if (email != "test@gmail.com") {
@@ -66,7 +68,16 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void signOut(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('email');
+    try {
+      emit(state.copyWith(email: "", password: "", status: AuthStatus.loading));
+      // await Future.delayed(const Duration(seconds: 2));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('email');
+      emit(state.copyWith(status: AuthStatus.notLogged));
+    } catch (e) {
+      emit(state.copyWith(status: AuthStatus.error));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
   }
 }
