@@ -11,12 +11,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
   Future<bool> isLogged() async {
+    emit(state.copyWith(status: AuthStatus.loading));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
     if (email != null) {
       print("You Logged as $email");
       return true;
     }
+    emit(state.copyWith(status: AuthStatus.notLogged));
     return false;
   }
 
@@ -68,8 +70,8 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void signOut(BuildContext context) async {
+    emit(state.copyWith(email: "", password: "", status: AuthStatus.loading));
     try {
-      emit(state.copyWith(email: "", password: "", status: AuthStatus.loading));
       // await Future.delayed(const Duration(seconds: 2));
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('email');

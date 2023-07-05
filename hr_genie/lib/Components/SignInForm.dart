@@ -172,10 +172,12 @@ class _SigninFormState extends State<SigninForm> {
             ],
           ));
         } else if (state.status == AuthStatus.loading) {
+          print("status: ${state.status}");
           return const Center(child: CircularProgressIndicator());
         } else if (state.status == AuthStatus.error) {
           return const Center(child: Text("ERORR"));
         } else {
+          print("status: ${state.status}");
           return const Center(
             child: CircularProgressIndicator(),
           );

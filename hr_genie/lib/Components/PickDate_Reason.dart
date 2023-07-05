@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
+import 'package:hr_genie/Components/SubmitButton.dart';
+import 'package:hr_genie/Constants/LeaveDuration.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:intl/intl.dart';
@@ -51,46 +53,105 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
   Future<void> pickFullDays(
       BuildContext context, List<DateTime>? filteredDates) {
     return showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return BlocBuilder<LeaveFormCubit, LeaveFormState>(
           builder: (context, state) {
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 200),
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 160),
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: SfDateRangePicker(
-                    controller: _controller,
-                    allowViewNavigation: true,
-                    showNavigationArrow: true,
-                    onSelectionChanged: (args) {
-                      if (args.value is DateTime) {
-                        print("Selected Date: ${args.value.toString()}");
-                        context.read<LeaveFormCubit>().setDateTime(args.value);
-                      } else {
-                        selectionChanged(args);
-                        context
-                            .read<LeaveFormCubit>()
-                            .setRangeDate(selectedDates);
-                        print("Selected Date: $selectedDates");
-                        print("Start Date: ${_startDate}");
-                        print("End Date: ${_endDate}");
-                      }
-                    },
-                    enablePastDates: false,
-                    monthCellStyle: monthCellStyle(),
-                    monthViewSettings: const DateRangePickerMonthViewSettings(
-                      firstDayOfWeek: 1,
-                      weekendDays: [6, 7],
-                      enableSwipeSelection: true,
-                    ),
-                    toggleDaySelection: true,
-                    extendableRangeSelectionDirection:
-                        ExtendableRangeSelectionDirection.forward,
-                    selectionMode: widget.isFullDay
-                        ? DateRangePickerSelectionMode.range
-                        : DateRangePickerSelectionMode.single,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SfDateRangePicker(
+                        controller: _datePickerController,
+                        allowViewNavigation: true,
+                        showNavigationArrow: true,
+                        onSelectionChanged: (args) {
+                          if (args.value is DateTime) {
+                            // selectionChanged(args, state.duration);
+                            print("Selected Date: ${args.value.toString()}");
+                            context
+                                .read<LeaveFormCubit>()
+                                .setDateTime(args.value);
+                          } else {
+                            selectionChanged(args);
+                            print("START: $start END $end");
+                            context
+                                .read<LeaveFormCubit>()
+                                .setRangeDate(start, end);
+                            // print("Selected Date: $selectedDates");
+                            print(
+                                "Start Date: ${_startDate} = ${state.startDate}");
+                            print("End Date: ${_endDate} = ${state.endDate}");
+                          }
+                        },
+                        enablePastDates: false,
+                        monthCellStyle: monthCellStyle(),
+                        monthViewSettings:
+                            const DateRangePickerMonthViewSettings(
+                          firstDayOfWeek: 1,
+                          weekendDays: [6, 7],
+                          enableSwipeSelection: true,
+                        ),
+                        toggleDaySelection: true,
+                        extendableRangeSelectionDirection:
+                            ExtendableRangeSelectionDirection.forward,
+                        selectionMode: widget.isFullDay
+                            ? DateRangePickerSelectionMode.range
+                            : DateRangePickerSelectionMode.single,
+                      ),
+                      Text("From: ${state.startDate} to ${state.endDate}"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: SubmitButton(
+                                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                textColor: Colors.black,
+                                buttonColor:
+                                    MaterialStateProperty.all(Colors.white),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  context
+                                      .read<LeaveFormCubit>()
+                                      .setDateTime(null);
+                                  context
+                                      .read<LeaveFormCubit>()
+                                      .setRangeDate(null, null);
+                                  _datePickerController.selectedRange =
+                                      const PickerDateRange(null, null);
+                                },
+                                label: "Back"),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: SubmitButton(
+                                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                onPressed: state.startDate == null
+                                    ? null
+                                    : () {
+                                        setState(() {
+                                          widget.addFunction;
+                                          // _datePickerController.clear();
+                                          _datePickerController.selectedRange =
+                                              PickerDateRange(state.startDate,
+                                                  state.endDate);
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                label: "Proceed"),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -102,8 +163,10 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
   }
 
   late String _startDate, _endDate;
-  final DateRangePickerController _controller = DateRangePickerController();
-  List<DateTime> selectedDates = [];
+  late DateTime start, end;
+  final DateRangePickerController _datePickerController =
+      DateRangePickerController();
+  // List<DateTime> selectedDates = [];
 
   @override
   void initState() {
@@ -112,12 +175,11 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
     _endDate = DateFormat('dd, MMMM yyyy')
         .format(today.add(const Duration(days: 2)))
         .toString();
-    // _controller.selectedRange =
-    //     PickerDateRange(today, today.add(const Duration(days: 2)));
+    _datePickerController.selectedRange = const PickerDateRange(null, null);
     // selectedDates = getSelectedDates(today, today.add(const Duration(days: 3)));
     super.initState();
     context.read<LeaveFormCubit>().setDateTime(null);
-    context.read<LeaveFormCubit>().setRangeDate(null);
+    context.read<LeaveFormCubit>().setRangeDate(null, null);
   }
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {
@@ -127,10 +189,74 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
       _endDate = DateFormat('dd, MMMM yyyy')
           .format(args.value.endDate ?? args.value.startDate)
           .toString();
-      selectedDates =
-          getSelectedDates(args.value.startDate, args.value.endDate);
+      start = args.value.startDate;
+      end = args.value.endDate ?? args.value.startDate;
     });
   }
+
+  // void selectionChanged(
+  //     DateRangePickerSelectionChangedArgs args, String? duration) {
+  //   setState(() {
+  //     _startDate =
+  //         DateFormat('dd, MMMM yyyy').format(args.value.startDate).toString();
+  //     _endDate = DateFormat('dd, MMMM yyyy')
+  //         .format(args.value.endDate ?? args.value.startDate)
+  //         .toString();
+
+  //     // if (duration == LeaveDuration.fullDay.value) {
+  //     //   print("Duration is $duration");
+  //     start = DateTime(
+  //       args.value.startDate.year,
+  //       args.value.startDate.month,
+  //       args.value.startDate.day,
+  //       00, // Set specific start time hour
+  //       00, // Set specific start time minute
+  //     );
+  //     end = DateTime(
+  //       args.value.endDate?.year ?? args.value.startDate.year,
+  //       args.value.endDate?.month ?? args.value.startDate.month,
+  //       args.value.endDate?.day ?? args.value.startDate.day,
+  //       00, // Set specific end time hour
+  //       00, // Set specific end time minute
+  //     );
+  //     // } else if (duration == LeaveDuration.firstHalf.value) {
+  //     //   print("Duration is $duration");
+
+  //     //   start = DateTime(
+  //     //     args.value.startDate.year,
+  //     //     args.value.startDate.month,
+  //     //     args.value.startDate.day,
+  //     //     09, // Set specific start time hour
+  //     //     00, // Set specific start time minute
+  //     //   );
+  //     //   end = DateTime(
+  //     //     args.value.endDate?.year ?? args.value.startDate.year,
+  //     //     args.value.endDate?.month ?? args.value.startDate.month,
+  //     //     args.value.endDate?.day ?? args.value.startDate.day,
+  //     //     13, // Set specific end time hour
+  //     //     00, // Set specific end time minute
+  //     //   );
+  //     // } else {
+  //     //   print("Duration is $duration");
+
+  //     //   start = DateTime(
+  //     //     args.value.startDate.year,
+  //     //     args.value.startDate.month,
+  //     //     args.value.startDate.day,
+  //     //     14, // Set specific start time hour
+  //     //     00, // Set specific start time minute
+  //     //   );
+  //     //   end = DateTime(
+  //     //     args.value.endDate?.year ?? args.value.startDate.year,
+  //     //     args.value.endDate?.month ?? args.value.startDate.month,
+  //     //     args.value.endDate?.day ?? args.value.startDate.day,
+  //     //     18, // Set specific end time hour
+  //     //     00, // Set specific end time minute
+  //     //   );
+  //     // }
+  //     // Set specific time for start and end dates
+  //   });
+  // }
 
   List<DateTime> getSelectedDates(DateTime startDate, DateTime? endDate) {
     final List<DateTime> dates = [];
@@ -174,7 +300,9 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
 
   Color checkTextColor(LeaveFormState state) {
     if (state.duration == "Full-Day") {
-      return state.dateRange != null ? Colors.white : Colors.black;
+      return state.startDate != null && state.endDate != null
+          ? Colors.white
+          : Colors.black;
     } else {
       return state.startDate != null ? Colors.white : Colors.black;
     }

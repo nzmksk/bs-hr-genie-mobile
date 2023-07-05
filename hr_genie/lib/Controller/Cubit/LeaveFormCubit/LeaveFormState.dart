@@ -3,8 +3,6 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hr_genie/Constants/ApplicationStatus.dart';
-import 'package:hr_genie/Constants/LeaveDuration.dart';
-import 'package:hr_genie/Constants/LeaveCategories.dart';
 
 enum LeaveStatus { initial, loading, sent, error }
 
@@ -18,6 +16,7 @@ extension ParseToString on Duration {
 class LeaveFormState extends Equatable {
   final String? leaveType;
   final DateTime? startDate;
+  final DateTime? endDate;
   final List<DateTime>? dateRange;
   final String? duration;
   final String? reason;
@@ -45,6 +44,7 @@ class LeaveFormState extends Equatable {
       this.appStatus = AppStatus.pending,
       this.duration,
       this.startDate,
+      this.endDate,
       this.dateRange,
       this.isValidReason = false,
       this.isValidLeaveType = false,
@@ -58,6 +58,7 @@ class LeaveFormState extends Equatable {
   LeaveFormState copyWith({
     String? leaveType,
     ValueGetter<DateTime?>? startDate,
+    ValueGetter<DateTime?>? endDate,
     ValueGetter<List<DateTime>?>? dateRange,
     String? duration,
     ValueGetter<String?>? reason,
@@ -76,6 +77,7 @@ class LeaveFormState extends Equatable {
     return LeaveFormState(
         leaveType: leaveType ?? this.leaveType,
         startDate: startDate != null ? startDate() : this.startDate,
+        endDate: endDate != null ? endDate() : this.endDate,
         dateRange: dateRange != null ? dateRange() : this.dateRange,
         duration: duration ?? this.duration,
         reason: reason != null ? reason() : this.reason,
@@ -96,6 +98,7 @@ class LeaveFormState extends Equatable {
   List<Object?> get props => [
         leaveType,
         startDate,
+        endDate,
         dateRange,
         duration,
         reason,

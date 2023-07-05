@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Components/LeaveFormSummary.dart';
 import 'package:hr_genie/Components/LeaveTypeRadio.dart';
 import 'package:hr_genie/Components/PickDate_Reason.dart';
 import 'package:hr_genie/Components/ReasonTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/UploadAttach.dart';
-import 'package:hr_genie/Constants/LeaveCategories.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:intl/intl.dart';
@@ -41,15 +41,27 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   Widget build(BuildContext context) {
     return BlocConsumer<LeaveFormCubit, LeaveFormState>(
       listener: (context, state) {
-        if (state.leaveType == TYPE.parental.values) {
-          // context.read<LeaveFormCubit>().
-        } else if (currentStep == 0) {
-          _selectedDuration == 0;
+        if (currentStep == 0) {
+          _selectedDuration = 0;
           context.read<LeaveFormCubit>().setDateTime(null);
-          context.read<LeaveFormCubit>().setRangeDate(null);
+          context.read<LeaveFormCubit>().setRangeDate(null, null);
         } else if (currentStep == 1) {
-          context.read<LeaveFormCubit>().setDateTime(null);
-          context.read<LeaveFormCubit>().setRangeDate(null);
+          context.read<LeaveFormCubit>().firstStepDone();
+          print("Step 1 : Done");
+          // context.read<LeaveFormCubit>().setDateTime(null);
+          // context.read<LeaveFormCubit>().setRangeDate(null, null);
+        } else if (currentStep == 2) {
+          context.read<LeaveFormCubit>().secStepDone();
+          print("Step 2 : Done");
+          if (state.reason != null) {
+            context.read<LeaveFormCubit>().thirdStepDone();
+            print("Step 3 : Done");
+          }
+        }
+        if (state.startDate != null && currentStep == 1) {
+          setState(() {
+            currentStep == 2;
+          });
         }
       },
       builder: (context, state) {
@@ -61,16 +73,10 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                 // color: Colors.red,
                 height: 230.0,
                 alignment: Alignment.center,
-                child: Column(
+                child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                        'Leave Type: ${state.leaveType == "initial" ? "No leave added" : state.leaveType}'),
-                    Text('Duration: ${state.duration ?? "No duration added"}'),
-                    Text('Single Date: ${state.startDate ?? "No date added"}'),
-                    Text(
-                        'How many Day: ${state.dateRange?.length ?? "No date added"}'),
-                    Text('Reason: ${state.reason ?? "No reason added"}'),
+                    LeaveFormSummary(),
                   ],
                 ),
               ),
@@ -88,6 +94,11 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                   onStepTapped: (step) => setState(
                     () {
                       if (step > currentStep) return;
+                      if (currentStep == 2 && state.startDate != null) {
+                        final leave = context.read<LeaveFormCubit>();
+                        leave.setDateTime(null);
+                        leave.setRangeDate(null, null);
+                      }
                       currentStep = step;
                     },
                   ),
@@ -171,11 +182,11 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
         title: const Text("Choose Date"),
         content: BlocConsumer<LeaveFormCubit, LeaveFormState>(
           listener: (context, state) {
-            if (state.dateRange != null || state.startDate != null) {
-              setState(() {
+            setState(() {
+              if (state.startDate != null && state.endDate != null) {
                 currentStep = 2;
-              });
-            }
+              }
+            });
           },
           builder: (context, state) {
             return Column(
@@ -240,9 +251,7 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                       )
                     : PickDateReasonRow(
                         addFunction: () {
-                          setState(() {
-                            currentStep = 2;
-                          });
+                          currentStep = 2;
                         },
                         updatedColor: checkTileColor(state),
                         dateTitle: "Pick one date",
@@ -281,7 +290,9 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
 
   Color? checkTileColor(LeaveFormState state) {
     if (state.duration == "Full-Day") {
-      return state.dateRange != null ? Colors.indigo : Colors.grey[400];
+      return state.startDate != null && state.endDate != null
+          ? Colors.indigo
+          : Colors.grey[400];
     } else {
       return state.startDate != null ? Colors.indigo : Colors.grey[400];
     }

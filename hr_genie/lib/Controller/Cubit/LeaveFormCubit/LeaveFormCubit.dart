@@ -16,7 +16,7 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
   }
 
   void inputChecking(String reason) {
-    if (!RegExp(r"\s").hasMatch(reason) && reason.isNotEmpty) {
+    if (reason.isNotEmpty) {
       emit(state.copyWith(isValidReason: true));
     } else {
       emit(state.copyWith(isValidReason: false));
@@ -56,11 +56,14 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
     }
   }
 
-  void setRangeDate(List<DateTime>? dateRange) {
-    if (dateRange == null) {
-      emit(state.copyWith(dateRange: () => null));
+  void setRangeDate(DateTime? startDate, endDate) {
+    if (startDate == null && endDate == null) {
+      emit(state.copyWith(startDate: () => null, endDate: () => null));
+      print("Running null placement");
     } else {
-      emit(state.copyWith(dateRange: () => dateRange));
+      emit(state.copyWith(startDate: () => startDate, endDate: () => endDate));
+      print(
+          "VALUE placement, startDat: ${state.startDate}, endDate: ${state.endDate}");
     }
   }
 }

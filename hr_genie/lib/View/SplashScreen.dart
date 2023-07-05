@@ -26,14 +26,6 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  //  Future<String> checkLog()async{
-  //   var isItin = context.read<AuthCubit>().isLogged();
-
-  //   if(isItin){
-
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(

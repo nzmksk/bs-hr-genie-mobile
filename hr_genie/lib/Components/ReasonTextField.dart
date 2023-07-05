@@ -61,6 +61,7 @@ class _ReasonFieldState extends State<ReasonField> {
   Future<dynamic> insertReason(
       BuildContext context, TextEditingController reasonController) {
     return showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return BlocBuilder<LeaveFormCubit, LeaveFormState>(

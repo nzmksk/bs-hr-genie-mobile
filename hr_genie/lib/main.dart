@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
@@ -9,7 +10,6 @@ import 'package:hr_genie/Routes/AppRoutes.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await initialization(null);
   runApp(const MyApp());
 }
 
@@ -42,7 +42,9 @@ class MyApp extends StatelessWidget {
         ).copyWith(
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: <TargetPlatform, PageTransitionsBuilder>{
-              TargetPlatform.android: ZoomPageTransitionsBuilder(),
+              TargetPlatform.android: SharedAxisPageTransitionsBuilder(
+                transitionType: SharedAxisTransitionType.scaled,
+              ),
             },
           ),
         ),

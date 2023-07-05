@@ -6,12 +6,21 @@ enum BottomNavItems { leaveScreen, accountScreen }
 enum RouteStatus { initial, loading, success, error }
 
 class RoutesCubitState extends Equatable {
-  final String? bottomNavItems;
-  final int? index;
+  final String bottomNavItems;
+  final int index;
   final RouteStatus status;
 
   const RoutesCubitState(
-      {this.bottomNavItems, this.index, required this.status});
+      {required this.bottomNavItems,
+      required this.index,
+      required this.status});
+
+  // RoutesCubitState copyWith({
+  //   RouteStatus? status,
+  // }) {
+  //   return const RoutesCubitState(
+  //       status: RouteStatus.initial, bottomNavItems: '', index: 0);
+  // }
 
   factory RoutesCubitState.initial() {
     return RoutesCubitState(
@@ -19,6 +28,7 @@ class RoutesCubitState extends Equatable {
         index: 0,
         status: RouteStatus.initial);
   }
+
   @override
-  List<Object> get props => [bottomNavItems!, index!];
+  List<Object> get props => [bottomNavItems, index, status];
 }
