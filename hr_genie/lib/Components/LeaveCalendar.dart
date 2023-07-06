@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -12,20 +13,33 @@ class LeaveCalendar extends StatefulWidget {
 class _LeaveCalendarState extends State<LeaveCalendar> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SfCalendar(
-      firstDayOfWeek: 6,
-      view: CalendarView.month,
-      dataSource: LeaveDataSource(_getDataSource()),
-      // by default the month appointment display mode set as Indicator, we can
-      // change the display mode as appointment using the appointment display
-      // mode property
-      monthViewSettings: const MonthViewSettings(
-          showAgenda: true,
-          // navigationDirection: MonthNavigationDirection.vertical,
-          monthCellStyle: MonthCellStyle(),
-          appointmentDisplayMode: MonthAppointmentDisplayMode.indicator),
-    ));
+    return SafeArea(
+      child: Scaffold(
+          body: SfCalendar(
+        todayHighlightColor: primaryBlue,
+        viewHeaderStyle: const ViewHeaderStyle(
+            dayTextStyle: TextStyle(color: globalTextColor)),
+        headerStyle: const CalendarHeaderStyle(
+            textStyle: TextStyle(color: globalTextColor)),
+        cellBorderColor: globalTextColor,
+        firstDayOfWeek: 1,
+        view: CalendarView.month,
+        dataSource: LeaveDataSource(_getDataSource()),
+        monthViewSettings: MonthViewSettings(
+            showAgenda: true,
+            agendaStyle: const AgendaStyle(
+                dateTextStyle: TextStyle(color: globalTextColor),
+                dayTextStyle: TextStyle(color: globalTextColor)),
+            monthCellStyle: MonthCellStyle(
+                todayBackgroundColor: primaryBlue,
+                textStyle: const TextStyle(
+                  color: globalTextColor,
+                ),
+                leadingDatesTextStyle: TextStyle(color: Colors.grey.shade800),
+                trailingDatesTextStyle: TextStyle(color: Colors.grey.shade800)),
+            appointmentDisplayMode: MonthAppointmentDisplayMode.indicator),
+      )),
+    );
   }
 
   List<Leave> _getDataSource() {

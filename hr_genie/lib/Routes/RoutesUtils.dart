@@ -5,6 +5,8 @@ enum PAGES {
   leave,
   leaveApp,
   leaveDetails,
+  request,
+  requestDetails,
   account,
   error,
 }
@@ -23,6 +25,10 @@ extension AppRouteExtension on PAGES {
       case PAGES.leaveApp:
         return "application";
       case PAGES.leaveDetails:
+        return "details";
+      case PAGES.request:
+        return "/request";
+      case PAGES.requestDetails:
         return "details";
       case PAGES.account:
         return "/account";
@@ -47,6 +53,10 @@ extension AppRouteExtension on PAGES {
         return "LEAVE FORM";
       case PAGES.leaveDetails:
         return "LEAVE DETAILS";
+      case PAGES.request:
+        return "REQUEST";
+      case PAGES.requestDetails:
+        return "REQUEST DETAILS";
       case PAGES.account:
         return "ACCOUNT";
       case PAGES.error:
@@ -70,6 +80,10 @@ extension AppRouteExtension on PAGES {
         return "Leave Application";
       case PAGES.leaveDetails:
         return "Leave Details";
+      case PAGES.request:
+        return "Request";
+      case PAGES.requestDetails:
+        return "Request Details";
       case PAGES.account:
         return "Account";
       case PAGES.error:

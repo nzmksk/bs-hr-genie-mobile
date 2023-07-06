@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hr_genie/Constants/Color.dart';
 
 class SubmitButton extends StatelessWidget {
   final String label;
@@ -7,7 +8,7 @@ class SubmitButton extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final double width;
   final double height;
-  final MaterialStateProperty<Color>? buttonColor;
+  final Color? buttonColor;
   final Color? textColor;
 
   const SubmitButton({
@@ -28,11 +29,13 @@ class SubmitButton extends StatelessWidget {
       height: height,
       width: width,
       child: ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor: buttonColor,
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)))),
+          style: ElevatedButton.styleFrom(
+            disabledBackgroundColor: disabledButtonColor,
+            backgroundColor: buttonColor ?? primaryBlue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
           onPressed: onPressed,
           child: Text(
             label,
@@ -41,3 +44,12 @@ class SubmitButton extends StatelessWidget {
     );
   }
 }
+
+// ButtonStyle(
+//             backgroundColor: buttonColor,
+//             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//               RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(20),
+//               ),
+//             ),
+//           )

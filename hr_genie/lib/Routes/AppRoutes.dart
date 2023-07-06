@@ -11,6 +11,8 @@ import 'package:hr_genie/View/LeavePage.dart';
 import 'package:hr_genie/View/LoginPage.dart';
 import 'package:hr_genie/View/NotFoundPage.dart';
 import 'package:hr_genie/View/PasswordUpdate.dart';
+import 'package:hr_genie/View/RequestDetailsPage.dart';
+import 'package:hr_genie/View/RequestPage.dart';
 import 'package:hr_genie/View/SplashScreen.dart';
 import 'package:hr_genie/View/TestPage.dart';
 import 'package:hr_genie/View/TestPage2.dart';
@@ -48,6 +50,24 @@ class AppRouter {
             pageBuilder: (context, state) {
               return const NoTransitionPage(child: AccountPage());
             },
+          ),
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: PAGES.request.screenPath,
+            name: PAGES.request.screenName,
+            pageBuilder: (context, state) {
+              return NoTransitionPage(child: RequestPage());
+            },
+            routes: [
+              GoRoute(
+                parentNavigatorKey: _shellNavigatorKey,
+                path: PAGES.requestDetails.screenPath,
+                name: PAGES.requestDetails.screenName,
+                builder: (context, state) {
+                  return const RequestDetailPage();
+                },
+              ),
+            ],
           ),
           GoRoute(
             parentNavigatorKey: _shellNavigatorKey,
