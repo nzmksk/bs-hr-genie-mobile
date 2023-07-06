@@ -49,7 +49,8 @@ class _SigninFormState extends State<SigninForm> {
         }
       },
       builder: (context, state) {
-        if (state.status == AuthStatus.notLogged) {
+        if (state.status == AuthStatus.notLogged ||
+            state.status == AuthStatus.error) {
           return Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -172,8 +173,6 @@ class _SigninFormState extends State<SigninForm> {
         } else if (state.status == AuthStatus.loading) {
           print("status: ${state.status}");
           return const Center(child: CircularProgressIndicator());
-        } else if (state.status == AuthStatus.error) {
-          return const Center(child: Text("ERORR"));
         } else {
           print("status: ${state.status}");
           return const Center(

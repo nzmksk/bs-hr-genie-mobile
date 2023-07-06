@@ -94,6 +94,8 @@ class AuthCubit extends Cubit<AuthState> {
           errorMessage: "Server unavailable",
           status: AuthStatus.error,
         ));
+        emit(state.copyWith(status: AuthStatus.notLogged));
+        print("STATUS: ${state.status}");
       }
     }
   }
@@ -109,6 +111,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(state.copyWith(status: AuthStatus.error));
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Error: $e")));
+      emit(state.copyWith(status: AuthStatus.notLogged));
     }
   }
 }
