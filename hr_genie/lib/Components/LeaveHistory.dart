@@ -13,7 +13,7 @@ class _LeaveHistoryState extends State<LeaveHistory> {
   final List<Leave> leave = [
     Leave(
         startDate: DateTime.parse('1969-07-20 20:18:04Z'),
-        duration: 2.5,
+        endDate: DateTime(2023, 6, 30, 15, 30),
         leaveTypeId: "AL",
         leaveId: "AL003",
         reason: "Going on Vacation",
@@ -23,7 +23,7 @@ class _LeaveHistoryState extends State<LeaveHistory> {
         approvedRejectedBy: 'HRS230'),
     Leave(
         startDate: DateTime.parse('2022-07-20 20:18:04Z'),
-        duration: 2.5,
+        endDate: DateTime(2023, 7, 2, 15, 30),
         leaveTypeId: "AL",
         leaveId: "AL003",
         reason: "Going on Vacation",
@@ -33,7 +33,7 @@ class _LeaveHistoryState extends State<LeaveHistory> {
         approvedRejectedBy: 'HRS230'),
     Leave(
         startDate: DateTime.parse('1969-07-20 20:18:04Z'),
-        duration: 2.5,
+        endDate: DateTime(2023, 7, 2, 15, 30),
         leaveTypeId: "AL",
         leaveId: "AL003",
         reason: "Going on Vacation",

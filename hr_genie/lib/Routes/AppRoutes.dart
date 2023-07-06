@@ -5,12 +5,14 @@ import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:hr_genie/View/AccountDetailPage.dart';
 import 'package:hr_genie/View/AccountPage.dart';
-import 'package:hr_genie/View/ForgotPassword.dart';
 import 'package:hr_genie/View/HomePage.dart';
+import 'package:hr_genie/View/LeaveApplication.dart';
 import 'package:hr_genie/View/LeavePage.dart';
 import 'package:hr_genie/View/LoginPage.dart';
 import 'package:hr_genie/View/NotFoundPage.dart';
+import 'package:hr_genie/View/PasswordUpdate.dart';
 import 'package:hr_genie/View/SplashScreen.dart';
+import 'package:hr_genie/View/TestPage2.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -22,13 +24,13 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     routes: [
       GoRoute(
-          parentNavigatorKey: _rootNavigatorKey,
-          path: PAGES.home.screenPath,
-          name: PAGES.home.screenName,
-          builder: (context, state) {
-            return const SplashScreen();
-          },
-          routes: []),
+        parentNavigatorKey: _rootNavigatorKey,
+        path: PAGES.home.screenPath,
+        name: PAGES.home.screenName,
+        builder: (context, state) {
+          return const SplashScreen();
+        },
+      ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
         builder: (context, state, child) {
@@ -61,7 +63,15 @@ class AppRouter {
                 builder: (context, state) {
                   return const AccountDetailsPage();
                 },
-              )
+              ),
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                path: PAGES.leaveApp.screenPath,
+                name: PAGES.leaveApp.screenName,
+                builder: (context, state) {
+                  return const LeaveApplicationPage();
+                },
+              ),
             ],
           ),
         ],
@@ -79,7 +89,7 @@ class AppRouter {
             path: PAGES.forgotPassword.screenPath,
             name: PAGES.forgotPassword.screenName,
             builder: (context, state) {
-              return const ForgotPassword();
+              return const PasswordUpdateForm();
             },
           )
         ],
