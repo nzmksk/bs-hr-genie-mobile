@@ -11,6 +11,9 @@ class AuthState extends Equatable {
   final String email;
   final String password;
   final AuthStatus status;
+  final String accessToken;
+  final String refreshToken;
+  final String? errorMessage;
 
   const AuthState({
     this.validEmail = true,
@@ -20,12 +23,17 @@ class AuthState extends Equatable {
     required this.status,
     this.loading = false,
     this.isExist = true,
+    this.accessToken = "",
+    this.refreshToken = "",
+    this.errorMessage,
   });
   factory AuthState.initial() {
     return const AuthState(
       email: "",
       password: "",
       status: AuthStatus.initial,
+      accessToken: "",
+      refreshToken: "",
     );
   }
   factory AuthState.error() {
@@ -36,14 +44,18 @@ class AuthState extends Equatable {
       status: AuthStatus.error,
     );
   }
-  AuthState copyWith(
-      {bool? loading,
-      String? email,
-      String? password,
-      AuthStatus? status,
-      bool? isExist,
-      bool? validEmail,
-      bool? validPass}) {
+  AuthState copyWith({
+    bool? loading,
+    String? email,
+    String? password,
+    AuthStatus? status,
+    bool? isExist,
+    bool? validEmail,
+    bool? validPass,
+    String? accessToken,
+    String? refreshToken,
+    String? errorMessage,
+  }) {
     return AuthState(
       loading: loading ?? this.loading,
       email: email ?? this.email,
@@ -52,12 +64,25 @@ class AuthState extends Equatable {
       validEmail: validEmail ?? this.validEmail,
       validPass: validPass ?? this.validPass,
       isExist: isExist ?? this.isExist,
+      accessToken: accessToken ?? this.accessToken,
+      refreshToken: refreshToken ?? this.refreshToken,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   bool get isNotNull => email.isNotEmpty && password.isNotEmpty;
 
   @override
-  List<Object?> get props =>
-      [email, password, status, loading, validEmail, validPass, isNotNull];
+  List<Object?> get props => [
+        email,
+        password,
+        status,
+        loading,
+        validEmail,
+        validPass,
+        isNotNull,
+        accessToken,
+        refreshToken,
+        errorMessage,
+      ];
 }
