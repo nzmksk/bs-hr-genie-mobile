@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hr_genie/Components/BottomNavBarWithRoutes.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class HomePage extends StatelessWidget {
@@ -51,7 +52,7 @@ BlocBuilder<RoutesCubit, RoutesCubitState> _buildBottomNavigation(
             size: ((IconTheme.of(mContext).size)! * 1.3),
           ),
           items: tabs,
-          currentIndex: state.index,
+          currentIndex: state.index!,
           type: BottomNavigationBarType.fixed,
         );
       },

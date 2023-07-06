@@ -13,7 +13,6 @@ class Employee {
   String? hashPassword;
   String? phone;
   String? nric;
-  bool? isProbation;
   bool? isMarried;
   String? joinedDate;
   int? tenure;
@@ -27,10 +26,9 @@ class Employee {
     required this.lastName,
     required this.gender,
     required this.email,
+    required this.nric,
     this.hashPassword,
     this.phone,
-    required this.nric,
-    this.isProbation,
     this.isMarried,
     this.joinedDate,
     this.tenure,
@@ -47,7 +45,6 @@ class Employee {
     email = json['email'];
     phone = json['phone'];
     nric = json['nric'];
-    isProbation = json['is_probation'];
     isMarried = json['is_married'];
     joinedDate = json['joined_date'];
   }
@@ -62,7 +59,6 @@ class Employee {
     data['email'] = this.email;
     data['phone'] = this.phone;
     data['nric'] = this.nric;
-    data['is_probation'] = this.isProbation;
     data['is_married'] = this.isMarried;
     data['joined_date'] = this.joinedDate;
 

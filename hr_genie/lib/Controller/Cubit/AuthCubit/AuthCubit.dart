@@ -16,36 +16,37 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
   Future<bool> isLogged() async {
+    emit(state.copyWith(status: AuthStatus.loading));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
     if (email != null) {
       print("You Logged as $email");
       return true;
     }
+    emit(state.copyWith(status: AuthStatus.notLogged));
     return false;
   }
 
   void emailChanged(String value) {
     bool emailValid = EmailValidator.validate(value);
-    emit(state.copyWith(validPass: true));
+    emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
     if (emailValid) {
       emit(state.copyWith(
           email: value,
           validEmail: true,
-          status: AuthStatus.initial,
+          status: AuthStatus.notLogged,
           loading: true));
     } else {
       emit(state.copyWith(
-          email: value, validEmail: false, status: AuthStatus.initial));
+          email: value, validEmail: false, status: AuthStatus.notLogged));
     }
   }
 
   void passwordChanged(String value) {
     if (value == "") {
-      emit(state.copyWith(validPass: true));
-      print("password is empty");
+      emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
     } else {
-      emit(state.copyWith(password: value, status: AuthStatus.initial));
+      emit(state.copyWith(password: value, status: AuthStatus.notLogged));
     }
   }
 
@@ -73,7 +74,7 @@ class AuthCubit extends Cubit<AuthState> {
           isExist: true,
           validPass: true,
           validEmail: true,
-          status: AuthStatus.success,
+          status: AuthStatus.loggedIn,
           accessToken: responseBody.token,
           refreshToken: parsedCookie.value,
         ));
@@ -93,12 +94,24 @@ class AuthCubit extends Cubit<AuthState> {
           errorMessage: "Server unavailable",
           status: AuthStatus.error,
         ));
+        emit(state.copyWith(status: AuthStatus.notLogged));
+        print("STATUS: ${state.status}");
       }
     }
   }
 
   void signOut(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('email');
+    emit(state.copyWith(email: "", password: "", status: AuthStatus.loading));
+    try {
+      // await Future.delayed(const Duration(seconds: 2));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('email');
+      emit(state.copyWith(status: AuthStatus.notLogged));
+    } catch (e) {
+      emit(state.copyWith(status: AuthStatus.error));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error: $e")));
+      emit(state.copyWith(status: AuthStatus.notLogged));
+    }
   }
 }

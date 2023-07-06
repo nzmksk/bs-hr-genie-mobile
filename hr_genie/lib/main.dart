@@ -1,6 +1,8 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
@@ -8,7 +10,6 @@ import 'package:hr_genie/Routes/AppRoutes.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await initialization(null);
   runApp(const MyApp());
 }
 
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthCubit(),
         ),
         BlocProvider(create: (context) => UpdatePasswordCubit()),
-        BlocProvider(create: (context) => ApiServiceCubit())
+        BlocProvider(create: (context) => ApiServiceCubit()),
+        BlocProvider(create: (context) => LeaveFormCubit()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -40,7 +42,9 @@ class MyApp extends StatelessWidget {
         ).copyWith(
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: <TargetPlatform, PageTransitionsBuilder>{
-              TargetPlatform.android: ZoomPageTransitionsBuilder(),
+              TargetPlatform.android: SharedAxisPageTransitionsBuilder(
+                transitionType: SharedAxisTransitionType.scaled,
+              ),
             },
           ),
         ),
