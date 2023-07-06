@@ -6,15 +6,15 @@ extension LeaveCatergoriesList on LEAVES {
   LeaveCategory get leaveTypeName {
     switch (this) {
       case LEAVES.annual:
-        return LeaveCategory(leaveTitle: "Annual Leave");
+        return LeaveCategory(leaveTitle: "Annual");
       case LEAVES.medical:
-        return LeaveCategory(leaveTitle: "Medical Leave");
+        return LeaveCategory(leaveTitle: "Medical");
       case LEAVES.parental:
-        return LeaveCategory(leaveTitle: "Parental Leave");
+        return LeaveCategory(leaveTitle: "Parental");
       case LEAVES.emergency:
-        return LeaveCategory(leaveTitle: "Emergency Leave");
+        return LeaveCategory(leaveTitle: "Emergency");
       case LEAVES.unpaid:
-        return LeaveCategory(leaveTitle: "Unpaid Leave");
+        return LeaveCategory(leaveTitle: "Unpaid");
       default:
     }
     return LeaveCategory(leaveTitle: "unrecognized");
@@ -35,5 +35,21 @@ extension LeaveCatergoriesList on LEAVES {
       default:
     }
     return LeaveCategory(leaveTitle: "ERR");
+  }
+
+  String? get quota {
+    switch (this) {
+      case LEAVES.annual:
+        return "(Remaining: 12 days)";
+      case LEAVES.medical:
+        return "(Remaining: 10 days)";
+      case LEAVES.parental:
+        return "(Remaining: 7 days)";
+      case LEAVES.emergency:
+        return "(Remaining: 6 days)";
+      case LEAVES.unpaid:
+        return "(Remaining: 22 days)";
+      default:
+    }
   }
 }

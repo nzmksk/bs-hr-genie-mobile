@@ -7,8 +7,11 @@ class LeaveApplicationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: LeaveAppForm(),
+    return const SafeArea(
+      child: Scaffold(
+        // resizeToAvoidBottomInset: false,
+        body: LeaveAppForm(),
+      ),
     );
   }
 }

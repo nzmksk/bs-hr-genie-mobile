@@ -12,6 +12,7 @@ import 'package:hr_genie/View/LoginPage.dart';
 import 'package:hr_genie/View/NotFoundPage.dart';
 import 'package:hr_genie/View/PasswordUpdate.dart';
 import 'package:hr_genie/View/SplashScreen.dart';
+import 'package:hr_genie/View/TestPage.dart';
 import 'package:hr_genie/View/TestPage2.dart';
 
 class AppRouter {

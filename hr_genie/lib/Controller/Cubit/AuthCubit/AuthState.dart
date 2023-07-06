@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum AuthStatus { initial, loading, success, error }
+enum AuthStatus { notLogged, loading, loggedIn, error }
 
 class AuthState extends Equatable {
   // final User? user;
@@ -31,7 +31,7 @@ class AuthState extends Equatable {
     return const AuthState(
       email: "",
       password: "",
-      status: AuthStatus.initial,
+      status: AuthStatus.notLogged,
       accessToken: "",
       refreshToken: "",
     );
