@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_genie/Components/LeaveCalendar.dart';
+import 'package:hr_genie/Constants/Color.dart';
 
 import 'LeaveHistory.dart';
 
@@ -21,30 +22,40 @@ class LeaveTabs extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: TabBar(
-                indicatorColor: Colors.red,
-                unselectedLabelColor: Colors.black,
-                labelColor: Colors.white,
-                labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.indigo),
-                tabs: const [
-                  Tab(
-                    text: "History",
+              child: Stack(
+                fit: StackFit.passthrough,
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: cardColor,
+                    ),
                   ),
-                  Tab(
-                    text: "Calendar",
+                  TabBar(
+                    dividerColor: Colors.red,
+                    unselectedLabelColor: subtitleTextColor,
+                    labelColor: Colors.white,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: primaryBlue),
+                    tabs: const [
+                      Tab(
+                        text: "History",
+                      ),
+                      Tab(
+                        text: "Calendar",
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 5.0,
-            ),
             Expanded(
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: const TabBarView(
                   children: [
                     LeaveHistory(),

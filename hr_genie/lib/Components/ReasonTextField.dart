@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Components/LimitedTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 
@@ -39,16 +40,18 @@ class _ReasonFieldState extends State<ReasonField> {
     return BlocBuilder<LeaveFormCubit, LeaveFormState>(
       builder: (context, state) {
         return CustomListTile(
-          color: state.reason != null ? Colors.indigo : Colors.grey[200],
+          color: state.reason != null
+              ? selectedButtonColor
+              : unselectedButtonColor,
           margin: const EdgeInsets.fromLTRB(9, 1, 10, 1),
           title: Text(
             "Reason",
             style: TextStyle(
-                color: state.reason != null ? Colors.white : Colors.black),
+                color: state.reason != null ? Colors.white : globalTextColor),
           ),
           trailing: Icon(
             Icons.edit,
-            color: state.reason != null ? Colors.white : Colors.black,
+            color: state.reason != null ? Colors.white : globalTextColor,
           ),
           onTap: () {
             insertReason(context, reasonController);
@@ -100,8 +103,7 @@ class _ReasonFieldState extends State<ReasonField> {
                             flex: 1,
                             child: SubmitButton(
                               textColor: Colors.grey.shade600,
-                              buttonColor:
-                                  MaterialStateProperty.all(Colors.white),
+                              buttonColor: Colors.white,
                               margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                               label: "CANCEL",
                               onPressed: () {
@@ -167,7 +169,7 @@ class _ReasonFieldState extends State<ReasonField> {
                   Navigator.pop(context);
                 })
             : SubmitButton(
-                buttonColor: MaterialStateProperty.all(Colors.red),
+                buttonColor: Colors.red,
                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 label: "REMOVE",
                 onPressed: () {

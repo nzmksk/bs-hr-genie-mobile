@@ -44,9 +44,9 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
     }
   }
 
-  void firstStepDone() => emit(state.copyWith(firstStepDone: true));
-  void secStepDone() => emit(state.copyWith(secStepDone: true));
-  void thirdStepDone() => emit(state.copyWith(thirdStepDone: true));
+  void firstStepDone(bool done) => emit(state.copyWith(firstStepDone: done));
+  void secStepDone(bool done) => emit(state.copyWith(secStepDone: done));
+  void thirdStepDone(bool done) => emit(state.copyWith(thirdStepDone: done));
 
   void setDateTime(DateTime? startDate) {
     if (startDate == null) {

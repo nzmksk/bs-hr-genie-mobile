@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Constants/LeaveCategories.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
@@ -26,10 +27,10 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
     return BlocBuilder<LeaveFormCubit, LeaveFormState>(
       builder: (context, state) {
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
           height: 260,
           child: Card(
-            color: Colors.grey[200],
+            color: cardColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -52,7 +53,8 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                               subtitle: Text(
                                 LEAVES.annual.quota!,
-                                style: const TextStyle(fontSize: 12),
+                                style: const TextStyle(
+                                    fontSize: 12, color: subtitleTextColor),
                               ),
                               value: TYPE.annual.values,
                               groupValue: _leaveType,
@@ -80,7 +82,8 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                               subtitle: Text(
                                 LEAVES.emergency.quota!,
-                                style: const TextStyle(fontSize: 12),
+                                style: const TextStyle(
+                                    fontSize: 12, color: subtitleTextColor),
                               ),
                               value: TYPE.emergency.values,
                               groupValue: _leaveType,
@@ -114,7 +117,8 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                               subtitle: Text(
                                 LEAVES.medical.quota!,
-                                style: const TextStyle(fontSize: 12),
+                                style: const TextStyle(
+                                    fontSize: 12, color: subtitleTextColor),
                               ),
                               value: TYPE.medical.values,
                               groupValue: _leaveType,
@@ -142,7 +146,8 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                               subtitle: Text(
                                 LEAVES.parental.quota!,
-                                style: const TextStyle(fontSize: 12),
+                                style: const TextStyle(
+                                    fontSize: 12, color: subtitleTextColor),
                               ),
                               value: TYPE.parental.values,
                               groupValue: _leaveType,
@@ -178,7 +183,8 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                           ),
                           subtitle: Text(
                             LEAVES.unpaid.quota!,
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(
+                                fontSize: 12, color: subtitleTextColor),
                           ),
                           value: TYPE.unpaid.values,
                           groupValue: _leaveType,
