@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
               TargetPlatform.android: SharedAxisPageTransitionsBuilder(
                 transitionType: SharedAxisTransitionType.scaled,
               ),
+
             },
           ),
         ),
