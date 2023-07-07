@@ -97,6 +97,36 @@ class AccountPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        // Add your logout logic here
+                      },
+                    ),
+                  ),
+  const Center(
+    
+    child: Padding(
+      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+      child: Text(
+    
+        "Profile Page",
+        style: TextStyle(
+          
+          fontSize: 20, // Replace with the desired font size
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
+        ),
+      ),
+    ),
+  ),
+
                 ],
               ),
               const SizedBox(height: 20),
