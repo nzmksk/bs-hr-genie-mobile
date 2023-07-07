@@ -7,6 +7,7 @@ import 'package:hr_genie/Components/PickDate_Reason.dart';
 import 'package:hr_genie/Components/ReasonTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/UploadAttach.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,11 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   int? _selectedHalf = 1;
   List<DateTime>? selectedDateList;
   int currentStep = 0;
+  Color disabledButton = disabledButtonColor;
+  Color selectedButton = selectedButtonColor;
+  Color unselectedButton = unselectedButtonColor;
+  String stepOneInstruction =
+      "Choose leave type first and select either Full-day or Half-day ";
   @override
   void initState() {
     super.initState();
@@ -46,21 +52,24 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
           context.read<LeaveFormCubit>().setDateTime(null);
           context.read<LeaveFormCubit>().setRangeDate(null, null);
         } else if (currentStep == 1) {
-          context.read<LeaveFormCubit>().firstStepDone();
+          context.read<LeaveFormCubit>().firstStepDone(true);
           print("Step 1 : Done");
           // context.read<LeaveFormCubit>().setDateTime(null);
           // context.read<LeaveFormCubit>().setRangeDate(null, null);
         } else if (currentStep == 2) {
-          context.read<LeaveFormCubit>().secStepDone();
+          // context.read<LeaveFormCubit>().secStepDone(true);
           print("Step 2 : Done");
           if (state.reason != null) {
-            context.read<LeaveFormCubit>().thirdStepDone();
+            context.read<LeaveFormCubit>().thirdStepDone(true);
             print("Step 3 : Done");
           }
         }
-        if (state.startDate != null && currentStep == 1) {
+        if (state.startDate != null &&
+            state.endDate != null &&
+            state.secStepDone) {
+          print("Going to last step: ${state.secStepDone}");
           setState(() {
-            currentStep == 2;
+            currentStep = 2;
           });
         }
       },
@@ -70,7 +79,6 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                // color: Colors.red,
                 height: 230.0,
                 alignment: Alignment.center,
                 child: const Column(
@@ -84,23 +92,38 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                 // color: Colors.yellow,
                 height: 650.0,
                 alignment: Alignment.center,
-                child: Stepper(
-                  controlsBuilder: (context, controller) {
-                    return const SizedBox.shrink();
-                  },
-                  margin: const EdgeInsets.fromLTRB(50, 0, 10, 50),
-                  currentStep: currentStep,
-                  steps: getSteps(state),
-                  onStepTapped: (step) => setState(
-                    () {
-                      if (step > currentStep) return;
-                      if (currentStep == 2 && state.startDate != null) {
-                        final leave = context.read<LeaveFormCubit>();
-                        leave.setDateTime(null);
-                        leave.setRangeDate(null, null);
-                      }
-                      currentStep = step;
+                child: Theme(
+                  data: ThemeData(
+                    textTheme: const TextTheme().copyWith(
+                      bodyLarge: TextStyle(color: globalTextColor),
+                    ),
+                    canvasColor: Colors.yellow,
+                    colorScheme: Theme.of(context).colorScheme.copyWith(
+                          primary: primaryBlue,
+                        ),
+                  ),
+                  child: Stepper(
+                    controlsBuilder: (context, controller) {
+                      return const SizedBox.shrink();
                     },
+                    margin: const EdgeInsets.fromLTRB(50, 0, 10, 50),
+                    currentStep: currentStep,
+                    steps: getSteps(state),
+                    onStepTapped: (step) => setState(
+                      () {
+                        final leave = context.read<LeaveFormCubit>();
+                        if (step == 1) leave.secStepDone(false);
+
+                        if (step > currentStep) return;
+                        if (currentStep == 2 &&
+                            state.startDate != null &&
+                            state.secStepDone) {
+                          leave.setDateTime(null);
+                          leave.setRangeDate(null, null);
+                        }
+                        currentStep = step;
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -123,7 +146,7 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
           children: [
             const LeaveTypeRadio(),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -142,8 +165,10 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                               });
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            _selectedDuration == 1 ? Colors.blue : Colors.grey,
+                        disabledBackgroundColor: disabledButton,
+                        backgroundColor: _selectedDuration == 1
+                            ? selectedButton
+                            : unselectedButton,
                       ),
                       child: const Text('Full Day'),
                     ),
@@ -164,13 +189,26 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                               });
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            _selectedDuration == 2 ? Colors.blue : Colors.grey,
+                        disabledBackgroundColor: disabledButton,
+                        backgroundColor: _selectedDuration == 2
+                            ? selectedButton
+                            : unselectedButton,
                       ),
                       child: const Text('Half Day'),
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: 200,
+              child: Text(
+                stepOneInstruction,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 13, color: unselectedButton),
               ),
             ),
           ],
@@ -182,11 +220,11 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
         title: const Text("Choose Date"),
         content: BlocConsumer<LeaveFormCubit, LeaveFormState>(
           listener: (context, state) {
-            setState(() {
-              if (state.startDate != null && state.endDate != null) {
-                currentStep = 2;
-              }
-            });
+            // setState(() {
+            //   if (state.secStepDone && state.startDate != null) {
+            //     currentStep = 2;
+            //   }
+            // });
           },
           builder: (context, state) {
             return Column(
@@ -211,8 +249,10 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                                   });
                                 },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                _selectedHalf == 1 ? Colors.blue : Colors.grey,
+                            disabledBackgroundColor: disabledButton,
+                            backgroundColor: _selectedHalf == 1
+                                ? selectedButton
+                                : unselectedButton,
                           ),
                           child: const Text('First Half'),
                         ),
@@ -234,8 +274,10 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                                   });
                                 },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                _selectedHalf == 2 ? Colors.blue : Colors.grey,
+                            disabledBackgroundColor: disabledButton,
+                            backgroundColor: _selectedHalf == 2
+                                ? selectedButton
+                                : unselectedButton,
                           ),
                           child: const Text('Second Half'),
                         ),
@@ -250,9 +292,6 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                         isFullDay: true, // the calendar input will be range
                       )
                     : PickDateReasonRow(
-                        addFunction: () {
-                          currentStep = 2;
-                        },
                         updatedColor: checkTileColor(state),
                         dateTitle: "Pick one date",
                         isFullDay:
@@ -291,10 +330,10 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   Color? checkTileColor(LeaveFormState state) {
     if (state.duration == "Full-Day") {
       return state.startDate != null && state.endDate != null
-          ? Colors.indigo
-          : Colors.grey[400];
+          ? primaryBlue
+          : unselectedButton;
     } else {
-      return state.startDate != null ? Colors.indigo : Colors.grey[400];
+      return state.startDate != null ? selectedButton : unselectedButton;
     }
   }
 }

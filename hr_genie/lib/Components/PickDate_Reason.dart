@@ -1,10 +1,11 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, deprecated_member_use
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Constants/LeaveDuration.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
@@ -32,6 +33,15 @@ class PickDateReasonRow extends StatefulWidget {
 class _PickDateReasonRowState extends State<PickDateReasonRow> {
   DateRangePickerMonthCellStyle monthCellStyle() {
     return DateRangePickerMonthCellStyle(
+      selectionColor: primaryBlue,
+      startRangeSelectionColor: primaryBlue,
+      endRangeSelectionColor: primaryBlue,
+      rangeSelectionColor: const Color.fromARGB(255, 116, 186, 243),
+      rangeTextStyle: const TextStyle(color: globalTextColor),
+      leadingDatesTextStyle: TextStyle(color: globalTextColor),
+      trailingDatesTextStyle: TextStyle(color: globalTextColor),
+      textStyle: const TextStyle(color: globalTextColor),
+      todayTextStyle: const TextStyle(color: primaryBlue),
       blackoutDatesDecoration: BoxDecoration(
           color: Colors.red,
           border: Border.all(color: const Color(0xFFF44436), width: 1),
@@ -61,12 +71,19 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 160),
               child: Card(
+                color: primaryBlack,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SfDateRangePicker(
+                        todayHighlightColor: primaryBlue,
+                        headerStyle: const DateRangePickerHeaderStyle(
+                          textAlign: TextAlign.center,
+                          textStyle: TextStyle(color: globalTextColor),
+                        ),
+                        backgroundColor: primaryBlack,
                         controller: _datePickerController,
                         allowViewNavigation: true,
                         showNavigationArrow: true,
@@ -104,7 +121,10 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                             ? DateRangePickerSelectionMode.range
                             : DateRangePickerSelectionMode.single,
                       ),
-                      Text("From: ${state.startDate} to ${state.endDate}"),
+                      Text(
+                        "From: ${state.startDate} to ${state.endDate}",
+                        style: const TextStyle(color: globalTextColor),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -113,8 +133,7 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                             child: SubmitButton(
                                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                 textColor: Colors.black,
-                                buttonColor:
-                                    MaterialStateProperty.all(Colors.white),
+                                buttonColor: Colors.white,
                                 onPressed: () {
                                   Navigator.pop(context);
                                   context
@@ -140,6 +159,11 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                                     : () {
                                         setState(() {
                                           widget.addFunction;
+                                          if (state.startDate != null) {
+                                            context
+                                                .read<LeaveFormCubit>()
+                                                .secStepDone(true);
+                                          }
                                           // _datePickerController.clear();
                                           _datePickerController.selectedRange =
                                               PickerDateRange(state.startDate,
@@ -291,7 +315,6 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
           ),
           onTap: () async {
             await pickFullDays(context, filteredDates);
-            widget.addFunction;
           },
         );
       },
@@ -302,9 +325,9 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
     if (state.duration == "Full-Day") {
       return state.startDate != null && state.endDate != null
           ? Colors.white
-          : Colors.black;
+          : globalTextColor;
     } else {
-      return state.startDate != null ? Colors.white : Colors.black;
+      return state.startDate != null ? Colors.white : globalTextColor;
     }
   }
 }

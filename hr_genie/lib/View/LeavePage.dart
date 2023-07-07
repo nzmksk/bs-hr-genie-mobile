@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/LeaveTabs.dart';
 import 'package:hr_genie/Components/NameCard.dart';
+import 'package:hr_genie/Components/RequestCountCard.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 
@@ -14,17 +16,29 @@ class LeavePage extends StatelessWidget {
     return BlocBuilder<RoutesCubit, RoutesCubitState>(
       builder: (context, state) {
         if (state.status == RouteStatus.initial) {
-          return const Scaffold(
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 40,
+          return SafeArea(
+            child: Scaffold(
+              floatingActionButton: RawMaterialButton(
+                onPressed: () {
+                  context.read<RoutesCubit>().goToApplyLeave();
+                },
+                // elevation: 2.0,
+                fillColor: primaryBlue,
+                padding: const EdgeInsets.all(6.0),
+                shape: const CircleBorder(),
+                child: const Icon(
+                  Icons.add,
+                  size: 35.0,
                 ),
-                ProfileCard(),
-                LeaveTabs(),
-                // LeaveTab(),
-              ],
+              ),
+              body: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ProfileCard(),
+                  RequestCountCard(),
+                  LeaveTabs(),
+                ],
+              ),
             ),
           );
         } else if (state.status == RouteStatus.loading) {
@@ -32,8 +46,8 @@ class LeavePage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (state.status == RouteStatus.error) {
-          return const Center(
-            child: Text("ERROR"),
+          return Center(
+            child: Text("ERROR: ${state.status}"),
           );
         }
 

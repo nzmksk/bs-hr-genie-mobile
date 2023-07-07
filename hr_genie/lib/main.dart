@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
@@ -10,7 +11,7 @@ import 'package:hr_genie/Routes/AppRoutes.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 Future initialization(BuildContext? context) async {
@@ -18,8 +19,8 @@ Future initialization(BuildContext? context) async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  MyApp({super.key});
+  TextStyle whiteColor = TextStyle(color: globalTextColor);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,24 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.from(
-          colorScheme: const ColorScheme.light(),
+          textTheme: TextTheme(
+            titleLarge: whiteColor,
+            titleMedium: whiteColor,
+            titleSmall: whiteColor,
+            bodySmall: whiteColor,
+            bodyMedium: whiteColor,
+            bodyLarge: whiteColor,
+            labelLarge: whiteColor,
+            labelMedium: whiteColor,
+            labelSmall: whiteColor,
+            displayLarge: whiteColor,
+            displayMedium: whiteColor,
+            displaySmall: whiteColor,
+          ),
+          colorScheme: const ColorScheme.light(
+              onSecondary: Colors.white,
+              secondary: Color.fromARGB(255, 255, 255, 255),
+              background: Color.fromARGB(255, 14, 14, 14)),
         ).copyWith(
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: <TargetPlatform, PageTransitionsBuilder>{
