@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/TextField/CustomTextField.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Controller/Services/StatusMessage.dart';
@@ -55,7 +57,25 @@ class _SigninFormState extends State<SigninForm> {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Image.asset("assets/logo.jpeg"),
+              Expanded(
+                  child: FittedBox(
+                fit: BoxFit.cover,
+                child: Image.asset(
+                  "assets/logo.png",
+                  height: 600,
+                  width: 600,
+                ),
+              )),
+              const Text(
+                "HR GENIE",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                "Fulfilling wishes at work.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              ),
               EmailField(
                 autoFocus: autoFocus,
                 suffixIcon: IconButton(
@@ -149,24 +169,23 @@ class _SigninFormState extends State<SigninForm> {
                           "${PAGES.login.screenPath}/${PAGES.forgotPassword.screenPath}");
                     }),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 200, 0, 90),
-                height: 46,
-                width: 300,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)))),
-                    onPressed: state.isNotNull
-                        ? () {
-                            context
-                                .read<AuthCubit>()
-                                .signIn(state.email, state.password, context);
-                          }
-                        : null,
-                    child: const Text("Login")),
+              SubmitButton(
+                margin: const EdgeInsets.fromLTRB(0, 200, 0, 15),
+                label: "Login",
+                onPressed: state.isNotNull
+                    ? () {
+                        context
+                            .read<AuthCubit>()
+                            .signIn(state.email, state.password, context);
+                      }
+                    : null,
+              ),
+              const Text(
+                "You need to type in your email and password to Login",
+                style: TextStyle(fontSize: 12, color: instructionTextColor),
+              ),
+              const SizedBox(
+                height: 30,
               )
             ],
           ));

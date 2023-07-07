@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:intl/intl.dart';
 
 import '../Model/LeaveModel.dart';
@@ -69,7 +70,7 @@ class PendingTab extends StatelessWidget {
                       style: TextStyle(fontSize: 12),
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios),
-                    color: Colors.grey[200],
+                    color: cardColor,
                   )),
         )
       ],

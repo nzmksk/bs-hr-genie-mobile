@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/TextField/CustomTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordCubit.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordState.dart';
 import 'package:hr_genie/Controller/Services/StatusMessage.dart';
 import 'package:hr_genie/Controller/Services/TextStyle.dart';
 
-class PasswordUpdateForm extends StatelessWidget {
-  const PasswordUpdateForm({super.key});
+class PasswordUpdateForm extends StatefulWidget {
+  const PasswordUpdateForm({
+    super.key,
+  });
 
+  @override
+  State<PasswordUpdateForm> createState() => _PasswordUpdateFormState();
+}
+
+class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
+  bool isObscure = true;
   @override
   Widget build(BuildContext context) {
     TextEditingController repeatController = TextEditingController();
@@ -17,78 +26,101 @@ class PasswordUpdateForm extends StatelessWidget {
       builder: (context, state) {
         return BlocBuilder<UpdatePasswordCubit, UpdatePasswordState>(
           builder: (context, state) {
-            return Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: Colors.white,
-              body: Center(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  width: 400,
-                  height: 650,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      //set border radius more than 50% of height and width to make circle
-                    ),
-                    color: Colors.grey[200],
+            return SafeArea(
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 30),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          state.newPassValid ? Icons.key : Icons.error,
-                          size: 170,
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 50, 130, 50),
+                          child: const Text(
+                            "Welcome!",
+                            textAlign: TextAlign.left,
+                            style:
+                                TextStyle(color: globalTextColor, fontSize: 50),
+                          ),
                         ),
                         Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
                           child: const Text(
-                            "Choose a strong password, avoid reusing passwords. Remember it or use a secure password manager.",
+                            "Please create a new password to replace the temporary password given.",
                             textAlign: TextAlign.left,
                             style:
-                                TextStyle(color: Colors.black38, fontSize: 13),
+                                TextStyle(color: globalTextColor, fontSize: 25),
                           ),
                         ),
-                        NewPasswordField(
-                            hintText: "New Password",
-                            onchanged: (value) {
-                              if (value == "" || value.isEmpty) {
-                                repeatController.clear();
-                              }
-                              // _textFieldFocusNode.requestFocus();
-                              context
-                                  .read<UpdatePasswordCubit>()
-                                  .newPasswordChanged(value);
-                            },
-                            errorStyle: state.newPassValid
-                                ? TextStyleStore().success()
-                                : TextStyleStore().failed(),
-                            errorText: state.newPassValid
-                                ? null
-                                : MSG.newPassword.errorMsg),
-                        RepeatPasswordField(
-                            controller: repeatController,
-                            obscureText: true,
-                            enabled:
-                                state.newPassword != "" && state.newPassValid
-                                    ? true
-                                    : false,
-                            hintText: "Repeat Password",
-                            onchanged: (value) {
-                              context
-                                  .read<UpdatePasswordCubit>()
-                                  .repeatPasswordChanged(value);
-                            },
-                            errorStyle: state.isMatched
-                                ? null
-                                : TextStyleStore().failed(),
-                            errorText: state.isMatched
-                                ? null
-                                : state.repeatPassEmpty
-                                    ? null
-                                    : MSG.repeatPassword.errorMsg),
+                        Expanded(
+                          flex: 0,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            child: const Text(
+                              "Choose a strong password, avoid reusing passwords. Remember it or use a secure password manager.",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: instructionTextColor, fontSize: 13),
+                            ),
+                          ),
+                        ),
+                        PasswordField(
+                          obscurePassword: isObscure,
+                          onpress: () {
+                            setState(() {
+                              isObscure = !isObscure;
+                            });
+                          },
+                          onchanged: (value) {
+                            if (value == "" || value.isEmpty) {
+                              repeatController.clear();
+                            }
+                            // _textFieldFocusNode.requestFocus();
+                            context
+                                .read<UpdatePasswordCubit>()
+                                .newPasswordChanged(value);
+                          },
+                          errorStyle: state.newPassValid
+                              ? TextStyleStore().success()
+                              : TextStyleStore().failed(),
+                          errorText: state.newPassValid
+                              ? null
+                              : MSG.newPassword.errorMsg,
+                          hintText: "New Password",
+                        ),
+                        PasswordField(
+                          visibleToggle: false,
+                          controller: repeatController,
+                          onpress: () {},
+                          obscurePassword: true,
+                          enabled: state.newPassword != "" && state.newPassValid
+                              ? true
+                              : false,
+                          hintText: "Confirm New Password",
+                          onchanged: (value) {
+                            context
+                                .read<UpdatePasswordCubit>()
+                                .repeatPasswordChanged(value);
+                          },
+                          errorStyle: state.isMatched
+                              ? null
+                              : TextStyleStore().failed(),
+                          errorText: state.isMatched
+                              ? null
+                              : state.repeatPassEmpty
+                                  ? null
+                                  : MSG.repeatPassword.errorMsg,
+                        ),
+                        const SizedBox(
+                          height: 120,
+                        ),
                         SubmitButton(
-                            label: "Update",
-                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 40),
+                            label: "Save",
+                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                             onPressed: state.isNotEmpty && state.isMatched
                                 ? () {}
                                 : null)

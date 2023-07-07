@@ -254,7 +254,10 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                                 ? selectedButton
                                 : unselectedButton,
                           ),
-                          child: const Text('First Half'),
+                          child: Text(
+                            'First Half',
+                            style: TextStyle(color: cardColor),
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -279,7 +282,8 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                                 ? selectedButton
                                 : unselectedButton,
                           ),
-                          child: const Text('Second Half'),
+                          child: Text('Second Half',
+                              style: TextStyle(color: cardColor)),
                         ),
                       ),
                     ],

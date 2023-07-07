@@ -19,6 +19,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
+    print("email in Shared Preferences: $email");
     if (email != null) {
       print("You Logged as $email");
       return true;
@@ -86,6 +87,8 @@ class AuthCubit extends Cubit<AuthState> {
           status: AuthStatus.error,
         ));
       }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', email);
     } catch (error) {
       if (error is http.ClientException || error is SocketException) {
         emit(state.copyWith(

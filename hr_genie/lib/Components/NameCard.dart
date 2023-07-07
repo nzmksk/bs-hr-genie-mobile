@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CountLeaveCompo.dart';
 import 'package:hr_genie/Constants/Color.dart';
-import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
-import 'package:hr_genie/Routes/AppRoutes.dart';
-import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
@@ -43,19 +39,6 @@ class ProfileCard extends StatelessWidget {
                     "Senior Manager,Food Management",
                     style: TextStyle(fontSize: 12, color: subtitleTextColor),
                   ),
-                  // trailing: ElevatedButton(
-                  //   onPressed: () {
-                  //     // AppRouter.router.push(
-                  //     //     "${PAGES.leave.screenPath}/${PAGES.leaveApp.screenPath}");
-                  //   },
-                  //   style: ElevatedButton.styleFrom(
-                  //     shape: const CircleBorder(),
-                  //     padding: const EdgeInsets.all(10),
-                  //     backgroundColor: primaryBlue, // <-- Button color
-                  //     foregroundColor: Colors.white, // <-- Splash color
-                  //   ),
-                  //   child: const Icon(Icons.add_rounded),
-                  // ),
                 ),
               ),
               Divider(

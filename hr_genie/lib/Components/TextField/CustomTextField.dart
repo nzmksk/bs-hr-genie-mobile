@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hr_genie/Constants/Color.dart';
 
 class EmailField extends StatelessWidget {
   final String hintText;
@@ -34,6 +35,7 @@ class EmailField extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
       child: TextFormField(
+        style: const TextStyle(color: globalTextColor),
         controller: controller,
         // focusNode: focusNode,
         obscureText: obscureText,
@@ -41,15 +43,37 @@ class EmailField extends StatelessWidget {
         autofocus: autoFocus,
         onChanged: onchanged,
         enabled: enabled,
-        decoration: InputDecoration(
-            fillColor: Colors.white,
-            errorStyle: errorStyle,
-            errorText: errorText,
-            prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon,
-            hintText: hintText),
+        decoration: CustomInputDeco(),
       ),
     );
+  }
+
+  InputDecoration CustomInputDeco() {
+    return InputDecoration(
+        focusedErrorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: errorBorderColor),
+            borderRadius: BorderRadius.circular(10)),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: errorBorderColor),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: primaryLightBlue),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: primaryBlue)),
+        hintStyle: const TextStyle(color: secondaryLightBlue),
+        focusColor: primaryBlue,
+        prefixIconColor: primaryLightBlue,
+        suffixIconColor: primaryLightBlue,
+        fillColor: globalTextColor,
+        errorStyle: errorStyle,
+        errorText: errorText,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        hintText: hintText);
   }
 }
 
@@ -57,13 +81,15 @@ class PasswordField extends StatelessWidget {
   final TextStyle? errorStyle;
   final String? errorText;
   final Function() onpress;
-  final Function(String) onchanged;
   final String hintText;
+  final bool _obscurePassword;
+  final Function(String) onchanged;
   final bool autoFocus;
   final bool enabled;
-  final bool _obscurePassword;
   final TextEditingController? controller;
+  final bool? visibleToggle;
   const PasswordField({
+    this.visibleToggle = true,
     super.key,
     required bool obscurePassword,
     required this.onpress,
@@ -88,14 +114,41 @@ class PasswordField extends StatelessWidget {
         enabled: enabled,
         obscureText: _obscurePassword,
         decoration: InputDecoration(
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: disabledButtonColor)),
+          focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: errorBorderColor),
+              borderRadius: BorderRadius.circular(10)),
+          errorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: errorBorderColor),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: primaryLightBlue),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: primaryBlue)),
+          hintStyle: const TextStyle(color: secondaryLightBlue),
           errorStyle: errorStyle,
           errorText: errorText,
           hintText: hintText,
-          prefixIcon: const Icon(Icons.password),
-          suffixIcon: IconButton(
-              onPressed: onpress,
-              icon: Icon(
-                  _obscurePassword ? Icons.visibility : Icons.visibility_off)),
+          prefixIcon: const Icon(
+            Icons.lock,
+            color: primaryLightBlue,
+          ),
+          suffixIcon: visibleToggle!
+              ? IconButton(
+                  onPressed: onpress,
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                    color: primaryLightBlue,
+                  ),
+                )
+              : null,
+          fillColor: globalTextColor,
         ),
       ),
     );
@@ -114,6 +167,9 @@ class NewPasswordField extends StatefulWidget {
   final bool enabled;
   final FocusNode? focusNode;
   final TextEditingController? controller;
+  final Function() onpress;
+  final bool _obscurePassword;
+
   const NewPasswordField({
     super.key,
     this.prefixIcon,
@@ -127,14 +183,16 @@ class NewPasswordField extends StatefulWidget {
     this.suffixIcon,
     this.autoFocus = false,
     this.enabled = true,
-  });
+    required this.onpress,
+    required bool obscurePassword,
+  }) : _obscurePassword = obscurePassword;
 
   @override
   State<NewPasswordField> createState() => _NewPasswordFieldState();
 }
 
 class _NewPasswordFieldState extends State<NewPasswordField> {
-  bool obscureText = true;
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -143,25 +201,46 @@ class _NewPasswordFieldState extends State<NewPasswordField> {
       child: TextFormField(
         controller: widget.controller,
         focusNode: widget.focusNode,
-        obscureText: obscureText,
+        obscureText: _obscurePassword,
         enabled: widget.enabled,
         autofillHints: widget.autofillHints,
         autofocus: widget.autoFocus,
         onChanged: widget.onchanged,
         decoration: InputDecoration(
-            fillColor: Colors.white,
-            errorStyle: widget.errorStyle,
-            errorText: widget.errorText,
-            prefixIcon: widget.prefixIcon,
-            suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    obscureText = !obscureText;
-                  });
-                },
-                icon: Icon(
-                    obscureText ? Icons.visibility : Icons.visibility_off)),
-            hintText: widget.hintText),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: disabledButtonColor)),
+          focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: errorBorderColor),
+              borderRadius: BorderRadius.circular(10)),
+          errorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: errorBorderColor),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: primaryLightBlue),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: primaryBlue)),
+          hintStyle: const TextStyle(color: secondaryLightBlue),
+          errorStyle: widget.errorStyle,
+          errorText: widget.errorText,
+          hintText: widget.hintText,
+          prefixIcon: const Icon(
+            Icons.password,
+            color: primaryLightBlue,
+          ),
+          suffixIcon: IconButton(
+            onPressed: widget.onpress,
+            icon: Icon(
+              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+              color: primaryLightBlue,
+            ),
+          ),
+          fillColor: globalTextColor,
+        ),
       ),
     );
   }

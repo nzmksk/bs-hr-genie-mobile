@@ -19,6 +19,7 @@ class LeaveTypeRadio extends StatefulWidget {
 class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
   String? _leaveType;
   TextStyle radioTextStyle = const TextStyle(
+    color: globalTextColor,
     fontSize: 12,
   );
 
