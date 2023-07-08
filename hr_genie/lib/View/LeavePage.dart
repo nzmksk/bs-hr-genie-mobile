@@ -18,17 +18,20 @@ class LeavePage extends StatelessWidget {
         if (state.status == RouteStatus.initial) {
           return SafeArea(
             child: Scaffold(
-              floatingActionButton: RawMaterialButton(
+              floatingActionButton: ElevatedButton(
                 onPressed: () {
                   context.read<RoutesCubit>().goToApplyLeave();
                 },
-                // elevation: 2.0,
-                fillColor: primaryBlue,
-                padding: const EdgeInsets.all(6.0),
-                shape: const CircleBorder(),
-                child: const Icon(
-                  Icons.add,
-                  size: 35.0,
+                style: ElevatedButton.styleFrom(
+                  disabledBackgroundColor: disabledButtonColor,
+                  backgroundColor: primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  "Apply Leave",
+                  style: TextStyle(color: globalTextColor),
                 ),
               ),
               body: const Column(

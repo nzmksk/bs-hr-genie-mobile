@@ -32,11 +32,9 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   @override
   void initState() {
     super.initState();
-    // setState(() {
-    context.read<LeaveFormCubit>().typeOnChanged(null);
-    context.read<LeaveFormCubit>().setDateTime(null);
-
-    // });
+    LeaveFormCubit formCubit = context.read<LeaveFormCubit>();
+    formCubit.typeOnChanged(null);
+    formCubit.setDateTime(null);
   }
 
   static String dateFormat(DateTime dateTime) {

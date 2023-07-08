@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 const Color primaryBlue = Color(0xFF2A3C98);
 const Color primaryLightBlue = Color.fromARGB(255, 182, 205, 236);
 const Color secondaryLightBlue = Color.fromARGB(255, 76, 92, 114);
-const Color primaryBlack = Color(0xFF0E0E0E);
+const Color primaryBlack = Color.fromARGB(255, 22, 22, 22);
 const Color globalTextColor = Color.fromARGB(255, 252, 252, 252);
 const Color subtitleTextColor = Color.fromARGB(255, 199, 199, 199);
 const Color instructionTextColor = Color.fromARGB(255, 97, 97, 97);

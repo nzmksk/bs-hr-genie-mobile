@@ -7,8 +7,8 @@ import 'package:intl/intl.dart';
 
 import '../Model/LeaveModel.dart';
 
-class PendingTab extends StatelessWidget {
-  PendingTab({super.key});
+class RejectedTab extends StatelessWidget {
+  RejectedTab({super.key});
   List<Leave> leaveList = List.generate(10, (index) {
     final faker = Faker();
     return Leave(
@@ -19,7 +19,7 @@ class PendingTab extends StatelessWidget {
       endDate: faker.date.dateTime(minYear: 1990, maxYear: 2023),
       reason: faker.lorem.sentence(),
       attachment: faker.lorem.word(),
-      applicationStatus: 'Pending',
+      applicationStatus: 'Rejected',
       approvedRejectedBy: faker.person.name(),
     );
   });
@@ -32,7 +32,7 @@ class PendingTab extends StatelessWidget {
           child: ListView.builder(
               itemCount: leaveList.length,
               itemBuilder: (context, index) => LeaveTile(
-                  leaveList: leaveList, index: index, tileColor: Colors.amber)),
+                  leaveList: leaveList, index: index, tileColor: Colors.red)),
         )
       ],
     );
