@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: <TargetPlatform, PageTransitionsBuilder>{
               TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-                transitionType: SharedAxisTransitionType.scaled,
+                transitionType: SharedAxisTransitionType.horizontal,
               ),
             },
           ),
