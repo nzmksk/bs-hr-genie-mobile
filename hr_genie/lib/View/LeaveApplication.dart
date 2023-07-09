@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hr_genie/Components/CustomAppBar.dart';
 import 'package:hr_genie/Components/LeaveAppForm.dart';
 
 class LeaveApplicationPage extends StatelessWidget {
@@ -7,12 +8,15 @@ class LeaveApplicationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SafeArea(
-        child: Scaffold(
-          // resizeToAvoidBottomInset: false,
-          body: LeaveAppForm(),
-        ),
+    return const SafeArea(
+      child: Scaffold(
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(50),
+            child: CustomAppBar(
+              title: 'New Application',
+            )),
+        resizeToAvoidBottomInset: false,
+        body: LeaveAppForm(),
       ),
     );
   }

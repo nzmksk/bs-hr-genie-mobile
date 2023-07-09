@@ -32,11 +32,9 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   @override
   void initState() {
     super.initState();
-    // setState(() {
-    context.read<LeaveFormCubit>().typeOnChanged(null);
-    context.read<LeaveFormCubit>().setDateTime(null);
-
-    // });
+    LeaveFormCubit formCubit = context.read<LeaveFormCubit>();
+    formCubit.typeOnChanged(null);
+    formCubit.setDateTime(null);
   }
 
   static String dateFormat(DateTime dateTime) {
@@ -53,84 +51,67 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
           context.read<LeaveFormCubit>().setRangeDate(null, null);
         } else if (currentStep == 1) {
           context.read<LeaveFormCubit>().firstStepDone(true);
-          print("Step 1 : Done");
-          // context.read<LeaveFormCubit>().setDateTime(null);
-          // context.read<LeaveFormCubit>().setRangeDate(null, null);
         } else if (currentStep == 2) {
-          // context.read<LeaveFormCubit>().secStepDone(true);
-          print("Step 2 : Done");
           if (state.reason != null) {
             context.read<LeaveFormCubit>().thirdStepDone(true);
-            print("Step 3 : Done");
           }
         }
         if (state.startDate != null &&
             state.endDate != null &&
             state.secStepDone) {
-          print("Going to last step: ${state.secStepDone}");
           setState(() {
             currentStep = 2;
           });
         }
       },
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 230.0,
-                alignment: Alignment.center,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LeaveFormSummary(),
-                  ],
-                ),
-              ),
-              Container(
-                // color: Colors.yellow,
-                height: 650.0,
-                alignment: Alignment.center,
-                child: Theme(
-                  data: ThemeData(
-                    textTheme: const TextTheme().copyWith(
-                      bodyLarge: TextStyle(color: globalTextColor),
-                    ),
-                    canvasColor: Colors.yellow,
-                    colorScheme: Theme.of(context).colorScheme.copyWith(
-                          primary: primaryBlue,
-                        ),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const LeaveFormSummary(),
+            Container(
+              // color: Colors.yellow,
+              height: 590.0,
+              alignment: Alignment.center,
+              child: Theme(
+                data: ThemeData(
+                  textTheme: const TextTheme().copyWith(
+                    bodyLarge: const TextStyle(color: globalTextColor),
                   ),
-                  child: Stepper(
-                    controlsBuilder: (context, controller) {
-                      return const SizedBox.shrink();
+                  // canvasColor: Colors.yellow,
+                  colorScheme: Theme.of(context).colorScheme.copyWith(
+                        primary: primaryBlue,
+                        secondary: Colors.red,
+                      ),
+                ),
+                child: Stepper(
+                  controlsBuilder: (context, controller) {
+                    return const SizedBox.shrink();
+                  },
+                  margin: const EdgeInsets.fromLTRB(50, 0, 10, 50),
+                  currentStep: currentStep,
+                  steps: getSteps(state),
+                  onStepTapped: (step) => setState(
+                    () {
+                      final leave = context.read<LeaveFormCubit>();
+                      if (step == 1) leave.secStepDone(false);
+
+                      if (step > currentStep) return;
+                      if (currentStep == 2 &&
+                          state.startDate != null &&
+                          state.secStepDone) {
+                        leave.setDateTime(null);
+                        leave.setRangeDate(null, null);
+                      }
+                      currentStep = step;
                     },
-                    margin: const EdgeInsets.fromLTRB(50, 0, 10, 50),
-                    currentStep: currentStep,
-                    steps: getSteps(state),
-                    onStepTapped: (step) => setState(
-                      () {
-                        final leave = context.read<LeaveFormCubit>();
-                        if (step == 1) leave.secStepDone(false);
-
-                        if (step > currentStep) return;
-                        if (currentStep == 2 &&
-                            state.startDate != null &&
-                            state.secStepDone) {
-                          leave.setDateTime(null);
-                          leave.setRangeDate(null, null);
-                        }
-                        currentStep = step;
-                      },
-                    ),
                   ),
                 ),
               ),
+            ),
 
-              // SubmitButton(label: "Submit", onPressed: () {})
-            ],
-          ),
+            // SubmitButton(label: "Submit", onPressed: () {})
+          ],
         );
       },
     );
@@ -219,13 +200,7 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
         isActive: currentStep >= 1,
         title: const Text("Choose Date"),
         content: BlocConsumer<LeaveFormCubit, LeaveFormState>(
-          listener: (context, state) {
-            // setState(() {
-            //   if (state.secStepDone && state.startDate != null) {
-            //     currentStep = 2;
-            //   }
-            // });
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             return Column(
               children: [
@@ -254,7 +229,9 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                                 ? selectedButton
                                 : unselectedButton,
                           ),
-                          child: const Text('First Half'),
+                          child: const Text(
+                            'First Half',
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -279,7 +256,9 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                                 ? selectedButton
                                 : unselectedButton,
                           ),
-                          child: const Text('Second Half'),
+                          child: const Text(
+                            'Second Half',
+                          ),
                         ),
                       ),
                     ],

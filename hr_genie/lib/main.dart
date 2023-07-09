@@ -8,6 +8,7 @@ import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/UpdatePassword/UpdatePasswordCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ Future initialization(BuildContext? context) async {
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-  TextStyle whiteColor = TextStyle(color: globalTextColor);
+  TextStyle whiteColor = const TextStyle(color: globalTextColor);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -39,31 +40,33 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.from(
-          textTheme: TextTheme(
-            titleLarge: whiteColor,
-            titleMedium: whiteColor,
-            titleSmall: whiteColor,
-            bodySmall: whiteColor,
-            bodyMedium: whiteColor,
-            bodyLarge: whiteColor,
-            labelLarge: whiteColor,
-            labelMedium: whiteColor,
-            labelSmall: whiteColor,
-            displayLarge: whiteColor,
-            displayMedium: whiteColor,
-            displaySmall: whiteColor,
+          textTheme: GoogleFonts.nunitoTextTheme(
+            Theme.of(context).textTheme.copyWith(
+                  titleLarge: whiteColor,
+                  titleMedium: whiteColor,
+                  titleSmall: whiteColor,
+                  bodySmall: whiteColor,
+                  bodyMedium: whiteColor,
+                  bodyLarge: whiteColor,
+                  labelLarge: whiteColor,
+                  labelMedium: whiteColor,
+                  labelSmall: whiteColor,
+                  displayLarge: whiteColor,
+                  displayMedium: whiteColor,
+                  displaySmall: whiteColor,
+                ),
           ),
           colorScheme: const ColorScheme.light(
+              primary: primaryBlue,
               onSecondary: Colors.white,
               secondary: Color.fromARGB(255, 255, 255, 255),
-              background: Color.fromARGB(255, 14, 14, 14)),
+              background: primaryBlack),
         ).copyWith(
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: <TargetPlatform, PageTransitionsBuilder>{
               TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-                transitionType: SharedAxisTransitionType.scaled,
+                transitionType: SharedAxisTransitionType.horizontal,
               ),
-
             },
           ),
         ),

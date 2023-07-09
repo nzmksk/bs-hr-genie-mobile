@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +49,9 @@ class AppRouter {
             path: PAGES.account.screenPath,
             name: PAGES.account.screenName,
             pageBuilder: (context, state) {
-              return const NoTransitionPage(child: AccountPage());
+              return const NoTransitionPage(
+                child: AccountPage(),
+              );
             },
           ),
           GoRoute(

@@ -21,7 +21,7 @@ class CountLeaveComponent extends StatelessWidget {
         children: [
           Text(title),
           const SizedBox(
-            height: 10,
+            height: 5,
           ),
           Container(
             margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),

@@ -5,7 +5,9 @@ import 'package:hr_genie/Controller/Services/PasswordValidator.dart';
 class UpdatePasswordCubit extends Cubit<UpdatePasswordState> {
   UpdatePasswordCubit() : super(UpdatePasswordState.initial());
 
-  void newPasswordChanged(String value) {
+  void newPasswordChanged(String value) async {
+    await Future.delayed(const Duration(milliseconds: 900));
+
     emit(state.copyWith(
       newPassword: value,
       status: UpdatePasswordStatus.initial,
@@ -21,7 +23,8 @@ class UpdatePasswordCubit extends Cubit<UpdatePasswordState> {
     }
   }
 
-  void repeatPasswordChanged(String value) {
+  void repeatPasswordChanged(String value) async {
+    await Future.delayed(const Duration(milliseconds: 900));
     emit(
       state.copyWith(
           repeatPassword: value, status: UpdatePasswordStatus.initial),

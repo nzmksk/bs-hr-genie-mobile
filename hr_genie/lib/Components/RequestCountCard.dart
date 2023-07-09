@@ -11,7 +11,7 @@ class RequestCountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       // padding: const EdgeInsets.all(8),
       width: 400,
       height: 100,

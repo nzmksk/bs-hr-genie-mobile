@@ -56,7 +56,7 @@ class LeaveFormState extends Equatable {
   }
 
   LeaveFormState copyWith({
-    String? leaveType,
+    ValueGetter<String?>? leaveType,
     ValueGetter<DateTime?>? startDate,
     ValueGetter<DateTime?>? endDate,
     ValueGetter<List<DateTime>?>? dateRange,
@@ -75,7 +75,7 @@ class LeaveFormState extends Equatable {
     LeaveStatus? status,
   }) {
     return LeaveFormState(
-        leaveType: leaveType ?? this.leaveType,
+        leaveType: leaveType != null ? leaveType() : this.leaveType,
         startDate: startDate != null ? startDate() : this.startDate,
         endDate: endDate != null ? endDate() : this.endDate,
         dateRange: dateRange != null ? dateRange() : this.dateRange,

@@ -40,15 +40,15 @@ extension LeaveCatergoriesList on LEAVES {
   String? get quota {
     switch (this) {
       case LEAVES.annual:
-        return "(Remaining: 12 days)";
+        return "12 days left";
       case LEAVES.medical:
-        return "(Remaining: 10 days)";
+        return "10 days left";
       case LEAVES.parental:
-        return "(Remaining: 7 days)";
+        return "7 days left";
       case LEAVES.emergency:
-        return "(Remaining: 6 days)";
+        return "6 days left";
       case LEAVES.unpaid:
-        return "(Remaining: 22 days)";
+        return "22 days left";
       default:
     }
   }
