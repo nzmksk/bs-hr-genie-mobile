@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CallApi {
-  String baseUrl = 'http://192.168.18.46:2000';
+  String baseUrl = 'http://localhost:2000';
 
   Future<http.Response> postLogin({
     required email,
