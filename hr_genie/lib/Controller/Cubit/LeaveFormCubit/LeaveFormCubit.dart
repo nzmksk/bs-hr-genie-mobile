@@ -8,9 +8,9 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
   void typeOnChanged(String? type) {
     emit(state.copyWith(firstStepDone: false));
     if (type == null) {
-      emit(state.copyWith(leaveType: "initial", isValidLeaveType: false));
+      emit(state.copyWith(leaveType: () => null, isValidLeaveType: false));
     } else {
-      emit(state.copyWith(leaveType: type, isValidLeaveType: true));
+      emit(state.copyWith(leaveType: () => type, isValidLeaveType: true));
     }
     print("Running type changed: ${state.leaveType}");
   }

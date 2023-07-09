@@ -3,7 +3,13 @@ import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 enum BottomNavItems { leaveScreen, accountScreen }
 
-enum RouteStatus { initial, loading, success, error }
+enum RouteStatus {
+  initial,
+  loadingLeavePage,
+  success,
+  error,
+  loadingLeaveApplication
+}
 
 class RoutesCubitState extends Equatable {
   final String bottomNavItems;

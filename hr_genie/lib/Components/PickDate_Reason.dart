@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Constants/Color.dart';
-import 'package:hr_genie/Constants/LeaveDuration.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:intl/intl.dart';
@@ -33,30 +32,28 @@ class PickDateReasonRow extends StatefulWidget {
 class _PickDateReasonRowState extends State<PickDateReasonRow> {
   DateRangePickerMonthCellStyle monthCellStyle() {
     return DateRangePickerMonthCellStyle(
+      rangeSelectionColor: Colors.red,
+      rangeTextStyle: const TextStyle(color: globalTextColor),
+      selectionTextStyle: const TextStyle(color: Colors.red),
+      disabledDatesTextStyle: const TextStyle(color: instructionTextColor),
       selectionColor: primaryBlue,
       startRangeSelectionColor: primaryBlue,
       endRangeSelectionColor: primaryBlue,
-      rangeSelectionColor: const Color.fromARGB(255, 116, 186, 243),
-      rangeTextStyle: const TextStyle(color: globalTextColor),
-      leadingDatesTextStyle: TextStyle(color: globalTextColor),
-      trailingDatesTextStyle: TextStyle(color: globalTextColor),
+      leadingDatesTextStyle: const TextStyle(color: globalTextColor),
+      trailingDatesTextStyle: const TextStyle(color: globalTextColor),
       textStyle: const TextStyle(color: globalTextColor),
-      todayTextStyle: const TextStyle(color: primaryBlue),
+      todayCellDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle, color: instructionTextColor),
+      todayTextStyle:
+          const TextStyle(color: primaryLightBlue, fontWeight: FontWeight.bold),
       blackoutDatesDecoration: BoxDecoration(
           color: Colors.red,
           border: Border.all(color: const Color(0xFFF44436), width: 1),
           shape: BoxShape.circle),
-      weekendDatesDecoration: BoxDecoration(
-          color: const Color(0xFFDFDFDF),
-          border: Border.all(color: const Color(0xFFF1F1F1), width: 1),
-          shape: BoxShape.rectangle),
-      specialDatesDecoration: BoxDecoration(
-          color: Colors.green,
-          border: Border.all(color: const Color(0xFF2B732F), width: 1),
-          shape: BoxShape.circle),
+      weekendDatesDecoration: const BoxDecoration(
+          color: Color.fromARGB(255, 61, 61, 61), shape: BoxShape.rectangle),
       blackoutDateTextStyle: const TextStyle(
-          color: Colors.white, decoration: TextDecoration.lineThrough),
-      specialDatesTextStyle: const TextStyle(color: Colors.white),
+          color: instructionTextColor, decoration: TextDecoration.lineThrough),
     );
   }
 
@@ -89,7 +86,6 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                         showNavigationArrow: true,
                         onSelectionChanged: (args) {
                           if (args.value is DateTime) {
-                            // selectionChanged(args, state.duration);
                             print("Selected Date: ${args.value.toString()}");
                             context
                                 .read<LeaveFormCubit>()
@@ -110,6 +106,8 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                         monthCellStyle: monthCellStyle(),
                         monthViewSettings:
                             const DateRangePickerMonthViewSettings(
+                          viewHeaderStyle: DateRangePickerViewHeaderStyle(
+                              textStyle: TextStyle(color: globalTextColor)),
                           firstDayOfWeek: 1,
                           weekendDays: [6, 7],
                           enableSwipeSelection: true,
@@ -121,9 +119,11 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                             ? DateRangePickerSelectionMode.range
                             : DateRangePickerSelectionMode.single,
                       ),
-                      Text(
-                        "From: ${state.startDate} to ${state.endDate}",
-                        style: const TextStyle(color: globalTextColor),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

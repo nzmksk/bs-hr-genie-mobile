@@ -28,22 +28,25 @@ class AuthCubit extends Cubit<AuthState> {
     return false;
   }
 
-  void emailChanged(String value) {
+  void emailChanged(String value) async {
     bool emailValid = EmailValidator.validate(value);
     emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
+    await Future.delayed(const Duration(milliseconds: 900));
     if (emailValid) {
       emit(state.copyWith(
-          email: value,
-          validEmail: true,
-          status: AuthStatus.notLogged,
-          loading: true));
+        email: value,
+        validEmail: true,
+        status: AuthStatus.notLogged,
+      ));
     } else {
       emit(state.copyWith(
           email: value, validEmail: false, status: AuthStatus.notLogged));
     }
   }
 
-  void passwordChanged(String value) {
+  void passwordChanged(String value) async {
+    await Future.delayed(const Duration(milliseconds: 900));
+
     if (value == "") {
       emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
     } else {

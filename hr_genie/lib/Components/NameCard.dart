@@ -26,16 +26,16 @@ class ProfileCard extends StatelessWidget {
               ListTile(
                 leading: CircleAvatar(
                   backgroundColor: primaryBlue,
-                  child: Text("M"),
                   radius: 30,
+                  child: Text("M"),
                 ),
                 title: Text(
                   "Mark Wien",
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
                   "Senior Manager,Food Management",
-                  style: TextStyle(fontSize: 16, color: subtitleTextColor),
+                  style: TextStyle(fontSize: 14, color: subtitleTextColor),
                 ),
               ),
               Divider(
@@ -49,7 +49,7 @@ class ProfileCard extends StatelessWidget {
                   CountLeaveComponent(
                     title: 'Available',
                     count: 2,
-                    countColor: globalTextColor,
+                    countColor: Colors.red,
                   ),
                   CountLeaveComponent(
                     title: 'Total',
@@ -59,7 +59,7 @@ class ProfileCard extends StatelessWidget {
                   CountLeaveComponent(
                     title: 'Used',
                     count: 22,
-                    countColor: Colors.red,
+                    countColor: globalTextColor,
                   )
                 ],
               )

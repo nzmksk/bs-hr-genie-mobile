@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Components/CustomAppBar.dart';
 import 'package:hr_genie/Components/LeaveTabs.dart';
 import 'package:hr_genie/Components/NameCard.dart';
 import 'package:hr_genie/Components/RequestCountCard.dart';
+import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class LeavePage extends StatelessWidget {
   const LeavePage({super.key});
@@ -18,11 +21,19 @@ class LeavePage extends StatelessWidget {
         if (state.status == RouteStatus.initial) {
           return SafeArea(
             child: Scaffold(
+              appBar: const PreferredSize(
+                preferredSize: Size.fromHeight(50),
+                child: CustomAppBar(
+                  showLogo: true,
+                  title: 'HR GENIE',
+                ),
+              ),
               floatingActionButton: ElevatedButton(
                 onPressed: () {
                   context.read<RoutesCubit>().goToApplyLeave();
                 },
                 style: ElevatedButton.styleFrom(
+                  elevation: 10,
                   disabledBackgroundColor: disabledButtonColor,
                   backgroundColor: primaryBlue,
                   shape: RoundedRectangleBorder(
@@ -37,6 +48,9 @@ class LeavePage extends StatelessWidget {
               body: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(
+                    height: 10,
+                  ),
                   ProfileCard(),
                   RequestCountCard(),
                   LeaveTabs(),
@@ -44,9 +58,17 @@ class LeavePage extends StatelessWidget {
               ),
             ),
           );
-        } else if (state.status == RouteStatus.loading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+        } else if (state.status == RouteStatus.loadingLeavePage) {
+          return Center(
+            child: ShimmerLoading(
+              screenName: PAGES.leave.screenName,
+            ),
+          );
+        } else if (state.status == RouteStatus.loadingLeaveApplication) {
+          return Center(
+            child: ShimmerLoading(
+              screenName: PAGES.leaveApp.screenName,
+            ),
           );
         } else if (state.status == RouteStatus.error) {
           return Center(

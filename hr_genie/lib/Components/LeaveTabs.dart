@@ -17,11 +17,8 @@ class LeaveTabs extends StatelessWidget {
       child: Expanded(
         child: Column(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
+              margin: const EdgeInsets.fromLTRB(12, 5, 12, 0),
               child: Stack(
                 fit: StackFit.passthrough,
                 alignment: Alignment.bottomCenter,

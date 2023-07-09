@@ -21,7 +21,7 @@ Future initialization(BuildContext? context) async {
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-  TextStyle whiteColor = TextStyle(color: globalTextColor);
+  TextStyle whiteColor = const TextStyle(color: globalTextColor);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

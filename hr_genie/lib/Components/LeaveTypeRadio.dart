@@ -28,8 +28,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
     return BlocBuilder<LeaveFormCubit, LeaveFormState>(
       builder: (context, state) {
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-          height: 260,
+          height: 230,
           child: Card(
             color: cardColor,
             child: Column(
@@ -48,6 +47,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                             ),
                             child: RadioListTile(
+                              fillColor: MaterialStateProperty.all(primaryBlue),
                               title: Text(
                                 LEAVES.annual.leaveTypeName.leaveTitle!,
                                 style: radioTextStyle,
@@ -77,6 +77,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                             ),
                             child: RadioListTile(
+                              fillColor: MaterialStateProperty.all(primaryBlue),
                               title: Text(
                                 LEAVES.emergency.leaveTypeName.leaveTitle!,
                                 style: radioTextStyle,
@@ -112,6 +113,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                             ),
                             child: RadioListTile(
+                              fillColor: MaterialStateProperty.all(primaryBlue),
                               title: Text(
                                 LEAVES.medical.leaveTypeName.leaveTitle!,
                                 style: radioTextStyle,
@@ -141,6 +143,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                               ),
                             ),
                             child: RadioListTile(
+                              fillColor: MaterialStateProperty.all(primaryBlue),
                               title: Text(
                                 LEAVES.parental.leaveTypeName.leaveTitle!,
                                 style: radioTextStyle,
@@ -178,6 +181,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                           ),
                         ),
                         child: RadioListTile(
+                          fillColor: MaterialStateProperty.all(primaryBlue),
                           title: Text(
                             LEAVES.unpaid.leaveTypeName.leaveTitle!,
                             style: radioTextStyle,

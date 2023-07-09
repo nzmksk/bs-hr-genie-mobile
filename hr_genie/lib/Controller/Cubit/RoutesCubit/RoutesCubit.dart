@@ -8,11 +8,11 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
   RoutesCubit() : super(RoutesCubitState.initial());
   void goToApplyLeave() async {
     emit(RoutesCubitState(
-        status: RouteStatus.loading,
+        status: RouteStatus.loadingLeaveApplication,
         bottomNavItems: PAGES.leave.screenName,
         index: 0));
     // print("STATUS: ${state.status}");
-    // await Future.delayed( Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 500));
     try {
       await AppRouter.router
           .push("${PAGES.leave.screenPath}/${PAGES.leaveApp.screenPath}");

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
@@ -22,15 +23,15 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       const Duration(seconds: 1),
       () async => AppRouter.router
-          .go(await check ? PAGES.leave.screenPath : PAGES.login.screenPath),
+          .go(await check ? PAGES.leave.screenPath : PAGES.leave.screenPath),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      child: Image.asset("assets/md.png"),
+      color: primaryBlack,
+      child: Image.asset("assets/logo.png"),
     );
   }
 }
