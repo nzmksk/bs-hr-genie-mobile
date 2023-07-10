@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:hr_genie/Model/EmployeeModel.dart';
 
 enum AuthStatus { notLogged, loading, loggedIn, error }
 
@@ -14,6 +15,7 @@ class AuthState extends Equatable {
   final String accessToken;
   final String refreshToken;
   final String? errorMessage;
+  final Employee? userData;
 
   const AuthState({
     this.validEmail = true,
@@ -21,6 +23,7 @@ class AuthState extends Equatable {
     required this.email,
     required this.password,
     required this.status,
+    this.userData,
     this.loading = false,
     this.isExist = true,
     this.accessToken = "",
@@ -55,6 +58,7 @@ class AuthState extends Equatable {
     String? accessToken,
     String? refreshToken,
     String? errorMessage,
+    Employee? userData,
   }) {
     return AuthState(
       loading: loading ?? this.loading,
@@ -67,6 +71,7 @@ class AuthState extends Equatable {
       accessToken: accessToken ?? this.accessToken,
       refreshToken: refreshToken ?? this.refreshToken,
       errorMessage: errorMessage ?? this.errorMessage,
+      userData: userData ?? this.userData,
     );
   }
 
@@ -84,5 +89,6 @@ class AuthState extends Equatable {
         accessToken,
         refreshToken,
         errorMessage,
+        userData,
       ];
 }

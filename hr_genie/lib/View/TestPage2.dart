@@ -32,7 +32,8 @@ class _TestPage2State extends State<TestPage2> {
                 lastName: "Raj",
                 gender: "male",
                 email: "dea@gmail.com",
-                nric: "332142412412"));
+                nric: "332142412412",
+                position: 'Software Engineer'));
             setState(() {
               context.read<ApiServiceCubit>().fetchEmployees();
             });

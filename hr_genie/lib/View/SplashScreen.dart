@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       const Duration(seconds: 1),
       () async => AppRouter.router
-          .go(await check ? PAGES.leave.screenPath : PAGES.leave.screenPath),
+          .go(await check ? PAGES.leave.screenPath : PAGES.login.screenPath),
     );
   }
 

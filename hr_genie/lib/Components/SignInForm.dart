@@ -119,7 +119,7 @@ class _SigninFormState extends State<SigninForm> {
                     );
                   },
                 ),
-                hintText: "Your Working email",
+                hintText: "Email address",
                 prefixIcon: const Icon(Icons.email_sharp),
                 onchanged: (value) {
                   setState(() {

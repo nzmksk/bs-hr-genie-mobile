@@ -48,15 +48,20 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
     final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
     final DateTime endTime = startTime.add(const Duration(hours: 2));
     leave.add(Leave(
-        leaveId: "Annual Leave",
-        employeeId: "employeeId",
-        leaveTypeId: "Annual Leave",
-        startDate: DateTime(2023, 6, 30, 9, 00),
-        endDate: DateTime(2023, 7, 2, 13, 00),
-        reason: "reason",
-        attachment: "attachment",
-        applicationStatus: "Pending",
-        approvedRejectedBy: "approvedRejectedBy"));
+      leaveId: "Annual Leave",
+      employeeId: "employeeId",
+      leaveTypeId: "Annual Leave",
+      startDate: DateTime(2023, 6, 30, 9, 00),
+      endDate: DateTime(2023, 7, 2, 13, 00),
+      reason: "reason",
+      attachment: "attachment",
+      applicationStatus: "Pending",
+      approvedRejectedBy: "approvedRejectedBy",
+      createdAt: DateTime(2023, 6, 30, 9, 00),
+      durationType: '',
+      durationLength: 3,
+      rejectReason: '',
+    ));
     return leave;
   }
 }

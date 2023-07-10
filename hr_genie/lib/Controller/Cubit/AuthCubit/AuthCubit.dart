@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ResponseBodyModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
@@ -54,6 +55,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  void fetchUserData(Employee employee) {
+    print("Fetcing User Data");
+    emit(state.copyWith(userData: employee));
+  }
+
   void signIn(String email, String password, BuildContext context) async {
     try {
       final http.Response response = await CallApi().postLogin(
@@ -70,18 +76,26 @@ class AuthCubit extends Cubit<AuthState> {
         final rawCookie = response.headers['set-cookie'];
         late final Cookie parsedCookie;
 
+        final jsonData = json.decode(response.body);
+        final accessToken = jsonData['token'];
+        final Map<String, dynamic> data = jsonData['data'];
+        final employee = Employee.fromJson(data);
+
         if (rawCookie != null) {
           parsedCookie = Cookie.fromSetCookieValue(rawCookie);
         }
-
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('refresh_token', parsedCookie.value);
+        prefs.setString('access_token', accessToken);
+        prefs.setString('user_data', response.body);
         emit(state.copyWith(
           isExist: true,
           validPass: true,
           validEmail: true,
           status: AuthStatus.loggedIn,
-          accessToken: responseBody.token,
-          refreshToken: parsedCookie.value,
+          userData: employee,
         ));
+        print("USER DATA: ${state.userData}");
       } else {
         emit(state.copyWith(
           validEmail: false,
@@ -107,6 +121,8 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void signOut(BuildContext context) async {
+    // print("USER DATA: ${state.userData!.firstName}");
+
     emit(state.copyWith(email: "", password: "", status: AuthStatus.loading));
     try {
       // await Future.delayed(const Duration(seconds: 2));

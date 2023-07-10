@@ -2,6 +2,8 @@
 
 // enum Gender { male, female }
 
+import 'dart:ffi';
+
 class Employee {
   String? departmentId;
   String? employeeId;
@@ -10,57 +12,65 @@ class Employee {
   String? lastName;
   String? gender;
   String? email;
-  String? hashPassword;
+  String? position;
   String? phone;
   String? nric;
   bool? isMarried;
   String? joinedDate;
-  int? tenure;
-  int? age;
+  Uint8? profileImage;
+  DateTime? createdAt;
+  DateTime? lastLogin;
 
-  Employee({
-    this.employeeId,
-    required this.departmentId,
-    required this.employeeRole,
-    required this.firstName,
-    required this.lastName,
-    required this.gender,
-    required this.email,
-    required this.nric,
-    this.hashPassword,
-    this.phone,
-    this.isMarried,
-    this.joinedDate,
-    this.tenure,
-    this.age,
-  });
+  Employee(
+      {this.employeeId,
+      required this.departmentId,
+      required this.employeeRole,
+      required this.firstName,
+      required this.lastName,
+      required this.gender,
+      required this.email,
+      required this.position,
+      required this.nric,
+      this.phone,
+      this.isMarried,
+      this.joinedDate,
+      this.profileImage,
+      this.createdAt,
+      this.lastLogin});
 
   Employee.fromJson(Map<String, dynamic> json) {
-    departmentId = json['department_id'];
-    employeeId = json['employee_id'];
-    employeeRole = json['employee_role'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
+    departmentId = json['departmentId'];
+    employeeId = json['employeeId'];
+    employeeRole = json['employeeRole'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
     gender = json['gender'];
     email = json['email'];
-    phone = json['phone'];
+    position = json['position'];
     nric = json['nric'];
-    isMarried = json['is_married'];
-    joinedDate = json['joined_date'];
+    phone = json['phone'];
+    isMarried = json['isMarried'];
+    joinedDate = json['joinedDate'];
+    profileImage = json['profileImage'];
+    createdAt = DateTime.tryParse(json['createdAt']);
+    lastLogin = DateTime.tryParse(json['lastLogin']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['department_id'] = this.departmentId;
-    data['employee_role'] = this.employeeRole;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
+    data['departmentId'] = this.departmentId;
+    data['employeeRole'] = this.employeeRole;
+    data['firstName'] = this.firstName;
+    data['lastName'] = this.lastName;
     data['gender'] = this.gender;
     data['email'] = this.email;
+    data['position'] = this.position;
     data['phone'] = this.phone;
     data['nric'] = this.nric;
-    data['is_married'] = this.isMarried;
-    data['joined_date'] = this.joinedDate;
+    data['isMarried'] = this.isMarried;
+    data['joinedDate'] = this.joinedDate;
+    data['profileImage'] = this.profileImage;
+    data['lastLogin'] = this.lastLogin;
 
     return data;
   }

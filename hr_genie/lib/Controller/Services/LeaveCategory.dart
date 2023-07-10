@@ -23,15 +23,15 @@ extension LeaveCatergoriesList on LEAVES {
   LeaveCategory get id {
     switch (this) {
       case LEAVES.annual:
-        return LeaveCategory(leaveTypeId: "ANL");
+        return LeaveCategory(leaveTypeId: "AL");
       case LEAVES.medical:
-        return LeaveCategory(leaveTypeId: "MCL");
+        return LeaveCategory(leaveTypeId: "ML");
       case LEAVES.parental:
-        return LeaveCategory(leaveTypeId: "PRL");
+        return LeaveCategory(leaveTypeId: "PL");
       case LEAVES.emergency:
-        return LeaveCategory(leaveTypeId: "EML");
+        return LeaveCategory(leaveTypeId: "EL");
       case LEAVES.unpaid:
-        return LeaveCategory(leaveTypeId: "UNL");
+        return LeaveCategory(leaveTypeId: "UL");
       default:
     }
     return LeaveCategory(leaveTitle: "ERR");

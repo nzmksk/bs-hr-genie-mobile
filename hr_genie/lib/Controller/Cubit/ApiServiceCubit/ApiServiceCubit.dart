@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Model/DepartmentModel.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
+import 'package:hr_genie/Model/HolidayModel.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServiceCubit extends Cubit<ApiServiceState> {

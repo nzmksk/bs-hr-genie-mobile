@@ -45,16 +45,19 @@ class LeavePage extends StatelessWidget {
                   style: TextStyle(color: globalTextColor),
                 ),
               ),
-              body: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ProfileCard(),
-                  RequestCountCard(),
-                  LeaveTabs(),
-                ],
+              body: RefreshIndicator(
+                onRefresh: () async {},
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ProfileCard(),
+                    RequestCountCard(),
+                    LeaveTabs(),
+                  ],
+                ),
               ),
             ),
           );
@@ -68,6 +71,12 @@ class LeavePage extends StatelessWidget {
           return Center(
             child: ShimmerLoading(
               screenName: PAGES.leaveApp.screenName,
+            ),
+          );
+        } else if (state.status == RouteStatus.loadingLeaveDetails) {
+          return Center(
+            child: ShimmerLoading(
+              screenName: PAGES.leaveDetails.screenName,
             ),
           );
         } else if (state.status == RouteStatus.error) {
