@@ -26,7 +26,7 @@ class CallApi {
     return response;
   }
 
-  Future<http.Response> saveUserData() async {
+  Future<Employee> getUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Saving Data and token in sharedPreferences
     String? accessToken = prefs.getString("access_token");
@@ -45,7 +45,7 @@ class CallApi {
         "Bearer": "$accessToken",
       },
     );
-    return response;
+    return employee;
   }
 
   Future<http.Response> fetchLeaveQuota(String accessToken) async {

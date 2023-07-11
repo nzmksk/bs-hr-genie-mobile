@@ -7,18 +7,47 @@ import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends StatefulWidget {
   const ProfileCard({
     super.key,
   });
 
   @override
+  State<ProfileCard> createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      test();
+    });
+  }
+
+  Future<void> test() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('access_token');
+    print("Runinansdjnawdni");
+    context.watch<ApiServiceCubit>().fetchLeaveQuota(accessToken!);
+    context.watch<AuthCubit>().fetchUserData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) async {
+        if (state.status == AuthStatus.loggedIn &&
+            state.userData!.firstName == null) {}
+      },
       builder: (context, state) {
         String? firstName = state.userData?.firstName;
         String? lastName = state.userData?.lastName;
+        print("State: ${state.status}");
+        print("UserData: ${state.userData?.firstName}");
 
         return SingleChildScrollView(
           child: Container(
@@ -26,7 +55,7 @@ class ProfileCard extends StatelessWidget {
               horizontal: 10,
             ),
             width: 400,
-            height: 200,
+            height: 190,
             child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -62,9 +91,9 @@ class ProfileCard extends StatelessWidget {
                     ),
                     BlocBuilder<ApiServiceCubit, ApiServiceState>(
                       builder: (context, state) {
-                        num? annual = state.leaveQuotaList![0]!.quota;
-                        num? medical = state.leaveQuotaList![1]!.quota;
-                        num? parental = state.leaveQuotaList![2]!.quota;
+                        num? annual = state.leaveQuotaList?[0]!.quota ?? 0;
+                        num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
+                        num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
 
                         num? total = annual! + medical! + parental!;
                         num? used = 0;

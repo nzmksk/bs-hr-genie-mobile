@@ -34,7 +34,7 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
     return const DateRangePickerMonthCellStyle(
       // rangeSelectionColor: Colors.red,
       rangeTextStyle: TextStyle(color: globalTextColor),
-      selectionTextStyle: TextStyle(color: Colors.red),
+      // selectionTextStyle: TextStyle(color: Colors.red),
       disabledDatesTextStyle: TextStyle(color: instructionTextColor),
       selectionColor: primaryBlue,
       startRangeSelectionColor: primaryBlue,
@@ -46,14 +46,14 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
           BoxDecoration(shape: BoxShape.rectangle, color: instructionTextColor),
       todayTextStyle:
           TextStyle(color: primaryLightBlue, fontWeight: FontWeight.bold),
-      blackoutDatesDecoration: BoxDecoration(
-          color: Colors.red,
-          // border: Border.all(color: const Color(0xFFF44436), width: 1),
-          shape: BoxShape.circle),
+      // blackoutDatesDecoration: BoxDecoration(
+      //     color: Colors.red,
+      //     // border: Border.all(color: const Color(0xFFF44436), width: 1),
+      //     shape: BoxShape.circle),
       weekendDatesDecoration: BoxDecoration(
           color: Color.fromARGB(255, 61, 61, 61), shape: BoxShape.rectangle),
-      blackoutDateTextStyle: TextStyle(
-          color: instructionTextColor, decoration: TextDecoration.lineThrough),
+      // blackoutDateTextStyle: TextStyle(
+      //     color: instructionTextColor, decoration: TextDecoration.lineThrough),
     );
   }
 
@@ -66,13 +66,13 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
         return BlocBuilder<LeaveFormCubit, LeaveFormState>(
           builder: (context, state) {
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 160),
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 200),
               child: Card(
                 color: primaryBlack,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SfDateRangePicker(
                         todayHighlightColor: primaryBlue,
@@ -82,8 +82,8 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                         ),
                         backgroundColor: primaryBlack,
                         controller: _datePickerController,
-                        allowViewNavigation: true,
-                        showNavigationArrow: true,
+                        // allowViewNavigation: true,
+                        // showNavigationArrow: true,
                         onSelectionChanged: (args) {
                           if (args.value is DateTime) {
                             print("Selected Date: ${args.value.toString()}");

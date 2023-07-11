@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ResponseBodyModel.dart';
@@ -20,9 +21,19 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
+    String userDataRes = prefs.getString('user_data')!;
+    final jsonData = json.decode(userDataRes);
+    final Map<String, dynamic> data = jsonData['data'];
+    final employee = Employee.fromJson(data);
+    emit(state.copyWith(userData: employee));
+
+    String? accessToken = prefs.getString('access_token');
     print("email in Shared Preferences: $email");
-    if (email != null) {
+    if (email != null && accessToken != null) {
       print("You Logged as $email");
+      print("Your Token is $accessToken");
+      emit(state.copyWith(status: AuthStatus.loggedIn));
+
       return true;
     }
     emit(state.copyWith(status: AuthStatus.notLogged));
@@ -55,9 +66,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void fetchUserData(Employee employee) {
+  Future<void> fetchUserData() async {
     print("Fetching User Data");
-    emit(state.copyWith(userData: employee));
+    Employee userData = await CallApi().getUserData();
+
+    emit(state.copyWith(userData: userData));
   }
 
   void signIn(String email, String password, BuildContext context) async {
@@ -96,7 +109,7 @@ class AuthCubit extends Cubit<AuthState> {
           userData: employee,
         ));
         print("USER DATA: ${state.userData}");
-        CallApi().saveUserData();
+        CallApi().getUserData();
         print("Done Fetch");
       } else {
         emit(state.copyWith(

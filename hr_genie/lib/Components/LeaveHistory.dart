@@ -7,6 +7,7 @@ import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Constants/ApplicationStatus.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
@@ -70,6 +71,7 @@ class _LeaveHistoryState extends State<LeaveHistory> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String? accessToken = prefs.getString('access_token');
         context.read<ApiServiceCubit>().fetchLeaveQuota(accessToken!);
+        context.read<AuthCubit>().fetchUserData();
       },
       child: ListView.builder(
           itemCount: leaveList.length,
