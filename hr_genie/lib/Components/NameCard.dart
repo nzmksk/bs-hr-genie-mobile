@@ -32,7 +32,7 @@ class _ProfileCardState extends State<ProfileCard> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('access_token');
     print("Runinansdjnawdni");
-    context.watch<ApiServiceCubit>().fetchLeaveQuota(accessToken!);
+    context.watch<ApiServiceCubit>().getLeaveQuota(accessToken!);
     context.watch<AuthCubit>().fetchUserData();
   }
 

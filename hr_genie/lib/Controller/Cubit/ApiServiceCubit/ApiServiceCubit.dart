@@ -68,7 +68,7 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     } else {}
   }
 
-  Future<void> fetchLeaveQuota(String accessToken) async {
+  Future<void> getLeaveQuota(String accessToken) async {
     http.Response response = await CallApi().fetchLeaveQuota(accessToken);
     print("Running fetchLeaveQuota");
     final jsonData = json.decode(response.body);

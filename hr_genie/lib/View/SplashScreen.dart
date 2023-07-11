@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('access_token');
     Future<bool> check = context.read<AuthCubit>().isLogged();
-    context.read<ApiServiceCubit>().fetchLeaveQuota(accessToken!);
+    context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
 
     AppRouter.router
         .go(await check ? PAGES.leave.screenPath : PAGES.login.screenPath);

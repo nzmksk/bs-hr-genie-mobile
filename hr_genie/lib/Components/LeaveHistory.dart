@@ -70,7 +70,7 @@ class _LeaveHistoryState extends State<LeaveHistory> {
       onRefresh: () async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String? accessToken = prefs.getString('access_token');
-        context.read<ApiServiceCubit>().fetchLeaveQuota(accessToken!);
+        context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
         context.read<AuthCubit>().fetchUserData();
       },
       child: ListView.builder(
