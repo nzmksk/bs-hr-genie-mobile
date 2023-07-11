@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
+import 'package:hr_genie/Controller/Services/CallApi.dart';
 import 'package:hr_genie/Model/DepartmentModel.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/HolidayModel.dart';
+import 'package:hr_genie/Model/LeaveQuotaModel.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServiceCubit extends Cubit<ApiServiceState> {
@@ -39,7 +41,6 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     } else {}
   }
 
-  // http://localhost:2000/employees
   Future<List<Employee>> fetchEmployees() async {
     final response =
         await http.get(Uri.parse('http://$localhost:2000/employees'));
@@ -65,5 +66,18 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     );
     if (response.statusCode == 200) {
     } else {}
+  }
+
+  Future<void> fetchLeaveQuota(String accessToken) async {
+    http.Response response = await CallApi().fetchLeaveQuota(accessToken);
+    print("Running fetchLeaveQuota");
+    final jsonData = json.decode(response.body);
+    final List<dynamic> data = jsonData['data'];
+    List<LeaveQuota> leaveQuotaList = [];
+    for (var item in data) {
+      LeaveQuota leaveQuota = LeaveQuota.fromJson(item);
+      leaveQuotaList.add(leaveQuota);
+    }
+    emit(state.copyWith(leaveQuotaList: leaveQuotaList));
   }
 }

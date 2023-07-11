@@ -22,12 +22,14 @@ class LeaveDetailPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
+              flex: 1,
               child: LeaveDetailInfo(
                 label: 'Leave Type',
                 value: checkLeaveType(leaveModel.leaveTypeId),
               ),
             ),
             Expanded(
+              flex: 1,
               child: LeaveDetailInfo(
                 label: 'Date',
                 value:
@@ -35,6 +37,7 @@ class LeaveDetailPage extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 1,
               child: LeaveDetailInfo(
                 label: 'Duration',
                 value:
@@ -42,6 +45,7 @@ class LeaveDetailPage extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 1,
               child: LeaveDetailInfo(
                 label: 'Reason',
                 value: leaveModel.reason,
@@ -54,29 +58,35 @@ class LeaveDetailPage extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 1,
               child: LeaveDetailInfo(
                 label: 'Status',
                 value: leaveModel.applicationStatus,
               ),
             ),
             const SizedBox(
-              height: 120,
+              height: 30,
             ),
-            const Expanded(
-              child: Text(
-                "You can cancel your leave application during pending only. Otherwise you'll need to inform your manager",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: instructionTextColor, fontSize: 13),
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Text(
+                    "You can cancel your leave application during pending only. Otherwise you'll need to inform your manager",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: instructionTextColor, fontSize: 13),
+                  ),
+                  SubmitButton(
+                    margin: const EdgeInsets.only(bottom: 25, top: 10),
+                    label: "Cancel",
+                    onPressed: leaveModel.applicationStatus == "Pending"
+                        ? () {}
+                        : null,
+                    buttonColor: Colors.red,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SubmitButton(
-              label: "Cancel",
-              onPressed:
-                  leaveModel.applicationStatus == "Pending" ? () {} : null,
-              buttonColor: Colors.red,
             )
           ],
         ),

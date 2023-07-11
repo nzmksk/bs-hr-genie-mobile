@@ -6,12 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Constants/ApplicationStatus.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveCategoryModel.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LeaveHistory extends StatefulWidget {
   const LeaveHistory({super.key});
@@ -63,37 +65,44 @@ class _LeaveHistoryState extends State<LeaveHistory> {
       return b.createdAt.compareTo(a.createdAt);
     });
 
-    return ListView.builder(
-        itemCount: leaveList.length,
-        itemBuilder: (context, index) {
-          String dateStart =
-              DateFormat.yMMMd('en-US').format(leaveList[index].startDate);
+    return RefreshIndicator(
+      onRefresh: () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? accessToken = prefs.getString('access_token');
+        context.read<ApiServiceCubit>().fetchLeaveQuota(accessToken!);
+      },
+      child: ListView.builder(
+          itemCount: leaveList.length,
+          itemBuilder: (context, index) {
+            String dateStart =
+                DateFormat.yMMMd('en-US').format(leaveList[index].startDate);
 
-          return CustomListTile(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-            color: cardColor,
-            leading: CircleAvatar(
-              backgroundColor: checkColor(index),
-              child: Text(
-                leaveList[index].leaveTypeId,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
+            return CustomListTile(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              color: cardColor,
+              leading: CircleAvatar(
+                backgroundColor: checkColor(index),
+                child: Text(
+                  leaveList[index].leaveTypeId,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            title: Text(checkLeaveType(leaveList[index].leaveTypeId)),
-            subtitle: Text(
-              dateStart,
-              style: const TextStyle(color: subtitleTextColor),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              color: globalTextColor,
-            ),
-            onTap: () =>
-                context.read<RoutesCubit>().goToLeaveDetail(leaveList[index]),
-            // trailing: Text(leave[index].startDate),
-          );
-        });
+              title: Text(checkLeaveType(leaveList[index].leaveTypeId)),
+              subtitle: Text(
+                dateStart,
+                style: const TextStyle(color: subtitleTextColor),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                color: globalTextColor,
+              ),
+              onTap: () =>
+                  context.read<RoutesCubit>().goToLeaveDetail(leaveList[index]),
+              // trailing: Text(leave[index].startDate),
+            );
+          }),
+    );
   }
 
   MaterialColor checkColor(int index) {

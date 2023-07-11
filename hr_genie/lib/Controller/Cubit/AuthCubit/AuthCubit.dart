@@ -56,7 +56,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void fetchUserData(Employee employee) {
-    print("Fetcing User Data");
+    print("Fetching User Data");
     emit(state.copyWith(userData: employee));
   }
 
@@ -96,6 +96,8 @@ class AuthCubit extends Cubit<AuthState> {
           userData: employee,
         ));
         print("USER DATA: ${state.userData}");
+        CallApi().saveUserData();
+        print("Done Fetch");
       } else {
         emit(state.copyWith(
           validEmail: false,

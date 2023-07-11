@@ -19,7 +19,7 @@ class Employee {
   String? joinedDate;
   Uint8? profileImage;
   DateTime? createdAt;
-  // DateTime? lastLogin;
+  DateTime? lastLogin;
 
   Employee({
     this.employeeId,
@@ -36,7 +36,7 @@ class Employee {
     this.joinedDate,
     this.profileImage,
     this.createdAt,
-    // this.lastLogin,
+    this.lastLogin,
   });
 
   Employee.fromJson(Map<String, dynamic> json) {
@@ -54,7 +54,7 @@ class Employee {
     joinedDate = json['joinedDate'];
     profileImage = json['profileImage'];
     createdAt = DateTime.tryParse(json['createdAt']);
-    // lastLogin = DateTime.tryParse(json['lastLogin']);
+    lastLogin = DateTime.tryParse(json['lastLogin']);
   }
 
   Map<String, dynamic> toJson() {
@@ -71,7 +71,7 @@ class Employee {
     data['isMarried'] = this.isMarried;
     data['joinedDate'] = this.joinedDate;
     data['profileImage'] = this.profileImage;
-    // data['lastLogin'] = this.lastLogin;
+    data['lastLogin'] = this.lastLogin;
 
     return data;
   }

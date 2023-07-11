@@ -45,19 +45,16 @@ class LeavePage extends StatelessWidget {
                   style: TextStyle(color: globalTextColor),
                 ),
               ),
-              body: RefreshIndicator(
-                onRefresh: () async {},
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    ProfileCard(),
-                    RequestCountCard(),
-                    LeaveTabs(),
-                  ],
-                ),
+              body: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ProfileCard(),
+                  RequestCountCard(),
+                  LeaveTabs(),
+                ],
               ),
             ),
           );
