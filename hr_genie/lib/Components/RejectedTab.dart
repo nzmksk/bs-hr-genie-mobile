@@ -1,9 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Components/LeaveTile.dart';
-import 'package:hr_genie/Constants/Color.dart';
-import 'package:intl/intl.dart';
 
 import '../Model/LeaveModel.dart';
 
@@ -21,20 +18,27 @@ class RejectedTab extends StatelessWidget {
       attachment: faker.lorem.word(),
       applicationStatus: 'Rejected',
       approvedRejectedBy: faker.person.name(),
+      createdAt: DateTime(2023, 6, 30, 9, 00),
+      durationType: '',
+      durationLength: 3,
+      rejectReason: '',
     );
   });
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: ListView.builder(
-              itemCount: leaveList.length,
-              itemBuilder: (context, index) => LeaveTile(
-                  leaveList: leaveList, index: index, tileColor: Colors.red)),
-        )
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {},
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: ListView.builder(
+                itemCount: leaveList.length,
+                itemBuilder: (context, index) => LeaveTile(
+                    leaveList: leaveList, index: index, tileColor: Colors.red)),
+          )
+        ],
+      ),
     );
   }
 }

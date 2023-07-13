@@ -31,29 +31,29 @@ class PickDateReasonRow extends StatefulWidget {
 
 class _PickDateReasonRowState extends State<PickDateReasonRow> {
   DateRangePickerMonthCellStyle monthCellStyle() {
-    return DateRangePickerMonthCellStyle(
-      rangeSelectionColor: Colors.red,
-      rangeTextStyle: const TextStyle(color: globalTextColor),
-      selectionTextStyle: const TextStyle(color: Colors.red),
-      disabledDatesTextStyle: const TextStyle(color: instructionTextColor),
+    return const DateRangePickerMonthCellStyle(
+      // rangeSelectionColor: Colors.red,
+      rangeTextStyle: TextStyle(color: globalTextColor),
+      // selectionTextStyle: TextStyle(color: Colors.red),
+      disabledDatesTextStyle: TextStyle(color: instructionTextColor),
       selectionColor: primaryBlue,
       startRangeSelectionColor: primaryBlue,
       endRangeSelectionColor: primaryBlue,
-      leadingDatesTextStyle: const TextStyle(color: globalTextColor),
-      trailingDatesTextStyle: const TextStyle(color: globalTextColor),
-      textStyle: const TextStyle(color: globalTextColor),
-      todayCellDecoration: const BoxDecoration(
-          shape: BoxShape.rectangle, color: instructionTextColor),
+      leadingDatesTextStyle: TextStyle(color: globalTextColor),
+      trailingDatesTextStyle: TextStyle(color: globalTextColor),
+      textStyle: TextStyle(color: globalTextColor),
+      todayCellDecoration:
+          BoxDecoration(shape: BoxShape.rectangle, color: instructionTextColor),
       todayTextStyle:
-          const TextStyle(color: primaryLightBlue, fontWeight: FontWeight.bold),
-      blackoutDatesDecoration: BoxDecoration(
-          color: Colors.red,
-          border: Border.all(color: const Color(0xFFF44436), width: 1),
-          shape: BoxShape.circle),
-      weekendDatesDecoration: const BoxDecoration(
+          TextStyle(color: primaryLightBlue, fontWeight: FontWeight.bold),
+      // blackoutDatesDecoration: BoxDecoration(
+      //     color: Colors.red,
+      //     // border: Border.all(color: const Color(0xFFF44436), width: 1),
+      //     shape: BoxShape.circle),
+      weekendDatesDecoration: BoxDecoration(
           color: Color.fromARGB(255, 61, 61, 61), shape: BoxShape.rectangle),
-      blackoutDateTextStyle: const TextStyle(
-          color: instructionTextColor, decoration: TextDecoration.lineThrough),
+      // blackoutDateTextStyle: TextStyle(
+      //     color: instructionTextColor, decoration: TextDecoration.lineThrough),
     );
   }
 
@@ -66,13 +66,13 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
         return BlocBuilder<LeaveFormCubit, LeaveFormState>(
           builder: (context, state) {
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 160),
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 200),
               child: Card(
                 color: primaryBlack,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SfDateRangePicker(
                         todayHighlightColor: primaryBlue,
@@ -82,8 +82,8 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                         ),
                         backgroundColor: primaryBlack,
                         controller: _datePickerController,
-                        allowViewNavigation: true,
-                        showNavigationArrow: true,
+                        // allowViewNavigation: true,
+                        // showNavigationArrow: true,
                         onSelectionChanged: (args) {
                           if (args.value is DateTime) {
                             print("Selected Date: ${args.value.toString()}");
@@ -110,20 +110,14 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                               textStyle: TextStyle(color: globalTextColor)),
                           firstDayOfWeek: 1,
                           weekendDays: [6, 7],
-                          enableSwipeSelection: true,
+                          // enableSwipeSelection: true,
                         ),
-                        toggleDaySelection: true,
+                        // toggleDaySelection: true,
                         extendableRangeSelectionDirection:
                             ExtendableRangeSelectionDirection.forward,
                         selectionMode: widget.isFullDay
                             ? DateRangePickerSelectionMode.range
                             : DateRangePickerSelectionMode.single,
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [],
-                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

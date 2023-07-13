@@ -19,24 +19,31 @@ class ApprovedTab extends StatelessWidget {
       attachment: faker.lorem.word(),
       applicationStatus: 'Approved',
       approvedRejectedBy: faker.person.name(),
+      createdAt: DateTime(2023, 6, 30, 9, 00),
+      durationType: 'Full-day',
+      durationLength: 3,
+      rejectReason: '',
     );
   });
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: ListView.builder(
-              itemCount: leaveList.length,
-              itemBuilder: (context, index) => LeaveTile(
-                    onTap: () {},
-                    leaveList: leaveList,
-                    index: index,
-                    tileColor: Colors.green,
-                  )),
-        )
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {},
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: ListView.builder(
+                itemCount: leaveList.length,
+                itemBuilder: (context, index) => LeaveTile(
+                      onTap: () {},
+                      leaveList: leaveList,
+                      index: index,
+                      tileColor: Colors.green,
+                    )),
+          )
+        ],
+      ),
     );
   }
 }

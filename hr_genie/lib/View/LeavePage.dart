@@ -7,6 +7,7 @@ import 'package:hr_genie/Components/NameCard.dart';
 import 'package:hr_genie/Components/RequestCountCard.dart';
 import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
@@ -18,6 +19,7 @@ class LeavePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RoutesCubit, RoutesCubitState>(
       builder: (context, state) {
+        printYellow("State: ${state.status}");
         if (state.status == RouteStatus.initial) {
           return SafeArea(
             child: Scaffold(
@@ -68,6 +70,12 @@ class LeavePage extends StatelessWidget {
           return Center(
             child: ShimmerLoading(
               screenName: PAGES.leaveApp.screenName,
+            ),
+          );
+        } else if (state.status == RouteStatus.loadingLeaveDetails) {
+          return Center(
+            child: ShimmerLoading(
+              screenName: PAGES.leaveDetails.screenName,
             ),
           );
         } else if (state.status == RouteStatus.error) {

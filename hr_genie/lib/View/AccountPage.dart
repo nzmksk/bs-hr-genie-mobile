@@ -45,7 +45,7 @@ class AccountPage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) => const ProfilePictureScreen(
-                                      imageAsset: 'assets/logo.jpeg',
+                                      imageAsset: 'assets/logo.png',
                                     ),
                                   ),
                                 );
@@ -55,7 +55,7 @@ class AccountPage extends StatelessWidget {
                                 child: CircleAvatar(
                                   radius: 80,
                                   backgroundImage: AssetImage(
-                                    'assets/logo.jpeg',
+                                    'assets/logo.png',
                                   ), // Replace with your own image asset
                                 ),
                               ),
@@ -87,12 +87,14 @@ class AccountPage extends StatelessWidget {
                         const SizedBox(height: 20),
                         const Text(
                           'John Doe', // Replace with the user's name
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10),
                         Text(
                           'Software Engineer', // Replace with the user's occupation
-                          style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 18, color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -110,23 +112,19 @@ class AccountPage extends StatelessWidget {
                       },
                     ),
                   ),
-  const Center(
-    
-    child: Padding(
-      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-      child: Text(
-    
-        "Profile Page",
-        style: TextStyle(
-          
-          fontSize: 20, // Replace with the desired font size
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-        ),
-      ),
-    ),
-  ),
-
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      child: Text(
+                        "Profile Page",
+                        style: TextStyle(
+                          fontSize: 20, // Replace with the desired font size
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -143,12 +141,14 @@ class AccountPage extends StatelessWidget {
               const RoundedField(
                 icon: CommunityMaterialIcons.briefcase,
                 label: 'Department',
-                value: 'Department of Quality Assurance', // Replace with the user's department
+                value:
+                    'Department of Quality Assurance', // Replace with the user's department
               ),
               const RoundedField(
                 icon: CommunityMaterialIcons.phone,
                 label: 'Phone',
-                value: '+1 123-456-7890', // Replace with the user's phone number
+                value:
+                    '+1 123-456-7890', // Replace with the user's phone number
               ),
               const RoundedField(
                 icon: CommunityMaterialIcons.gender_male_female,
@@ -174,15 +174,13 @@ class AccountPage extends StatelessWidget {
   }
 }
 
-
-
-
 class RoundedField extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
 
-  const RoundedField({super.key, 
+  const RoundedField({
+    super.key,
     required this.icon,
     required this.label,
     required this.value,
@@ -199,7 +197,7 @@ class RoundedField extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), 
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
               icon,
@@ -209,9 +207,7 @@ class RoundedField extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Expanded(
-            
             child: Container(
-              
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: const Color(0xFF282828), // Blackish grey color
@@ -222,11 +218,16 @@ class RoundedField extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white), // Set the label text color to white
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color:
+                            Colors.white), // Set the label text color to white
                   ),
                   Text(
                     value,
-                    style: const TextStyle(color: Colors.white), // Set the value text color to white
+                    style: const TextStyle(
+                        color:
+                            Colors.white), // Set the value text color to white
                   ),
                 ],
               ),
@@ -241,7 +242,8 @@ class RoundedField extends StatelessWidget {
 class ProfilePictureScreen extends StatelessWidget {
   final String imageAsset;
 
-  const ProfilePictureScreen({Key? key, required this.imageAsset}) : super(key: key);
+  const ProfilePictureScreen({Key? key, required this.imageAsset})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

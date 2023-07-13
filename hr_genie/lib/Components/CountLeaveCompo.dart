@@ -4,7 +4,7 @@ import 'package:hr_genie/Constants/Color.dart';
 
 class CountLeaveComponent extends StatelessWidget {
   final String title;
-  final int? count;
+  final num? count;
   final Color? countColor;
   const CountLeaveComponent({
     super.key,

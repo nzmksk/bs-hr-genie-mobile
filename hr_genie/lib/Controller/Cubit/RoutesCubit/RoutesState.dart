@@ -8,7 +8,8 @@ enum RouteStatus {
   loadingLeavePage,
   success,
   error,
-  loadingLeaveApplication
+  loadingLeaveApplication,
+  loadingLeaveDetails,
 }
 
 class RoutesCubitState extends Equatable {

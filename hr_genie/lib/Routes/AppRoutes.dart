@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:hr_genie/View/AccountDetailPage.dart';
 import 'package:hr_genie/View/AccountPage.dart';
 import 'package:hr_genie/View/HomePage.dart';
 import 'package:hr_genie/View/LeaveApplication.dart';
+import 'package:hr_genie/View/LeaveDetailPage.dart';
 import 'package:hr_genie/View/LeavePage.dart';
 import 'package:hr_genie/View/LoginPage.dart';
 import 'package:hr_genie/View/NotFoundPage.dart';
@@ -40,7 +42,9 @@ class AppRouter {
         builder: (context, state, child) {
           return BlocProvider(
             create: (context) => RoutesCubit(),
-            child: HomePage(screen: child),
+            child: HomePage(
+              screen: child,
+            ),
           );
         },
         routes: [
@@ -85,7 +89,10 @@ class AppRouter {
                 path: PAGES.leaveDetails.screenPath,
                 name: PAGES.leaveDetails.screenName,
                 builder: (context, state) {
-                  return const AccountDetailsPage();
+                  final leaveModel = state.extra as Leave;
+                  return LeaveDetailPage(
+                    leaveModel: leaveModel,
+                  );
                 },
               ),
               GoRoute(

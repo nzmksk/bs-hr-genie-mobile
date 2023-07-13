@@ -31,13 +31,16 @@ class CustomListTile extends StatelessWidget {
         customBorder:
             BeveledRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: ListTile(
             contentPadding: padding,
             // isThreeLine: true,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             leading: leading,
             tileColor: color,
             title: title,

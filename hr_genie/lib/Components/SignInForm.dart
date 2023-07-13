@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/TextField/CustomTextField.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Controller/Services/StatusMessage.dart';
@@ -58,23 +60,39 @@ class _SigninFormState extends State<SigninForm> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Expanded(
-                  child: FittedBox(
-                fit: BoxFit.cover,
-                child: Image.asset(
-                  "assets/logo.png",
-                  height: 600,
-                  width: 600,
+                child: Stack(
+                  children: [
+                    FittedBox(
+                      alignment: Alignment.center,
+                      fit: BoxFit.fitWidth,
+                      child: Image.asset(
+                        "assets/logo.png",
+                        // height: 200,
+                        // width: 300,
+                      ),
+                    ),
+                    const Positioned(
+                      bottom: 30,
+                      left: 84,
+                      child: Text(
+                        "HR GENIE",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const Positioned(
+                      bottom: 20,
+                      left: 116 - 20,
+                      child: Text(
+                        "Fulfilling wishes at work.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ],
                 ),
-              )),
-              const Text(
-                "HR GENIE",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                "Fulfilling wishes at work.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
               ),
               EmailField(
                 autoFocus: autoFocus,
@@ -119,7 +137,7 @@ class _SigninFormState extends State<SigninForm> {
                     );
                   },
                 ),
-                hintText: "Your Working email",
+                hintText: "Email address",
                 prefixIcon: const Icon(Icons.email_sharp),
                 onchanged: (value) {
                   setState(() {
@@ -190,10 +208,10 @@ class _SigninFormState extends State<SigninForm> {
             ],
           ));
         } else if (state.status == AuthStatus.loading) {
-          print("status: ${state.status}");
-          return const Center(child: CircularProgressIndicator());
+          printYellow("status: ${state.status}");
+          return ShimmerLoading(screenName: PAGES.leave.screenName);
         } else {
-          print("status: ${state.status}");
+          printYellow("no status: ${state.status}");
           return const Center(
             child: CircularProgressIndicator(),
           );

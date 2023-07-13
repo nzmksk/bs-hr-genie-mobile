@@ -15,26 +15,37 @@ class PendingTab extends StatelessWidget {
       leaveId: faker.guid.guid(),
       employeeId: faker.person.name(),
       leaveTypeId: faker.guid.guid(),
-      startDate: faker.date.dateTime(minYear: 1990, maxYear: 2023),
-      endDate: faker.date.dateTime(minYear: 1990, maxYear: 2023),
+      startDate: faker.date.dateTime(minYear: 2023, maxYear: 2024),
+      endDate: faker.date.dateTime(minYear: 2023, maxYear: 2024),
       reason: faker.lorem.sentence(),
       attachment: faker.lorem.word(),
       applicationStatus: 'Pending',
       approvedRejectedBy: faker.person.name(),
+      createdAt: faker.date.dateTime(minYear: 2023, maxYear: 2023),
+      durationType: '',
+      durationLength: 3,
+      rejectReason: '',
     );
   });
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: ListView.builder(
-              itemCount: leaveList.length,
-              itemBuilder: (context, index) => LeaveTile(
-                  leaveList: leaveList, index: index, tileColor: Colors.amber)),
-        )
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {},
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: ListView.builder(
+                itemCount: leaveList.length,
+                itemBuilder: (context, index) => LeaveTile(
+                      leaveList: leaveList,
+                      index: index,
+                      tileColor: Colors.amber,
+                      onTap: () {},
+                    )),
+          )
+        ],
+      ),
     );
   }
 }

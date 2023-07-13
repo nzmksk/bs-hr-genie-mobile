@@ -26,6 +26,8 @@ class Response {
         List.from(json['holidays']).map((e) => Holidays.fromJson(e)).toList();
   }
 
+  get statusCode => null;
+
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['holidays'] = holidays.map((e) => e.toJson()).toList();
