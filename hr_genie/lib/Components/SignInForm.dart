@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/TextField/CustomTextField.dart';
@@ -36,20 +37,11 @@ class _SigninFormState extends State<SigninForm> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage!),
-              backgroundColor: Colors.red,
-            ),
-          );
+          showSnackBar(context, state.errorMessage!, Colors.red);
         } else if (state.status == AuthStatus.notLogged) {
         } else if (state.status == AuthStatus.loggedIn) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("You're logged as ${state.email}"),
-              backgroundColor: Colors.green,
-            ),
-          );
+          showSnackBar(
+              context, "You're logged as ${state.email}", Colors.green);
         }
       },
       builder: (context, state) {
@@ -184,7 +176,7 @@ class _SigninFormState extends State<SigninForm> {
                             fontSize: 15)),
                     onTap: () {
                       AppRouter.router.go(
-                          "${PAGES.login.screenPath}/${PAGES.forgotPassword.screenPath}");
+                          "${PAGES.login.screenPath}/${PAGES.passwordUpdate.screenPath}");
                     }),
               ),
               SubmitButton(

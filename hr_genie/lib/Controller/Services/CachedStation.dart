@@ -8,9 +8,21 @@ class CacheStore {
     return result;
   }
 
+  Future<bool?>? getBoolCache(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final result = prefs.getBool(key);
+    return result;
+  }
+
   Future<void> setCache(String key, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
+    print("Setting Cached Key: $key Value: $value");
+  }
+
+  Future<void> setBoolCache(String key, bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(key, value);
     print("Setting Cached Key: $key Value: $value");
   }
 

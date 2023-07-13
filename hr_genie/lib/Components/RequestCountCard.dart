@@ -21,14 +21,6 @@ class _RequestCountCardState extends State<RequestCountCard> {
   Widget build(BuildContext context) {
     return BlocBuilder<ApiServiceCubit, ApiServiceState>(
       builder: (context, state) {
-        // num? annual = state.leaveQuotaList?[0]!.quota;
-        // num? medical = state.leaveQuotaList?[1]!.quota;
-        // num? parental = state.leaveQuotaList?[2]!.quota;
-        // setState(() {
-        //   // total = annual;
-        //   // print("total leave : $total");
-        // });
-
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           // padding: const EdgeInsets.all(8),

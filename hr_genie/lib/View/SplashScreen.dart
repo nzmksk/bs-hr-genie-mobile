@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -21,7 +23,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> checkingUser() async {
     final accessToken = await CacheStore().getCache('access_token');
     final userRole = await CacheStore().getCache('user_role');
+    final updatedPass = await CacheStore().getBoolCache('updated_password');
+
     context.read<AuthCubit>().setUserRole(userRole);
+
     Future<bool> check = context.read<AuthCubit>().isLogged();
     if (accessToken != null) {
       context.read<ApiServiceCubit>().getLeaveQuota(accessToken);
@@ -29,8 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
       print("NotLogged: Qouta Data is null");
     }
 
-    AppRouter.router
-        .go(await check ? PAGES.leave.screenPath : PAGES.login.screenPath);
+    AppRouter.router.go(await check && updatedPass!
+        ? PAGES.leave.screenPath
+        : PAGES.login.screenPath);
   }
 
   @override

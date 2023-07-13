@@ -117,10 +117,12 @@ class AppRouter {
         routes: [
           GoRoute(
             parentNavigatorKey: _rootNavigatorKey,
-            path: PAGES.forgotPassword.screenPath,
-            name: PAGES.forgotPassword.screenName,
+            path: PAGES.passwordUpdate.screenPath,
+            name: PAGES.passwordUpdate.screenName,
             builder: (context, state) {
-              return const PasswordUpdateForm();
+              return WillPopScope(
+                  onWillPop: () async => false,
+                  child: const PasswordUpdateForm());
             },
           )
         ],

@@ -17,6 +17,7 @@ class AuthState extends Equatable {
   final String? errorMessage;
   final Employee? userData;
   final bool? isManager;
+  final bool? isFirstTime;
 
   const AuthState({
     this.validEmail = true,
@@ -31,6 +32,7 @@ class AuthState extends Equatable {
     this.refreshToken = "",
     this.errorMessage,
     this.isManager,
+    this.isFirstTime = false,
   });
   factory AuthState.initial() {
     return const AuthState(
@@ -62,6 +64,7 @@ class AuthState extends Equatable {
     String? errorMessage,
     Employee? userData,
     bool? isManager,
+    bool? isFirstTime,
   }) {
     return AuthState(
       loading: loading ?? this.loading,
@@ -76,6 +79,7 @@ class AuthState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       userData: userData ?? this.userData,
       isManager: isManager ?? this.isManager,
+      isFirstTime: isFirstTime ?? this.isFirstTime,
     );
   }
 
@@ -95,5 +99,6 @@ class AuthState extends Equatable {
         errorMessage,
         userData,
         isManager,
+        isFirstTime,
       ];
 }
