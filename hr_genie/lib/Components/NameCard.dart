@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CountLeaveCompo.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -23,16 +25,16 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      test();
-    });
+    getUserData(context);
   }
 
-  Future<void> test() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? accessToken = prefs.getString('access_token');
-    print("Runinansdjnawdni");
-    context.watch<ApiServiceCubit>().getLeaveQuota(accessToken!);
+  Future<void> getUserData(BuildContext context) async {
+    final accessToken = await CacheStore().getCache('access_token');
+    if (accessToken != null) {
+      context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
+      context.watch<ApiServiceCubit>().getLeaveQuota(accessToken);
+      print("done fetch user data");
+    }
     context.watch<AuthCubit>().fetchUserData();
   }
 
@@ -46,8 +48,9 @@ class _ProfileCardState extends State<ProfileCard> {
       builder: (context, state) {
         String? firstName = state.userData?.firstName;
         String? lastName = state.userData?.lastName;
-        print("State: ${state.status}");
-        print("UserData: ${state.userData?.firstName}");
+        printYellow("State: ${state.status}");
+        print(
+            "UserData: ${state.userData?.firstName} ${state.userData?.lastName}");
 
         return SingleChildScrollView(
           child: Container(
@@ -92,31 +95,40 @@ class _ProfileCardState extends State<ProfileCard> {
                     BlocBuilder<ApiServiceCubit, ApiServiceState>(
                       builder: (context, state) {
                         num? annual = state.leaveQuotaList?[0]!.quota ?? 0;
-                        num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
-                        num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
+                        // num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
+                        // num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
 
-                        num? total = annual! + medical! + parental!;
+                        num? total = annual;
                         num? used = 0;
                         num? available = total - used;
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CountLeaveComponent(
-                              title: 'Available',
-                              count: available,
-                              countColor: Colors.red,
-                            ),
-                            CountLeaveComponent(
-                              title: 'Total',
-                              count: total,
-                              countColor: globalTextColor,
-                            ),
-                            CountLeaveComponent(
-                              title: 'Used',
-                              count: used,
-                              countColor: globalTextColor,
-                            )
-                          ],
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: CountLeaveComponent(
+                                  title: 'Available',
+                                  count: available,
+                                  countColor: Colors.red,
+                                ),
+                              ),
+                              Expanded(
+                                child: CountLeaveComponent(
+                                  title: 'Total',
+                                  count: total,
+                                  countColor: globalTextColor,
+                                ),
+                              ),
+                              Expanded(
+                                child: CountLeaveComponent(
+                                  title: 'Used',
+                                  count: used,
+                                  countColor: globalTextColor,
+                                ),
+                              )
+                            ],
+                          ),
                         );
                       },
                     )

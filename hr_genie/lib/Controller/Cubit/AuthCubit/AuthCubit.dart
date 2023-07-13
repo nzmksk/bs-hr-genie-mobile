@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:hr_genie/Constants/PrintColor.dart';
+import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ResponseBodyModel.dart';
 import 'package:http/http.dart' as http;
@@ -19,13 +21,19 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
   Future<bool> isLogged() async {
     emit(state.copyWith(status: AuthStatus.loading));
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
-    String userDataRes = prefs.getString('user_data')!;
-    final jsonData = json.decode(userDataRes);
-    final Map<String, dynamic> data = jsonData['data'];
-    final employee = Employee.fromJson(data);
-    emit(state.copyWith(userData: employee));
+    final userDataRes = prefs.getString("user_data");
+
+    if (userDataRes != null) {
+      final jsonData = json.decode(userDataRes);
+      final Map<String, dynamic> data = jsonData['data'];
+      final employee = Employee.fromJson(data);
+      emit(state.copyWith(userData: employee));
+    } else {
+      print("NotLogged: User Data is null");
+    }
 
     String? accessToken = prefs.getString('access_token');
     print("email in Shared Preferences: $email");
@@ -87,18 +95,19 @@ class AuthCubit extends Cubit<AuthState> {
         AppRouter.router.go(PAGES.leave.screenPath);
 
         final rawCookie = response.headers['set-cookie'];
-        late final Cookie parsedCookie;
+        // late final Cookie parsedCookie;
 
         final jsonData = json.decode(response.body);
         final accessToken = jsonData['token'];
         final Map<String, dynamic> data = jsonData['data'];
         final employee = Employee.fromJson(data);
 
-        if (rawCookie != null) {
-          parsedCookie = Cookie.fromSetCookieValue(rawCookie);
-        }
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('refresh_token', parsedCookie.value);
+        if (rawCookie != null) {
+          // parsedCookie = Cookie.fromSetCookieValue(rawCookie);
+          prefs.setString('refresh_token', rawCookie);
+          print("rawCookie: $rawCookie");
+        }
         prefs.setString('access_token', accessToken);
         prefs.setString('user_data', response.body);
         emit(state.copyWith(
@@ -108,9 +117,8 @@ class AuthCubit extends Cubit<AuthState> {
           status: AuthStatus.loggedIn,
           userData: employee,
         ));
-        print("USER DATA: ${state.userData}");
         CallApi().getUserData();
-        print("Done Fetch");
+        printGreen("Done Fetch User Data");
       } else {
         emit(state.copyWith(
           validEmail: false,
@@ -136,11 +144,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void signOut(BuildContext context) async {
-    // print("USER DATA: ${state.userData!.firstName}");
-
     emit(state.copyWith(email: "", password: "", status: AuthStatus.loading));
     try {
-      // await Future.delayed(const Duration(seconds: 2));
+      final accessToken = await CacheStore().getCache('access_token');
+      CallApi().postLogout(accessToken!);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('email');
       emit(state.copyWith(status: AuthStatus.notLogged));

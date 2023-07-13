@@ -9,6 +9,7 @@ import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveCategoryModel.dart';
@@ -68,8 +69,7 @@ class _LeaveHistoryState extends State<LeaveHistory> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? accessToken = prefs.getString('access_token');
+        final accessToken = await CacheStore().getCache('access_token');
         context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
         context.read<AuthCubit>().fetchUserData();
       },

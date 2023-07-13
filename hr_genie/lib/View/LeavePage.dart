@@ -7,27 +7,19 @@ import 'package:hr_genie/Components/NameCard.dart';
 import 'package:hr_genie/Components/RequestCountCard.dart';
 import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
-import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LeavePage extends StatelessWidget {
   const LeavePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RoutesCubit, RoutesCubitState>(
-      listener: (context, state) async {
-        // if (state.status == RouteStatus.loadingLeavePage) {
-        //   SharedPreferences prefs = await SharedPreferences.getInstance();
-        //   String? accessToken = prefs.getString('access_token');
-        //   context.watch<ApiServiceCubit>().fetchLeaveQuota(accessToken!);
-        // }
-      },
+    return BlocBuilder<RoutesCubit, RoutesCubitState>(
       builder: (context, state) {
-        print("State: ${state.status}");
+        printYellow("State: ${state.status}");
         if (state.status == RouteStatus.initial) {
           return SafeArea(
             child: Scaffold(
