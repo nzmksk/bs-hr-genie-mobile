@@ -29,7 +29,7 @@ class CallApi {
     return response;
   }
 
-  Future<http.Response> postLogout(String accessToken) async {
+  Future<void> postLogout(String accessToken) async {
     http.Response response = await http.post(
       Uri.parse('$baseUrl/logout'),
       headers: {
@@ -37,28 +37,26 @@ class CallApi {
         "Authorization": accessToken,
       },
     );
-    return response;
   }
 
   Future<Employee> getUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     //Saving Data and token in sharedPreferences
-    String? accessToken = prefs.getString("access_token");
-    String userDataRes = prefs.getString('user_data')!;
+    final accessToken = await CacheStore().getCache('access_token')!;
+    final userDataRes = await CacheStore().getCache('user_data')!;
 
-    final jsonData = json.decode(userDataRes);
+    final jsonData = json.decode(userDataRes!);
     final Map<String, dynamic> data = jsonData['data'];
     final employee = Employee.fromJson(data);
     String id = employee.employeeId!;
     print("User ID: $id");
     //Calling to get the User Data
-    http.Response response = await http.get(
-      Uri.parse('$baseUrl/employees/$id'),
-      headers: {
-        "Content-Type": "application/json",
-        "Bearer": "$accessToken",
-      },
-    );
+    // http.Response response = await http.get(
+    //   Uri.parse('$baseUrl/employees/$id'),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Bearer": "$accessToken",
+    //   },
+    // );
 
     return employee;
   }

@@ -42,7 +42,9 @@ class AppRouter {
         builder: (context, state, child) {
           return BlocProvider(
             create: (context) => RoutesCubit(),
-            child: HomePage(screen: child),
+            child: HomePage(
+              screen: child,
+            ),
           );
         },
         routes: [

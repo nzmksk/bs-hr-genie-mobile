@@ -1,3 +1,4 @@
+import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheStore {
@@ -17,5 +18,16 @@ class CacheStore {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(key);
     print("Removed Cached Key: $key");
+  }
+
+  Future<void> removeAll() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('email');
+    prefs.remove('refresh_token');
+    prefs.remove('access_token');
+    prefs.remove('user_data');
+    prefs.remove('user_role');
+
+    printGreen("Removed All Cached");
   }
 }

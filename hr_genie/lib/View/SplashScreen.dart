@@ -20,6 +20,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Future<void> checkingUser() async {
     final accessToken = await CacheStore().getCache('access_token');
+    final userRole = await CacheStore().getCache('user_role');
+    context.read<AuthCubit>().setUserRole(userRole);
     Future<bool> check = context.read<AuthCubit>().isLogged();
     if (accessToken != null) {
       context.read<ApiServiceCubit>().getLeaveQuota(accessToken);

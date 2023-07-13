@@ -1,8 +1,9 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
@@ -96,28 +97,36 @@ class AuthCubit extends Cubit<AuthState> {
 
         final rawCookie = response.headers['set-cookie'];
         // late final Cookie parsedCookie;
-
         final jsonData = json.decode(response.body);
         final accessToken = jsonData['token'];
+
         final Map<String, dynamic> data = jsonData['data'];
         final employee = Employee.fromJson(data);
+        final userRole = employee.employeeRole;
+        await CacheStore().setCache('user_role', userRole!);
+        final bool isManager = userRole == 'manager' ? true : false;
 
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         if (rawCookie != null) {
           // parsedCookie = Cookie.fromSetCookieValue(rawCookie);
-          prefs.setString('refresh_token', rawCookie);
+          await CacheStore().setCache('refresh_token', rawCookie);
+          // prefs.setString('refresh_token', rawCookie);
           print("rawCookie: $rawCookie");
         }
-        prefs.setString('access_token', accessToken);
-        prefs.setString('user_data', response.body);
+        await CacheStore().setCache('access_token', accessToken);
+        await CacheStore().setCache('user_data', response.body);
+        // prefs.setString('access_token', accessToken);
+        // prefs.setString('user_data', response.body);
         emit(state.copyWith(
           isExist: true,
           validPass: true,
           validEmail: true,
           status: AuthStatus.loggedIn,
           userData: employee,
+          isManager: isManager,
         ));
         CallApi().getUserData();
+        printYellow("User Role: $userRole");
+        printYellow("isManager: ${state.isManager}");
         printGreen("Done Fetch User Data");
       } else {
         emit(state.copyWith(
@@ -147,15 +156,26 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(email: "", password: "", status: AuthStatus.loading));
     try {
       final accessToken = await CacheStore().getCache('access_token');
-      CallApi().postLogout(accessToken!);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.remove('email');
+      await CallApi().postLogout(accessToken!);
+      await CacheStore().removeAll();
       emit(state.copyWith(status: AuthStatus.notLogged));
+      showSnackBar(context, 'Successfully Log out', Colors.green);
+      printGreen("Successfully Log out");
     } catch (e) {
       emit(state.copyWith(status: AuthStatus.error));
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Error: $e")));
       emit(state.copyWith(status: AuthStatus.notLogged));
+    }
+  }
+
+  void setUserRole(String? role) {
+    if (role == 'manager') {
+      emit(state.copyWith(isManager: true));
+      printYellow("User is a MANAGER");
+    } else {
+      emit(state.copyWith(isManager: false));
+      printYellow("User is a EMPLOYEE");
     }
   }
 }

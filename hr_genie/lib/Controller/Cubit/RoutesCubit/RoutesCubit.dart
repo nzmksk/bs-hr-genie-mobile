@@ -69,12 +69,12 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
     }
   }
 
-  void goToRequestBar() {
-    emit(RoutesCubitState(
-        bottomNavItems: PAGES.request.screenName,
-        index: 1,
-        status: RouteStatus.initial));
-  }
+  // void goToRequestBar() {
+  //   emit(RoutesCubitState(
+  //       bottomNavItems: PAGES.request.screenName,
+  //       index: 1,
+  //       status: RouteStatus.initial));
+  // }
 
   void employeeNavBarItem(int index) {
     switch (index) {
