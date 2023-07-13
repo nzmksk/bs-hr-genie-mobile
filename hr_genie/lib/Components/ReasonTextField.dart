@@ -72,6 +72,7 @@ class _ReasonFieldState extends State<ReasonField> {
             return Container(
               margin: const EdgeInsets.fromLTRB(30, 150, 30, 350),
               child: Card(
+                color: primaryBlack,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -89,9 +90,10 @@ class _ReasonFieldState extends State<ReasonField> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         "Add a reason by filling the field and tapping Add, remove by tapping Remove without filling, or edit by filling a new reason and tapping Edit.",
-                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                        style: TextStyle(
+                            fontSize: 12, color: instructionTextColor),
                       ),
                       const SizedBox(
                         height: 10,

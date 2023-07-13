@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hr_genie/Constants/Color.dart';
 
 class LimitedTextField extends StatefulWidget {
   final int maxLength;
@@ -43,6 +44,7 @@ class _LimitedTextFieldState extends State<LimitedTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: const TextStyle(color: globalTextColor),
       focusNode: widget.focus,
       autofocus: true,
       onChanged: widget.onchanged,
@@ -51,8 +53,12 @@ class _LimitedTextFieldState extends State<LimitedTextField> {
       maxLength: widget.maxLength,
       maxLines: null, // Allow multiline input
       decoration: InputDecoration(
+        labelStyle: const TextStyle(color: globalTextColor),
+        counterStyle: const TextStyle(color: instructionTextColor),
         counterText: '$_remainingChars/${widget.maxLength}',
+        hintStyle: const TextStyle(color: instructionTextColor),
         hintText: "Reason",
+        fillColor: globalTextColor,
       ),
     );
   }

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
@@ -10,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CallApi {
-  String baseUrl = 'http://192.168.18.30:2000';
+  String? baseUrl = dotenv.env['baseUrl'];
   // String? accessToken;
   Future<http.Response> postLogin({
     required email,
@@ -133,7 +134,7 @@ class CallApi {
       String? accessToken,
       Map<String, dynamic>? requestBody}) async {
     // TODO: change this address to env
-    String baseUrl = 'http://192.168.18.30:2000';
+    String? baseUrl = dotenv.env['baseUrl'];
 
     Map<String, String> requestHeader = {
       "Content-Type": "application/json",
@@ -159,6 +160,25 @@ class CallApi {
           await refreshToken(originalRequest: request);
       if (refreshResponse != null) {}
     }
+    return response;
+  }
+
+  Future<http.Response> postNewPassword({
+    required newPassword,
+  }) async {
+    final accessToken = await CacheStore().getCache('access_token')!;
+    print("accessToken:$accessToken");
+    http.Response response = await http.post(
+      Uri.parse('$baseUrl/first_login'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${accessToken ?? ""}",
+      },
+      body: jsonEncode({
+        "password": newPassword,
+      }),
+    );
+    print('returning respone from postNewPassword');
     return response;
   }
 }

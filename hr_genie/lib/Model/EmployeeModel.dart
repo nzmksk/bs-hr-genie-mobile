@@ -20,6 +20,7 @@ class Employee {
   Uint8? profileImage;
   DateTime? createdAt;
   DateTime? lastLogin;
+  bool? isPasswordUpdated;
 
   Employee({
     this.employeeId,
@@ -37,6 +38,7 @@ class Employee {
     this.profileImage,
     this.createdAt,
     this.lastLogin,
+    this.isPasswordUpdated,
   });
 
   Employee.fromJson(Map<String, dynamic> json) {
@@ -53,8 +55,9 @@ class Employee {
     isMarried = json['isMarried'];
     joinedDate = json['joinedDate'];
     profileImage = json['profileImage'];
-    createdAt = DateTime.tryParse(json['createdAt']);
-    lastLogin = DateTime.tryParse(json['lastLogin']);
+    createdAt = DateTime.parse(json['createdAt']);
+    lastLogin = DateTime.parse(json['lastLogin']);
+    isPasswordUpdated = json['isPasswordUpdated'];
   }
 
   Map<String, dynamic> toJson() {
@@ -72,6 +75,7 @@ class Employee {
     data['joinedDate'] = this.joinedDate;
     data['profileImage'] = this.profileImage;
     data['lastLogin'] = this.lastLogin;
+    data['isPasswordUpdated'] = this.isPasswordUpdated;
 
     return data;
   }
