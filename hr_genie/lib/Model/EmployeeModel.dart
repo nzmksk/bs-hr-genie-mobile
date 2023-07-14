@@ -18,8 +18,8 @@ class Employee {
   bool? isMarried;
   String? joinedDate;
   Uint8? profileImage;
-  DateTime? createdAt;
-  DateTime? lastLogin;
+  String? createdAt;
+  String? lastLogin;
   bool? isPasswordUpdated;
 
   Employee({
@@ -55,8 +55,8 @@ class Employee {
     isMarried = json['isMarried'];
     joinedDate = json['joinedDate'];
     profileImage = json['profileImage'];
-    createdAt = DateTime.parse(json['createdAt']);
-    lastLogin = DateTime.parse(json['lastLogin']);
+    createdAt = json['createdAt'];
+    lastLogin = json['lastLogin'];
     isPasswordUpdated = json['isPasswordUpdated'];
   }
 
