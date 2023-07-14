@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
@@ -16,10 +15,10 @@ import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Controller/Services/CallApi.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
+
   Future<bool> isLogged() async {
     emit(state.copyWith(status: AuthStatus.loading));
 
@@ -50,32 +49,6 @@ class AuthCubit extends Cubit<AuthState> {
     return false;
   }
 
-  void emailChanged(String value) async {
-    bool emailValid = EmailValidator.validate(value);
-    emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
-    await Future.delayed(const Duration(milliseconds: 900));
-    if (emailValid) {
-      emit(state.copyWith(
-        email: value,
-        validEmail: true,
-        status: AuthStatus.notLogged,
-      ));
-    } else {
-      emit(state.copyWith(
-          email: value, validEmail: false, status: AuthStatus.notLogged));
-    }
-  }
-
-  void passwordChanged(String value) async {
-    await Future.delayed(const Duration(milliseconds: 900));
-
-    if (value == "") {
-      emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
-    } else {
-      emit(state.copyWith(password: value, status: AuthStatus.notLogged));
-    }
-  }
-
   Future<void> fetchUserData() async {
     print("Fetching User Data");
     Employee userData = await CallApi().getUserData();
@@ -90,7 +63,6 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
-
       ResponseBody responseBody =
           ResponseBody.fromJson(jsonDecode(response.body));
       if (response.statusCode == 200) {
@@ -103,7 +75,7 @@ class AuthCubit extends Cubit<AuthState> {
         final userRole = employee.employeeRole;
         final isPasswordUpdated = employee.isPasswordUpdated;
 
-        final bool isManager = userRole == 'manager' ? true : false;
+        final bool isManager = userRole == 'manager';
 
         emit(state.copyWith(
           isExist: true,
@@ -124,14 +96,17 @@ class AuthCubit extends Cubit<AuthState> {
         await CacheStore().setCache('access_token', accessToken);
         await CacheStore().setCache('user_role', userRole!);
         await CacheStore().setCache('user_data', response.body);
+
         if (rawCookie != null) {
           await CacheStore().setCache('refresh_token', rawCookie);
         }
+
         if (!isPasswordUpdated!) {
-          printRed("Password update: $isPasswordUpdated");
+          printRed("Need password update: ${!isPasswordUpdated}");
           AppRouter.router.go(
               "${PAGES.login.screenPath}/${PAGES.passwordUpdate.screenPath}");
           await CacheStore().setBoolCache('updated_password', false);
+          await CacheStore().setCache('email', email);
         } else {
           printGreen("Password update: $isPasswordUpdated");
           AppRouter.router.go(PAGES.leave.screenPath);
@@ -144,8 +119,6 @@ class AuthCubit extends Cubit<AuthState> {
           status: AuthStatus.error,
         ));
       }
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', email);
     } catch (error) {
       if (error is http.ClientException || error is SocketException) {
         emit(state.copyWith(
@@ -200,6 +173,32 @@ class AuthCubit extends Cubit<AuthState> {
       print("ERROR: ${response.statusCode}");
       print("ERROR: ${response.body}");
       emit(state.copyWith(status: AuthStatus.notLogged));
+    }
+  }
+
+  void emailChanged(String value) async {
+    bool emailValid = EmailValidator.validate(value);
+    emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
+    await Future.delayed(const Duration(milliseconds: 900));
+    if (emailValid) {
+      emit(state.copyWith(
+        email: value,
+        validEmail: true,
+        status: AuthStatus.notLogged,
+      ));
+    } else {
+      emit(state.copyWith(
+          email: value, validEmail: false, status: AuthStatus.notLogged));
+    }
+  }
+
+  void passwordChanged(String value) async {
+    await Future.delayed(const Duration(milliseconds: 900));
+
+    if (value == "") {
+      emit(state.copyWith(validPass: true, status: AuthStatus.notLogged));
+    } else {
+      emit(state.copyWith(password: value, status: AuthStatus.notLogged));
     }
   }
 }

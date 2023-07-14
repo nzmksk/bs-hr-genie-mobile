@@ -30,6 +30,12 @@ class _SigninFormState extends State<SigninForm> {
   }
 
   @override
+  void dispose() {
+    passwordController.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //development variables area
     const bool autoFocus = false;
@@ -187,6 +193,7 @@ class _SigninFormState extends State<SigninForm> {
                         context
                             .read<AuthCubit>()
                             .signIn(state.email, state.password, context);
+                        passwordController.clear();
                       }
                     : null,
               ),
