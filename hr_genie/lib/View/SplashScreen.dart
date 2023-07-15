@@ -10,7 +10,6 @@ import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

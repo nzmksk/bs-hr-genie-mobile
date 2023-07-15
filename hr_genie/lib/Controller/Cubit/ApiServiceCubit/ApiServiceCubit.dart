@@ -6,6 +6,7 @@ import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Controller/Services/CallApi.dart';
 import 'package:hr_genie/Model/ErrorModel.dart';
+import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Model/LeaveQuotaModel.dart';
 import 'package:http/http.dart' as http;
 
@@ -139,5 +140,20 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       leaveQuotaList.add(leaveQuota);
     }
     emit(state.copyWith(leaveQuotaList: leaveQuotaList));
+  }
+
+  Future<void> getMyLeaves(String accessToken) async {
+    http.Response response = await CallApi().fetchHistoryLeaves();
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body)['data'];
+      List<Leave> myLeaveList = [];
+      for (var item in jsonData) {
+        Leave leave = Leave.fromJson(item);
+        myLeaveList.add(leave);
+      }
+      printGreen("STATUS CODE = ${response.statusCode}");
+    } else {
+      printRed("STATUS CODE = ${response.statusCode}");
+    }
   }
 }

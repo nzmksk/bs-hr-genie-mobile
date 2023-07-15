@@ -54,7 +54,7 @@ class LeavePage extends StatelessWidget {
                     height: 10,
                   ),
                   ProfileCard(),
-                  RequestCountCard(),
+                  // RequestCountCard(),
                   LeaveTabs(),
                 ],
               ),

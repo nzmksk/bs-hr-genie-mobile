@@ -7,6 +7,7 @@ import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Constants/ApplicationStatus.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
@@ -25,92 +26,115 @@ class LeaveHistory extends StatefulWidget {
 }
 
 class _LeaveHistoryState extends State<LeaveHistory> {
-  List<Leave> leaveList = List.generate(10, (index) {
-    final faker = Faker();
-    List<String> leave = [
-      LEAVES.annual.id.leaveTypeId!,
-      LEAVES.emergency.id.leaveTypeId!,
-      LEAVES.parental.id.leaveTypeId!,
-      LEAVES.medical.id.leaveTypeId!,
-      LEAVES.unpaid.id.leaveTypeId!,
-    ];
-    List<String> status = [
-      AppStatus.pending.string,
-      AppStatus.approved.string,
-      AppStatus.rejected.string,
-    ];
-    final randomIndex = Random().nextInt(leave.length);
-    final randomIndex2 = Random().nextInt(status.length);
-    DateTime currentDate = DateTime.now();
+  List<Leave> leaveList = [];
+  // List<Leave> leaveList = List.generate(0, (index) {
+  //   final faker = Faker();
+  //   List<String> leave = [
+  //     LEAVES.annual.id.leaveTypeId!,
+  //     LEAVES.emergency.id.leaveTypeId!,
+  //     LEAVES.parental.id.leaveTypeId!,
+  //     LEAVES.medical.id.leaveTypeId!,
+  //     LEAVES.unpaid.id.leaveTypeId!,
+  //   ];
+  //   List<String> status = [
+  //     AppStatus.pending.string,
+  //     AppStatus.approved.string,
+  //     AppStatus.rejected.string,
+  //   ];
+  //   final randomIndex = Random().nextInt(leave.length);
+  //   final randomIndex2 = Random().nextInt(status.length);
+  //   DateTime currentDate = DateTime.now();
 
-    final DateTime startDate =
-        faker.date.dateTime(minYear: 2023, maxYear: 2024);
-    return Leave(
-      leaveId: faker.guid.guid(),
-      employeeId: faker.person.name(),
-      leaveTypeId: leave[randomIndex],
-      startDate: startDate,
-      endDate: startDate.add(Duration(days: Random().nextInt(10))),
-      reason: faker.lorem.sentence(),
-      attachment: faker.lorem.word(),
-      applicationStatus: status[randomIndex2],
-      approvedRejectedBy: faker.person.name(),
-      createdAt: faker.date.dateTime(maxYear: currentDate.year),
-      durationType: '',
-      durationLength: 3,
-      rejectReason: '',
-    );
-  });
+  //   final DateTime startDate =
+  //       faker.date.dateTime(minYear: 2023, maxYear: 2024);
+  //   return Leave(
+  //     leaveId: faker.guid.guid(),
+  //     employeeId: faker.person.name(),
+  //     leaveTypeId: leave[randomIndex],
+  //     startDate: startDate,
+  //     endDate: startDate.add(Duration(days: Random().nextInt(10))),
+  //     reason: faker.lorem.sentence(),
+  //     attachment: faker.lorem.word(),
+  //     applicationStatus: status[randomIndex2],
+  //     approvedRejectedBy: faker.person.name(),
+  //     createdAt: faker.date.dateTime(maxYear: currentDate.year),
+  //     durationType: '',
+  //     durationLength: 3,
+  //     rejectReason: '',
+  //   );
+  // });
+
+  @override
+  void initState() {
+    super.initState();
+    getMyLeaveList(context);
+  }
+
+  Future<void> getMyLeaveList(BuildContext context) async {
+    final accessToken = await CacheStore().getCache('access_token');
+    if (accessToken != null) {
+      context.read<ApiServiceCubit>().getMyLeaves(accessToken);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    leaveList.sort((a, b) {
-      return b.createdAt.compareTo(a.createdAt);
-    });
+    // leaveList.sort((a, b) {
+    //   return b.createdAt.compareTo(a.createdAt);
+    // });
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        final accessToken = await CacheStore().getCache('access_token');
-        context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
-        context.read<AuthCubit>().fetchUserData();
+    return BlocBuilder<ApiServiceCubit, ApiServiceState>(
+      builder: (context, state) {
+        return RefreshIndicator(
+          onRefresh: () async {
+            final accessToken = await CacheStore().getCache('access_token');
+            context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
+            context.read<AuthCubit>().fetchUserData();
+          },
+          child: ListView.builder(
+              itemCount: state.myLeaveList?.length ?? leaveList.length,
+              itemBuilder: (context, index) {
+                String dateStart = DateFormat.yMMMd('en-US').format(
+                    state.myLeaveList?[index]!.startDate ?? DateTime(2023));
+
+                return CustomListTile(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  color: cardColor,
+                  leading: CircleAvatar(
+                    backgroundColor: checkColor(index,
+                        state.myLeaveList?[index]!.applicationStatus ?? ""),
+                    child: Text(
+                      state.myLeaveList![index]!.leaveTypeId,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  title: Text(checkLeaveType(
+                      state.myLeaveList?[index]!.leaveTypeId ?? "")),
+                  subtitle: Text(
+                    dateStart,
+                    style: const TextStyle(color: subtitleTextColor),
+                  ),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: globalTextColor,
+                  ),
+                  onTap: () => context
+                      .read<RoutesCubit>()
+                      .goToLeaveDetail(state.myLeaveList![index]!),
+                  // trailing: Text(leave[index].startDate),
+                );
+              }),
+        );
       },
-      child: ListView.builder(
-          itemCount: leaveList.length,
-          itemBuilder: (context, index) {
-            String dateStart =
-                DateFormat.yMMMd('en-US').format(leaveList[index].startDate);
-
-            return CustomListTile(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-              color: cardColor,
-              leading: CircleAvatar(
-                backgroundColor: checkColor(index),
-                child: Text(
-                  leaveList[index].leaveTypeId,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              title: Text(checkLeaveType(leaveList[index].leaveTypeId)),
-              subtitle: Text(
-                dateStart,
-                style: const TextStyle(color: subtitleTextColor),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                color: globalTextColor,
-              ),
-              onTap: () =>
-                  context.read<RoutesCubit>().goToLeaveDetail(leaveList[index]),
-              // trailing: Text(leave[index].startDate),
-            );
-          }),
     );
   }
 
-  MaterialColor checkColor(int index) {
-    return leaveList[index].applicationStatus == "Rejected"
+  MaterialColor checkColor(int index, String status) {
+    return status == "Rejected"
         ? Colors.red
-        : leaveList[index].applicationStatus == "Approved"
+        : status == "Approved"
             ? Colors.green
             : Colors.amber;
   }
