@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CallApi {
   String? baseUrl = dotenv.env['baseUrl'];
-  // String? accessToken;
+
   Future<http.Response> postLogin({
     required email,
     required password,
@@ -41,8 +41,6 @@ class CallApi {
   }
 
   Future<Employee> getUserData() async {
-    //Saving Data and token in sharedPreferences
-    final accessToken = await CacheStore().getCache('access_token')!;
     final userDataRes = await CacheStore().getCache('user_data')!;
 
     final jsonData = json.decode(userDataRes!);
@@ -50,14 +48,6 @@ class CallApi {
     final employee = Employee.fromJson(data);
     String id = employee.employeeId!;
     print("User ID: $id");
-    //Calling to get the User Data
-    // http.Response response = await http.get(
-    //   Uri.parse('$baseUrl/employees/$id'),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Bearer": "$accessToken",
-    //   },
-    // );
 
     return employee;
   }
@@ -179,6 +169,18 @@ class CallApi {
       }),
     );
     print('returning respone from postNewPassword');
+    return response;
+  }
+
+  Future<http.Response> fetchHistoryLeaves() async {
+    final accessToken = await CacheStore().getCache('access_token')!;
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/leaves'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${accessToken ?? ""}",
+      },
+    );
     return response;
   }
 }

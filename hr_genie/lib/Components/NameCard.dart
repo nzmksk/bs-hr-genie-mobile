@@ -23,7 +23,6 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserData(context);
   }
@@ -32,7 +31,6 @@ class _ProfileCardState extends State<ProfileCard> {
     final accessToken = await CacheStore().getCache('access_token');
     if (accessToken != null) {
       context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
-      context.watch<ApiServiceCubit>().getLeaveQuota(accessToken);
       print("done fetch user data");
     }
     context.watch<AuthCubit>().fetchUserData();
@@ -58,7 +56,7 @@ class _ProfileCardState extends State<ProfileCard> {
               horizontal: 10,
             ),
             width: 400,
-            height: 190,
+            height: 170,
             child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),

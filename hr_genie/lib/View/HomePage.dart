@@ -10,6 +10,7 @@ import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
+import 'package:badges/badges.dart' as badges;
 
 class HomePage extends StatefulWidget {
   final Widget screen;
@@ -40,17 +41,20 @@ class _HomePageState extends State<HomePage> {
   final managerTabs = [
     BottomNavigationBarRoute(
       initialLocation: PAGES.leave.screenPath,
-      icon: const Icon(Icons.dashboard),
+      icon: const Icon(Icons.home),
       label: 'Leave',
     ),
     BottomNavigationBarRoute(
       initialLocation: PAGES.request.screenPath,
-      icon: const Icon(Icons.approval),
+      icon: const badges.Badge(
+          badgeAnimation: badges.BadgeAnimation.fade(),
+          badgeContent: Text('3'),
+          child: Icon(Icons.calendar_month)),
       label: 'Request',
     ),
     BottomNavigationBarRoute(
       initialLocation: PAGES.account.screenPath,
-      icon: const Icon(Icons.account_box_rounded),
+      icon: const Icon(Icons.person),
       label: 'Account',
     ),
   ];
