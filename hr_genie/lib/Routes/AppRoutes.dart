@@ -71,7 +71,10 @@ class AppRouter {
                 path: PAGES.requestDetails.screenPath,
                 name: PAGES.requestDetails.screenName,
                 builder: (context, state) {
-                  return const RequestDetailPage();
+                  final request = state.extra as Leave;
+                  return RequestDetailPage(
+                    leaveModel: request,
+                  );
                 },
               ),
             ],

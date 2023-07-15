@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -14,54 +17,59 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-          body: SfCalendar(
-        todayHighlightColor: primaryBlue,
-        viewHeaderStyle: const ViewHeaderStyle(
-            dayTextStyle: TextStyle(color: globalTextColor)),
-        headerStyle: const CalendarHeaderStyle(
-            textStyle: TextStyle(color: globalTextColor)),
-        cellBorderColor: globalTextColor,
-        firstDayOfWeek: 1,
-        view: CalendarView.month,
-        dataSource: LeaveDataSource(_getDataSource()),
-        monthViewSettings: MonthViewSettings(
-            showAgenda: true,
-            agendaStyle: const AgendaStyle(
-                dateTextStyle: TextStyle(color: globalTextColor),
+      child: BlocBuilder<ApiServiceCubit, ApiServiceState>(
+        builder: (context, state) {
+          return Scaffold(
+              body: SfCalendar(
+            todayHighlightColor: primaryBlue,
+            viewHeaderStyle: const ViewHeaderStyle(
                 dayTextStyle: TextStyle(color: globalTextColor)),
-            monthCellStyle: MonthCellStyle(
-                todayBackgroundColor: primaryBlue,
-                textStyle: const TextStyle(
-                  color: globalTextColor,
-                ),
-                leadingDatesTextStyle: TextStyle(color: Colors.grey.shade800),
-                trailingDatesTextStyle: TextStyle(color: Colors.grey.shade800)),
-            appointmentDisplayMode: MonthAppointmentDisplayMode.indicator),
-      )),
+            headerStyle: const CalendarHeaderStyle(
+                textStyle: TextStyle(color: globalTextColor)),
+            cellBorderColor: globalTextColor,
+            firstDayOfWeek: 1,
+            view: CalendarView.month,
+            dataSource: LeaveDataSource(_getDataSource(state.myLeaveList)),
+            monthViewSettings: MonthViewSettings(
+                showAgenda: true,
+                agendaStyle: const AgendaStyle(
+                    dateTextStyle: TextStyle(color: globalTextColor),
+                    dayTextStyle: TextStyle(color: globalTextColor)),
+                monthCellStyle: MonthCellStyle(
+                    todayBackgroundColor: primaryBlue,
+                    textStyle: const TextStyle(
+                      color: globalTextColor,
+                    ),
+                    leadingDatesTextStyle:
+                        TextStyle(color: Colors.grey.shade800),
+                    trailingDatesTextStyle:
+                        TextStyle(color: Colors.grey.shade800)),
+                appointmentDisplayMode: MonthAppointmentDisplayMode.indicator),
+          ));
+        },
+      ),
     );
   }
 
-  List<Leave> _getDataSource() {
-    final List<Leave> leave = <Leave>[];
+  List<Leave?>? _getDataSource(List<Leave?>? leave) {
     final DateTime today = DateTime.now();
     final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
     final DateTime endTime = startTime.add(const Duration(hours: 2));
-    leave.add(Leave(
-      leaveId: "Annual Leave",
-      employeeId: "employeeId",
-      leaveTypeId: "Annual Leave",
-      startDate: DateTime(2023, 6, 30, 9, 00),
-      endDate: DateTime(2023, 7, 2, 13, 00),
-      reason: "reason",
-      attachment: "attachment",
-      applicationStatus: "Pending",
-      approvedRejectedBy: "approvedRejectedBy",
-      createdAt: DateTime(2023, 6, 30, 9, 00),
-      durationType: '',
-      durationLength: 3,
-      rejectReason: '',
-    ));
+    // leave.add(Leave(
+    //   leaveId: "Annual Leave",
+    //   employeeId: "employeeId",
+    //   leaveTypeId: "Annual Leave",
+    //   startDate: DateTime(2023, 6, 30, 9, 00),
+    //   endDate: DateTime(2023, 7, 2, 13, 00),
+    //   reason: "reason",
+    //   attachment: "attachment",
+    //   applicationStatus: "Pending",
+    //   approvedRejectedBy: "approvedRejectedBy",
+    //   createdAt: DateTime(2023, 6, 30, 9, 00),
+    //   durationType: '',
+    //   durationLength: 3,
+    //   rejectReason: '',
+    // ));
     return leave;
   }
 }
@@ -69,42 +77,42 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
 class LeaveDataSource extends CalendarDataSource {
   /// Creates a meeting data source, which used to set the appointment
   /// collection to the calendar
-  LeaveDataSource(List<Leave> source) {
+  LeaveDataSource(List<Leave?>? source) {
     appointments = source;
   }
 
-  @override
-  DateTime getStartTime(int index) {
-    return _getLeaveData(index).startDate;
-  }
+  // @override
+  // DateTime getStartTime(int index) {
+  //   return _getLeaveData(index).startDate;
+  // }
 
-  @override
-  DateTime getEndTime(int index) {
-    return _getLeaveData(index).endDate;
-  }
+  // @override
+  // DateTime getEndTime(int index) {
+  //   return _getLeaveData(index).endDate;
+  // }
 
-  @override
-  String getSubject(int index) {
-    return _getLeaveData(index).leaveId;
-  }
+  // @override
+  // String getSubject(int index) {
+  //   return _getLeaveData(index).leaveId;
+  // }
 
   @override
   Color getColor(int index) {
-    String leaveType = _getLeaveData(index).leaveTypeId;
-    switch (leaveType) {
-      case "Annual Leave":
-        return Colors.orange;
-      case "Paternity Leave":
-        return Colors.yellowAccent;
-      case "Medical Leave":
-        return Colors.greenAccent;
-      case "Emergency Leave":
-        return Colors.redAccent;
-      case "Unpaid Leave":
-        return Colors.grey;
-      default:
-        return Colors.blueGrey;
-    }
+    // String leaveType = _getLeaveData(index).leaveTypeId;
+    // switch (leaveType) {
+    //   case "Annual Leave":
+    //     return Colors.orange;
+    //   case "Paternity Leave":
+    //     return Colors.yellowAccent;
+    //   case "Medical Leave":
+    //     return Colors.greenAccent;
+    //   case "Emergency Leave":
+    //     return Colors.redAccent;
+    //   case "Unpaid Leave":
+    //     return Colors.grey;
+    //   default:
+    return Colors.blueGrey;
+    // }
   }
 
   @override

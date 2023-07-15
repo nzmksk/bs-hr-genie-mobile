@@ -129,31 +129,67 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
         "Leave Quota successfully fetched: ${quotaList[0].leaveType} = ${quotaList[0].quota}");
   }
 
-  Future<void> getLeaveRequest(String accessToken) async {
-    http.Response response = await CallApi().fetchLeaveQuota(accessToken);
-    print("Running fetchLeaveQuota");
-    final jsonData = json.decode(response.body);
-    final List<dynamic> data = jsonData['data'];
-    List<LeaveQuota> leaveQuotaList = [];
-    for (var item in data) {
-      LeaveQuota leaveQuota = LeaveQuota.fromJson(item);
-      leaveQuotaList.add(leaveQuota);
-    }
-    emit(state.copyWith(leaveQuotaList: leaveQuotaList));
-  }
+  // Future<void> getLeaveRequest(String accessToken) async {
+  //   http.Response response = await CallApi().fetchLeaveQuota(accessToken);
+  //   print("Running fetchLeaveQuota");
+  //   final jsonData = json.decode(response.body);
+  //   final List<dynamic> data = jsonData['data'];
+  //   List<LeaveQuota> leaveQuotaList = [];
+  //   for (var item in data) {
+  //     LeaveQuota leaveQuota = LeaveQuota.fromJson(item);
+  //     leaveQuotaList.add(leaveQuota);
+  //   }
+
+  //   emit(state.copyWith(leaveQuotaList: leaveQuotaList));
+  // }
 
   Future<void> getMyLeaves(String accessToken) async {
     http.Response response = await CallApi().fetchHistoryLeaves();
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body)['data'];
-      List<Leave> myLeaveList = [];
-      for (var item in jsonData) {
-        Leave leave = Leave.fromJson(item);
-        myLeaveList.add(leave);
-      }
-      printGreen("STATUS CODE = ${response.statusCode}");
-    } else {
-      printRed("STATUS CODE = ${response.statusCode}");
+
+    final jsonData = jsonDecode(response.body)['data'];
+    List<Leave> leaveList = [];
+    for (var item in jsonData) {
+      Leave leave = Leave.fromJson(item);
+      leaveList.add(leave);
     }
+    emit(state.copyWith(myLeaveList: leaveList));
+  }
+
+  Future<void> getRequestLeaves(
+      String accessToken, String? departmentId) async {
+    print("YOUR ARE MANAGER: CALLING Request Leaves");
+    http.Response response = await CallApi().fetchRequestLeaves(departmentId);
+
+    final jsonData = jsonDecode(response.body)['data'];
+    List<Leave> pendingList = [];
+    List<Leave> approvedList = [];
+    List<Leave> rejectedList = [];
+    List<Leave> allList = [];
+
+    for (var item in jsonData) {
+      Leave request = Leave.fromJson(item);
+
+      allList.add(request);
+    }
+    pendingList = allList
+        .where(
+          (element) => element.applicationStatus == 'pending',
+        )
+        .toList();
+    approvedList = allList
+        .where(
+          (element) => element.applicationStatus == 'approved',
+        )
+        .toList();
+    rejectedList = allList
+        .where(
+          (element) => element.applicationStatus == 'rejected',
+        )
+        .toList();
+
+    emit(state.copyWith(
+        pendingList: pendingList,
+        approvedList: approvedList,
+        rejectedList: rejectedList));
   }
 }

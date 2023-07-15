@@ -181,6 +181,19 @@ class CallApi {
         "Authorization": "Bearer ${accessToken ?? ""}",
       },
     );
+    print("History Leaves: ${response.body}");
+    return response;
+  }
+
+  Future<http.Response> fetchRequestLeaves(String? departmentId) async {
+    final accessToken = await CacheStore().getCache('access_token')!;
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/leaves?id=$departmentId'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${accessToken ?? ""}",
+      },
+    );
     return response;
   }
 }

@@ -1,11 +1,11 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:hr_genie/Components/ApprovedTab.dart';
-import 'package:hr_genie/Components/PendingTab.dart';
-import 'package:hr_genie/Components/RejectedTab.dart';
+import 'package:hr_genie/Components/RequestListTab.dart';
 import 'package:hr_genie/Constants/Color.dart';
 
 class RequestPage extends StatelessWidget {
-  RequestPage({super.key});
+  const RequestPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class RequestPage extends StatelessWidget {
             centerTitle: true,
             title: const Text("Leave Approval"),
           ),
-          body: Column(
+          body: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DefaultTabController(
@@ -23,7 +23,7 @@ class RequestPage extends StatelessWidget {
                 child: Expanded(
                   child: Column(
                     children: [
-                      const TabBar(
+                      TabBar(
                         enableFeedback: true,
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicatorColor: primaryLightBlue,
@@ -43,18 +43,22 @@ class RequestPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 5.0,
                       ),
                       Expanded(
                         child: TabBarView(
                           children: [
                             //First index(TABS)
-                            PendingTab(),
-                            //tabs 2
-                            ApprovedTab(),
-                            //tabs 3
-                            RejectedTab(),
+                            RequestListTab(
+                              applicationStatus: 'pending',
+                            ),
+                            RequestListTab(
+                              applicationStatus: 'approved',
+                            ),
+                            RequestListTab(
+                              applicationStatus: 'rejected',
+                            ),
                           ],
                         ),
                       ),

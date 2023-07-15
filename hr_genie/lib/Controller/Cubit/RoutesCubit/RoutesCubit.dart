@@ -19,6 +19,13 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
         RouteStatus.loadingLeaveDetails);
   }
 
+  void goToRequestDetail(Leave request) async {
+    await routePassToPage(
+        "${PAGES.request.screenPath}/${PAGES.requestDetails.screenPath}",
+        request,
+        RouteStatus.loadingLeaveDetails);
+  }
+
   Future<void> routeToPage(String location, RouteStatus loading) async {
     emit(RoutesCubitState(
         status: loading, bottomNavItems: PAGES.leave.screenName, index: 0));
@@ -59,22 +66,13 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
           status: RouteStatus.initial,
           bottomNavItems: PAGES.leave.screenName,
           index: 0));
-      // print("STATUS: ${state.status}");
     } catch (e) {
       emit(RoutesCubitState(
           status: RouteStatus.error,
           bottomNavItems: PAGES.leave.screenName,
           index: 0));
-      // print("STATUS: ${state.status}");
     }
   }
-
-  // void goToRequestBar() {
-  //   emit(RoutesCubitState(
-  //       bottomNavItems: PAGES.request.screenName,
-  //       index: 1,
-  //       status: RouteStatus.initial));
-  // }
 
   void employeeNavBarItem(int index) {
     switch (index) {

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomAppBar.dart';
 import 'package:hr_genie/Components/LeaveTabs.dart';
 import 'package:hr_genie/Components/NameCard.dart';
-import 'package:hr_genie/Components/RequestCountCard.dart';
 import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
