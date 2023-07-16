@@ -6,13 +6,14 @@ import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ErrorModel.dart';
+import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Model/LeaveQuotaModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CallApi {
   String? baseUrl = dotenv.env['baseUrl'];
-  // String? accessToken;
+
   Future<http.Response> postLogin({
     required email,
     required password,
@@ -41,8 +42,6 @@ class CallApi {
   }
 
   Future<Employee> getUserData() async {
-    //Saving Data and token in sharedPreferences
-    final accessToken = await CacheStore().getCache('access_token')!;
     final userDataRes = await CacheStore().getCache('user_data')!;
 
     final jsonData = json.decode(userDataRes!);
@@ -50,14 +49,6 @@ class CallApi {
     final employee = Employee.fromJson(data);
     String id = employee.employeeId!;
     print("User ID: $id");
-    //Calling to get the User Data
-    // http.Response response = await http.get(
-    //   Uri.parse('$baseUrl/employees/$id'),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Bearer": "$accessToken",
-    //   },
-    // );
 
     return employee;
   }
@@ -179,6 +170,46 @@ class CallApi {
       }),
     );
     print('returning respone from postNewPassword');
+    return response;
+  }
+
+  Future<http.Response> fetchHistoryLeaves() async {
+    final accessToken = await CacheStore().getCache('access_token')!;
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/leaves'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${accessToken ?? ""}",
+      },
+    );
+    print("History Leaves: ${response.body}");
+    return response;
+  }
+
+  Future<http.Response> fetchRequestLeaves(String? departmentId) async {
+    final accessToken = await CacheStore().getCache('access_token')!;
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/leaves/$departmentId'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${accessToken ?? ""}",
+      },
+    );
+
+    return response;
+  }
+
+  Future<http.Response> patchRequest(Leave leaveModel) async {
+    final accessToken = await CacheStore().getCache('access_token')!;
+
+    http.Response response = await http.patch(
+        Uri.parse("$baseUrl/leaves/${leaveModel.leaveId}"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${accessToken ?? ""}",
+        },
+        body:
+            jsonEncode({"applicationStatus": "pending", "rejectReason": null}));
     return response;
   }
 }

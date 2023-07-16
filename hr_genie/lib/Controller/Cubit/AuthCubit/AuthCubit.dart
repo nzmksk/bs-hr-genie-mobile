@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:hr_genie/Components/CustomSnackBar.dart';
+import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
@@ -15,6 +16,7 @@ import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Controller/Services/CallApi.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
+import 'package:lottie/lottie.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
@@ -106,8 +108,9 @@ class AuthCubit extends Cubit<AuthState> {
           AppRouter.router.go(
               "${PAGES.login.screenPath}/${PAGES.passwordUpdate.screenPath}");
           await CacheStore().setBoolCache('updated_password', false);
-          await CacheStore().setCache('email', email);
         } else {
+          await CacheStore().setBoolCache('updated_password', true);
+          await CacheStore().setCache('email', email);
           printGreen("Password update: $isPasswordUpdated");
           AppRouter.router.go(PAGES.leave.screenPath);
         }
@@ -140,9 +143,10 @@ class AuthCubit extends Cubit<AuthState> {
       await CallApi().postLogout(accessToken!);
       await CacheStore().removeAll();
       emit(state.copyWith(status: AuthStatus.notLogged));
-      showSnackBar(context, 'Successfully Log out', Colors.green);
+      showCustomSnackBar(context, 'Successfully Log out', Colors.green);
       printGreen("Successfully Log out");
     } catch (e) {
+      print("ERRoR: $e");
       emit(state.copyWith(status: AuthStatus.error));
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Error: $e")));
@@ -160,14 +164,14 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void renewPassword(String newPassword) async {
+  void renewPassword(BuildContext context, newPassword) async {
     emit(state.copyWith(status: AuthStatus.loading));
     http.Response response =
         await CallApi().postNewPassword(newPassword: newPassword);
     print("Renewing Password");
 
     if (response.statusCode == 200) {
-      AppRouter.router.go(PAGES.login.screenPath);
+      showSuccessDialog(context);
       emit(state.copyWith(status: AuthStatus.notLogged));
     } else {
       print("ERROR: ${response.statusCode}");
@@ -200,5 +204,39 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       emit(state.copyWith(password: value, status: AuthStatus.notLogged));
     }
+  }
+
+  void showSuccessDialog(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: Padding(
+                // color: Colors.red,
+                padding: const EdgeInsets.all(10),
+
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Lottie.asset(
+                      'assets/success.json',
+                      animate: true,
+                      repeat: false,
+                    ),
+                    const Text(
+                        'Your password update success!\n You will need to login again\n'),
+                    SubmitButton(
+                        margin: const EdgeInsets.all(10),
+                        label: 'OK',
+                        onPressed: () =>
+                            AppRouter.router.go(PAGES.login.screenPath))
+                  ],
+                ),
+              ));
+        });
   }
 }

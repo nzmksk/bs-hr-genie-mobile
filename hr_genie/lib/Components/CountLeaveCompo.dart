@@ -24,16 +24,11 @@ class CountLeaveComponent extends StatelessWidget {
             height: 5,
           ),
           Container(
-            margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
             child: RichText(
               text: TextSpan(
                 text: "$count",
-                style: TextStyle(color: countColor, fontSize: 40),
-                children: const [
-                  TextSpan(
-                      text: " days",
-                      style: TextStyle(fontSize: 12, color: subtitleTextColor)),
-                ],
+                style: TextStyle(color: countColor, fontSize: 25),
+                children: const [],
               ),
             ),
           )

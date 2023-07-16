@@ -1,21 +1,22 @@
-import 'dart:math';
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:faker/faker.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
-import 'package:hr_genie/Constants/ApplicationStatus.dart';
+import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
-import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
-import 'package:hr_genie/Model/LeaveCategoryModel.dart';
-import 'package:hr_genie/Model/LeaveModel.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
+import 'package:hr_genie/View/DisconnectedServer.dart';
+import 'package:hr_genie/View/EmptyMyLeave.dart';
+import 'package:hr_genie/View/NoInternetPage.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LeaveHistory extends StatefulWidget {
   const LeaveHistory({super.key});
@@ -25,92 +26,104 @@ class LeaveHistory extends StatefulWidget {
 }
 
 class _LeaveHistoryState extends State<LeaveHistory> {
-  List<Leave> leaveList = List.generate(10, (index) {
-    final faker = Faker();
-    List<String> leave = [
-      LEAVES.annual.id.leaveTypeId!,
-      LEAVES.emergency.id.leaveTypeId!,
-      LEAVES.parental.id.leaveTypeId!,
-      LEAVES.medical.id.leaveTypeId!,
-      LEAVES.unpaid.id.leaveTypeId!,
-    ];
-    List<String> status = [
-      AppStatus.pending.string,
-      AppStatus.approved.string,
-      AppStatus.rejected.string,
-    ];
-    final randomIndex = Random().nextInt(leave.length);
-    final randomIndex2 = Random().nextInt(status.length);
-    DateTime currentDate = DateTime.now();
+  bool connected = true;
+  @override
+  void initState() {
+    super.initState();
+    getMyLeaveList(context);
+    checkInternet();
+  }
 
-    final DateTime startDate =
-        faker.date.dateTime(minYear: 2023, maxYear: 2024);
-    return Leave(
-      leaveId: faker.guid.guid(),
-      employeeId: faker.person.name(),
-      leaveTypeId: leave[randomIndex],
-      startDate: startDate,
-      endDate: startDate.add(Duration(days: Random().nextInt(10))),
-      reason: faker.lorem.sentence(),
-      attachment: faker.lorem.word(),
-      applicationStatus: status[randomIndex2],
-      approvedRejectedBy: faker.person.name(),
-      createdAt: faker.date.dateTime(maxYear: currentDate.year),
-      durationType: '',
-      durationLength: 3,
-      rejectReason: '',
-    );
-  });
+  Future<void> getMyLeaveList(BuildContext context) async {
+    final accessToken = await CacheStore().getCache('access_token');
+    if (accessToken != null) {
+      context.read<ApiServiceCubit>().getMyLeaves(accessToken);
+    }
+  }
+
+  Future<void> checkInternet() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        connected = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    leaveList.sort((a, b) {
-      return b.createdAt.compareTo(a.createdAt);
-    });
+    if (connected) {
+      return NoInternetPage();
+    }
+    return BlocBuilder<ApiServiceCubit, ApiServiceState>(
+      builder: (context, state) {
+        print("STATUS: ${state.status}");
+        if (state.status == ApiServiceStatus.loading) {
+          return ShimmerLoading(screenName: PAGES.request.screenName);
+        } else if (state.status == ApiServiceStatus.failed) {
+          return Center(
+              child: DisconnectedServer(errorMsg: state.errorMsg ?? ''));
+        }
+        if (state.myLeaveList == null) {
+          return const EmptyMyLeave();
+        } else {
+          state.myLeaveList!.sort((a, b) {
+            //sorting in ascending order
+            return DateTime.parse(a!.createdAt!)
+                .compareTo(DateTime.parse(b!.createdAt!));
+          });
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        final accessToken = await CacheStore().getCache('access_token');
-        context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
-        context.read<AuthCubit>().fetchUserData();
+          return RefreshIndicator(
+            onRefresh: () async {
+              final accessToken = await CacheStore().getCache('access_token');
+              context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
+              context.read<AuthCubit>().fetchUserData();
+            },
+            child: ListView.builder(
+                itemCount: state.myLeaveList?.length,
+                itemBuilder: (context, index) {
+                  String dateStart = DateFormat.yMMMd('en-US').format(
+                      DateTime.parse(state.myLeaveList![index]!.startDate!));
+
+                  return CustomListTile(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    color: cardColor,
+                    leading: CircleAvatar(
+                      backgroundColor: checkColor(index,
+                          state.myLeaveList?[index]!.applicationStatus ?? ""),
+                      child: Icon(
+                        checkLeaveTypeTitle(
+                            state.myLeaveList?[index]!.applicationStatus!),
+                        color: globalTextColor,
+                      ),
+                    ),
+                    title: Text(checkLeaveType(
+                        (state.myLeaveList?[index]!.leaveTypeId).toString())),
+                    subtitle: Text(
+                      dateStart,
+                      style: const TextStyle(color: subtitleTextColor),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: globalTextColor,
+                    ),
+                    onTap: () => context
+                        .read<RoutesCubit>()
+                        .goToLeaveDetail(state.myLeaveList![index]!),
+                    // trailing: Text(leave[index].startDate),
+                  );
+                }),
+          );
+        }
       },
-      child: ListView.builder(
-          itemCount: leaveList.length,
-          itemBuilder: (context, index) {
-            String dateStart =
-                DateFormat.yMMMd('en-US').format(leaveList[index].startDate);
-
-            return CustomListTile(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-              color: cardColor,
-              leading: CircleAvatar(
-                backgroundColor: checkColor(index),
-                child: Text(
-                  leaveList[index].leaveTypeId,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              title: Text(checkLeaveType(leaveList[index].leaveTypeId)),
-              subtitle: Text(
-                dateStart,
-                style: const TextStyle(color: subtitleTextColor),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                color: globalTextColor,
-              ),
-              onTap: () =>
-                  context.read<RoutesCubit>().goToLeaveDetail(leaveList[index]),
-              // trailing: Text(leave[index].startDate),
-            );
-          }),
     );
   }
 
-  MaterialColor checkColor(int index) {
-    return leaveList[index].applicationStatus == "Rejected"
+  MaterialColor checkColor(int index, String status) {
+    return status == "rejected"
         ? Colors.red
-        : leaveList[index].applicationStatus == "Approved"
+        : status == "approved"
             ? Colors.green
             : Colors.amber;
   }
