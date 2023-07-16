@@ -30,17 +30,23 @@ class TimerButton extends StatefulWidget {
 
 class _TimerButtonState extends State<TimerButton> {
   int time = 5;
+  Timer? timer;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
         if (time != 0) {
           time--;
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
   }
 
   @override
@@ -60,7 +66,7 @@ class _TimerButtonState extends State<TimerButton> {
           ),
           onPressed: time == 0 ? widget.onPressed : null,
           child: Text(
-            "${time != 0 ? '$time  ${widget.label}' : '${widget.label}'}",
+            time != 0 ? '$time  ${widget.label}' : widget.label,
             style: TextStyle(color: widget.textColor),
           )),
     );

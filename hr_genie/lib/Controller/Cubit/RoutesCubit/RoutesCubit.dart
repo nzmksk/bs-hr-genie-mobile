@@ -16,14 +16,16 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
     await routePassToPage(
         "${PAGES.leave.screenPath}/${PAGES.leaveDetails.screenPath}",
         leaveModel,
-        RouteStatus.loadingLeaveDetails);
+        RouteStatus.loadingLeaveDetails,
+        0);
   }
 
   void goToRequestDetail(Leave request) async {
     await routePassToPage(
         "${PAGES.request.screenPath}/${PAGES.requestDetails.screenPath}",
         request,
-        RouteStatus.loadingLeaveDetails);
+        RouteStatus.loadingRequestDetails,
+        1);
   }
 
   Future<void> routeToPage(String location, RouteStatus loading) async {
@@ -53,24 +55,24 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
   }
 
   Future<void> routePassToPage(
-      String location, Leave extra, RouteStatus loading) async {
+      String location, Leave extra, RouteStatus loading, int index) async {
     emit(RoutesCubitState(
-        status: loading, bottomNavItems: PAGES.leave.screenName, index: 0));
+        status: loading, bottomNavItems: PAGES.leave.screenName, index: index));
     try {
       await AppRouter.router.push(location, extra: extra);
       emit(RoutesCubitState(
           status: RouteStatus.success,
           bottomNavItems: PAGES.leave.screenName,
-          index: 0));
+          index: index));
       emit(RoutesCubitState(
           status: RouteStatus.initial,
           bottomNavItems: PAGES.leave.screenName,
-          index: 0));
+          index: index));
     } catch (e) {
       emit(RoutesCubitState(
           status: RouteStatus.error,
           bottomNavItems: PAGES.leave.screenName,
-          index: 0));
+          index: index));
     }
   }
 

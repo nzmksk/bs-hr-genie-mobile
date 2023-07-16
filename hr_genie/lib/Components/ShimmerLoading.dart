@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_genie/Components/ShimmerLeaveApplication.dart';
 import 'package:hr_genie/Components/ShimmerLeaveDetailsPage.dart';
+import 'package:hr_genie/Components/ShimmerRequestDetailPage.dart';
 import 'package:hr_genie/Components/ShimmerRequestPage.dart';
 
 import 'ShimmerLeavePage.dart';
@@ -29,6 +30,8 @@ Widget loadByRouteName(String screenName) {
       return const ShimmerLeaveDetailsPage();
     case "REQUEST":
       return const ShimmerRequest();
+    case "REQUEST DETAILS":
+      return const ShimmerRequestDetailsPage();
     default:
       return const CircularProgressIndicator();
   }

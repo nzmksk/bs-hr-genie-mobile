@@ -52,10 +52,7 @@ class _HomePageState extends State<HomePage> {
     ),
     BottomNavigationBarRoute(
       initialLocation: PAGES.request.screenPath,
-      icon: const badges.Badge(
-          badgeAnimation: badges.BadgeAnimation.fade(),
-          badgeContent: BadgesPending(),
-          child: Icon(Icons.calendar_month)),
+      icon: const CustomBadge(),
       label: 'Request',
     ),
     BottomNavigationBarRoute(
@@ -119,8 +116,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class BadgesPending extends StatelessWidget {
-  const BadgesPending({
+class CustomBadge extends StatelessWidget {
+  const CustomBadge({
     super.key,
   });
 
@@ -128,14 +125,11 @@ class BadgesPending extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ApiServiceCubit, ApiServiceState>(
       builder: (context, state) {
-        if (state.pendingList == null) {
-          return const Visibility(visible: false, child: Text(""));
-        } else {
-          return Text(state.pendingList!
-              .where((element) => element!.applicationStatus == 'pending')
-              .length
-              .toString());
-        }
+        return badges.Badge(
+            showBadge: state.pendingList != null,
+            badgeAnimation: const badges.BadgeAnimation.fade(),
+            badgeContent: Text(state.pendingList?.length.toString() ?? ''),
+            child: const Icon(Icons.calendar_month));
       },
     );
   }

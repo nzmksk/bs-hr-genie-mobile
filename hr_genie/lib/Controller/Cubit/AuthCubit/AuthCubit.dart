@@ -143,9 +143,10 @@ class AuthCubit extends Cubit<AuthState> {
       await CallApi().postLogout(accessToken!);
       await CacheStore().removeAll();
       emit(state.copyWith(status: AuthStatus.notLogged));
-      showSnackBar(context, 'Successfully Log out', Colors.green);
+      showCustomSnackBar(context, 'Successfully Log out', Colors.green);
       printGreen("Successfully Log out");
     } catch (e) {
+      print("ERRoR: $e");
       emit(state.copyWith(status: AuthStatus.error));
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Error: $e")));

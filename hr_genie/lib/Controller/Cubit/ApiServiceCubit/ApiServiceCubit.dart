@@ -5,6 +5,7 @@ import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Controller/Services/CallApi.dart';
+import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ErrorModel.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Model/LeaveQuotaModel.dart';
@@ -13,8 +14,6 @@ import 'package:http/http.dart' as http;
 class ApiServiceCubit extends Cubit<ApiServiceState> {
   ApiServiceCubit() : super(ApiServiceState.initial());
   // final String localhost = "172.20.10.12";
-  final String localhost = "192.168.18.46";
-
   // Future<List<Department>> fetchDepartments() async {
   //   final response =
   //       await http.get(Uri.parse('http://$localhost:2000/departments'));
@@ -107,7 +106,7 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
         }
       }
     }
-    print("Running fetchLeaveQuota");
+
     final jsonData = json.decode(response.body);
     final List<dynamic> data = jsonData['data'];
     List<LeaveQuota> leaveQuotaList = [];
@@ -129,20 +128,6 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
         "Leave Quota successfully fetched: ${quotaList[0].leaveType} = ${quotaList[0].quota}");
   }
 
-  // Future<void> getLeaveRequest(String accessToken) async {
-  //   http.Response response = await CallApi().fetchLeaveQuota(accessToken);
-  //   print("Running fetchLeaveQuota");
-  //   final jsonData = json.decode(response.body);
-  //   final List<dynamic> data = jsonData['data'];
-  //   List<LeaveQuota> leaveQuotaList = [];
-  //   for (var item in data) {
-  //     LeaveQuota leaveQuota = LeaveQuota.fromJson(item);
-  //     leaveQuotaList.add(leaveQuota);
-  //   }
-
-  //   emit(state.copyWith(leaveQuotaList: leaveQuotaList));
-  // }
-
   Future<void> getMyLeaves(String accessToken) async {
     http.Response response = await CallApi().fetchHistoryLeaves();
 
@@ -157,39 +142,91 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
 
   Future<void> getRequestLeaves(
       String accessToken, String? departmentId) async {
-    print("YOUR ARE MANAGER: CALLING Request Leaves");
-    http.Response response = await CallApi().fetchRequestLeaves(departmentId);
+    try {
+      emit(state.copyWith(status: ApiServiceStatus.loading));
+      http.Response response = await CallApi().fetchRequestLeaves(departmentId);
+      final jsonData = jsonDecode(response.body)['data'];
+      List<Leave> pendingList = [];
+      List<Leave> approvedList = [];
+      List<Leave> rejectedList = [];
+      List<Leave> allList = [];
 
-    final jsonData = jsonDecode(response.body)['data'];
-    List<Leave> pendingList = [];
-    List<Leave> approvedList = [];
-    List<Leave> rejectedList = [];
-    List<Leave> allList = [];
+      if (response.statusCode == 200) {
+        for (var item in jsonData) {
+          Leave request = Leave.fromJson(item);
+          print("Request Duration type: ${request.durationType}");
+          allList.add(request);
+        }
+        pendingList = allList
+            .where(
+              (element) => element.applicationStatus == 'pending',
+            )
+            .toList();
+        approvedList = allList
+            .where(
+              (element) => element.applicationStatus == 'approved',
+            )
+            .toList();
+        rejectedList = allList
+            .where(
+              (element) => element.applicationStatus == 'rejected',
+            )
+            .toList();
 
-    for (var item in jsonData) {
-      Leave request = Leave.fromJson(item);
-
-      allList.add(request);
+        emit(state.copyWith(
+            status: ApiServiceStatus.success,
+            allRequestList: allList,
+            pendingList: pendingList,
+            approvedList: approvedList,
+            rejectedList: rejectedList));
+        emit(state.copyWith(status: ApiServiceStatus.initial));
+      } else {
+        final jsonData = jsonDecode(response.body);
+        final Map<String, dynamic> data = jsonData;
+        final error = ErrorModel.fromJson(data);
+        emit(state.copyWith(
+            status: ApiServiceStatus.success,
+            allRequestList: null,
+            pendingList: null,
+            approvedList: null,
+            rejectedList: null,
+            errorMsg: error.errorMsg));
+        emit(state.copyWith(status: ApiServiceStatus.initial));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+          errorMsg: 'please connect to your server',
+          status: ApiServiceStatus.failed));
     }
-    pendingList = allList
-        .where(
-          (element) => element.applicationStatus == 'pending',
-        )
-        .toList();
-    approvedList = allList
-        .where(
-          (element) => element.applicationStatus == 'approved',
-        )
-        .toList();
-    rejectedList = allList
-        .where(
-          (element) => element.applicationStatus == 'rejected',
-        )
-        .toList();
+  }
 
-    emit(state.copyWith(
-        pendingList: pendingList,
-        approvedList: approvedList,
-        rejectedList: rejectedList));
+  Future<void> sendApproval(Leave leaveModel) async {
+    emit(state.copyWith(status: ApiServiceStatus.loading));
+    final accessToken = await CacheStore().getCache('access_token');
+
+    final userDataRes = await CacheStore().getCache('user_data');
+    final jsonData = jsonDecode(userDataRes!);
+    final departmentId = Employee.fromJson(jsonData).departmentId;
+    getRequestLeaves(accessToken!, departmentId);
+    try {
+      http.Response response = await CallApi().patchRequest(leaveModel);
+      if (response.statusCode == 201) {
+        final jsonData = jsonDecode(response.body);
+        final message = jsonData['message'];
+        emit(state.copyWith(
+            putRequestMsg: message, status: ApiServiceStatus.success));
+        printGreen(message);
+        emit(state.copyWith(status: ApiServiceStatus.initial));
+      } else {
+        final jsonData = jsonDecode(response.body);
+        final message = jsonData['message'];
+        printRed(message);
+        emit(state.copyWith(
+            putRequestMsg: message, status: ApiServiceStatus.success));
+        emit(state.copyWith(status: ApiServiceStatus.initial));
+      }
+    } catch (e) {
+      print('Error SendApproval: $e');
+    }
   }
 }

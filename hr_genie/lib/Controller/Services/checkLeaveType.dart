@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 String checkLeaveType(String? leaveId) {
   switch (leaveId) {
     case "1":
@@ -15,20 +18,16 @@ String checkLeaveType(String? leaveId) {
   }
 }
 
-String checkLeaveTypeTitle(String? leaveId) {
-  switch (leaveId) {
-    case "1":
-      return "AL";
-    case "2":
-      return "EL";
-    case "3":
-      return "PL";
-    case "4":
-      return "ML";
-    case "5":
-      return "UL";
+IconData checkLeaveTypeTitle(String? status) {
+  switch (status) {
+    case "pending":
+      return Icons.timer_outlined;
+    case "approved":
+      return Icons.check;
+    case "rejected":
+      return Icons.close;
     default:
-      return '??';
+      return Icons.question_mark;
   }
 }
 

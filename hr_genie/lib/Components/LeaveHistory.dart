@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
+import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
@@ -10,7 +12,10 @@ import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
-import 'package:hr_genie/View/MyLeaveEmpty.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
+import 'package:hr_genie/View/DisconnectedServer.dart';
+import 'package:hr_genie/View/EmptyMyLeave.dart';
+import 'package:hr_genie/View/NoInternetPage.dart';
 import 'package:intl/intl.dart';
 
 class LeaveHistory extends StatefulWidget {
@@ -21,10 +26,12 @@ class LeaveHistory extends StatefulWidget {
 }
 
 class _LeaveHistoryState extends State<LeaveHistory> {
+  bool connected = true;
   @override
   void initState() {
     super.initState();
     getMyLeaveList(context);
+    checkInternet();
   }
 
   Future<void> getMyLeaveList(BuildContext context) async {
@@ -34,12 +41,31 @@ class _LeaveHistoryState extends State<LeaveHistory> {
     }
   }
 
+  Future<void> checkInternet() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        connected = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (connected) {
+      return NoInternetPage();
+    }
     return BlocBuilder<ApiServiceCubit, ApiServiceState>(
       builder: (context, state) {
+        print("STATUS: ${state.status}");
+        if (state.status == ApiServiceStatus.loading) {
+          return ShimmerLoading(screenName: PAGES.request.screenName);
+        } else if (state.status == ApiServiceStatus.failed) {
+          return Center(
+              child: DisconnectedServer(errorMsg: state.errorMsg ?? ''));
+        }
         if (state.myLeaveList == null) {
-          return const MyLeaveEmpty();
+          return const EmptyMyLeave();
         } else {
           state.myLeaveList!.sort((a, b) {
             //sorting in ascending order
@@ -66,11 +92,10 @@ class _LeaveHistoryState extends State<LeaveHistory> {
                     leading: CircleAvatar(
                       backgroundColor: checkColor(index,
                           state.myLeaveList?[index]!.applicationStatus ?? ""),
-                      child: Text(
+                      child: Icon(
                         checkLeaveTypeTitle(
-                            state.myLeaveList?[index]!.leaveTypeId!.toString()),
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                            state.myLeaveList?[index]!.applicationStatus!),
+                        color: globalTextColor,
                       ),
                     ),
                     title: Text(checkLeaveType(

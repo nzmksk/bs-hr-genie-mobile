@@ -7,43 +7,71 @@ enum ApiServiceStatus { initial, loading, success, failed }
 class ApiServiceState extends Equatable {
   // final String? endpoint;
   List<LeaveQuota?>? leaveQuotaList;
+  List<Leave?>? allRequestList;
   List<Leave?>? pendingList;
   List<Leave?>? approvedList;
   List<Leave?>? rejectedList;
-
   List<Leave?>? myLeaveList;
+  ApiServiceStatus status;
+  String? errorMsg;
+  String? putRequestMsg;
 
   ApiServiceState(
-      {required this.leaveQuotaList,
+      {required this.allRequestList,
+      required this.leaveQuotaList,
+      required this.status,
       required this.pendingList,
       required this.approvedList,
       required this.rejectedList,
-      required this.myLeaveList});
+      required this.myLeaveList,
+      this.errorMsg,
+      this.putRequestMsg});
 
   factory ApiServiceState.initial() {
     return ApiServiceState(
+        status: ApiServiceStatus.initial,
+        allRequestList: null,
         leaveQuotaList: null,
         pendingList: null,
         myLeaveList: null,
         approvedList: null,
-        rejectedList: null);
+        rejectedList: null,
+        errorMsg: null,
+        putRequestMsg: null);
   }
 
   ApiServiceState copyWith(
-      {List<LeaveQuota?>? leaveQuotaList,
+      {ApiServiceStatus? status,
+      List<LeaveQuota?>? leaveQuotaList,
+      List<Leave?>? allRequestList,
       List<Leave?>? pendingList,
       List<Leave?>? approvedList,
       List<Leave?>? rejectedList,
-      List<Leave?>? myLeaveList}) {
+      List<Leave?>? myLeaveList,
+      String? errorMsg,
+      String? putRequestMsg}) {
     return ApiServiceState(
+        status: status ?? this.status,
+        allRequestList: allRequestList ?? this.allRequestList,
         leaveQuotaList: leaveQuotaList ?? this.leaveQuotaList,
         pendingList: pendingList ?? this.pendingList,
         myLeaveList: myLeaveList ?? this.myLeaveList,
         approvedList: approvedList ?? this.approvedList,
-        rejectedList: rejectedList ?? this.rejectedList);
+        rejectedList: rejectedList ?? this.rejectedList,
+        errorMsg: errorMsg ?? this.errorMsg,
+        putRequestMsg: putRequestMsg ?? this.putRequestMsg);
   }
 
   @override
-  List<Object?> get props =>
-      [leaveQuotaList, pendingList, approvedList, rejectedList, myLeaveList];
+  List<Object?> get props => [
+        status,
+        leaveQuotaList,
+        allRequestList,
+        pendingList,
+        approvedList,
+        rejectedList,
+        myLeaveList,
+        errorMsg,
+        putRequestMsg
+      ];
 }

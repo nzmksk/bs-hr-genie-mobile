@@ -63,11 +63,11 @@ class AppRouter {
             path: PAGES.request.screenPath,
             name: PAGES.request.screenName,
             pageBuilder: (context, state) {
-              return NoTransitionPage(child: RequestPage());
+              return NoTransitionPage(child: const RequestPage());
             },
             routes: [
               GoRoute(
-                parentNavigatorKey: _shellNavigatorKey,
+                parentNavigatorKey: _rootNavigatorKey,
                 path: PAGES.requestDetails.screenPath,
                 name: PAGES.requestDetails.screenName,
                 builder: (context, state) {
@@ -84,7 +84,7 @@ class AppRouter {
             path: PAGES.leave.screenPath,
             name: PAGES.leave.screenName,
             pageBuilder: (context, state) {
-              return const NoTransitionPage(child: LeavePage());
+              return NoTransitionPage(child: LeavePage());
             },
             routes: [
               GoRoute(

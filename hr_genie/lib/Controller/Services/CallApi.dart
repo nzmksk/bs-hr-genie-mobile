@@ -6,6 +6,7 @@ import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ErrorModel.dart';
+import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Model/LeaveQuotaModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -188,12 +189,27 @@ class CallApi {
   Future<http.Response> fetchRequestLeaves(String? departmentId) async {
     final accessToken = await CacheStore().getCache('access_token')!;
     http.Response response = await http.get(
-      Uri.parse('$baseUrl/leaves?id=$departmentId'),
+      Uri.parse('$baseUrl/leaves/$departmentId'),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer ${accessToken ?? ""}",
       },
     );
+
+    return response;
+  }
+
+  Future<http.Response> patchRequest(Leave leaveModel) async {
+    final accessToken = await CacheStore().getCache('access_token')!;
+
+    http.Response response = await http.patch(
+        Uri.parse("$baseUrl/leaves/${leaveModel.leaveId}"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${accessToken ?? ""}",
+        },
+        body:
+            jsonEncode({"applicationStatus": "pending", "rejectReason": null}));
     return response;
   }
 }

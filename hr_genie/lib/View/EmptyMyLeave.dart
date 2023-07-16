@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hr_genie/Constants/Color.dart';
 
-class MyLeaveEmpty extends StatelessWidget {
-  const MyLeaveEmpty({super.key});
+class EmptyMyLeave extends StatelessWidget {
+  const EmptyMyLeave({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class MyLeaveEmpty extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            "You apply nothing..",
+            "Nothing applied..",
             style: TextStyle(fontSize: 30, color: subtitleTextColor),
           ),
           const SizedBox(

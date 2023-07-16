@@ -1,5 +1,7 @@
 class Leave {
   Leave({
+    required this.firstName,
+    required this.lastName,
     required this.leaveId,
     required this.employeeId,
     required this.leaveTypeId,
@@ -14,6 +16,8 @@ class Leave {
     required this.approvedRejectedBy,
     required this.rejectReason,
   });
+  String? firstName;
+  String? lastName;
   String? leaveId;
   String? employeeId;
   int? leaveTypeId;
@@ -29,6 +33,8 @@ class Leave {
   String? rejectReason;
 
   Leave.fromJson(Map<String, dynamic> json) {
+    firstName = json['firstName'];
+    lastName = json['lastName'];
     leaveId = json['leaveId'];
     employeeId = json['employeeId'];
     leaveTypeId = json['leaveTypeId'];
@@ -46,6 +52,8 @@ class Leave {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> _data = new Map<String, dynamic>();
+    _data['firstName'] = firstName;
+    _data['lastName'] = lastName;
     _data['leaveId'] = leaveId;
     _data['employeeId'] = employeeId;
     _data['leaveTypeId'] = leaveTypeId;

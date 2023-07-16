@@ -23,13 +23,11 @@ class LeaveTile extends StatelessWidget {
       leading: CircleAvatar(
         backgroundColor:
             checkColor(index, leaveList?[index]?.applicationStatus ?? ""),
-        child: Text(
-          checkLeaveTypeTitle(leaveList?[index]?.leaveTypeId.toString()),
-          style: const TextStyle(fontSize: 20, color: Colors.white),
-        ),
+        child: Icon(checkLeaveTypeTitle(leaveList?[index]?.applicationStatus),
+            color: globalTextColor),
       ),
       title: Text(
-        leaveList?[index]!.employeeId ?? "",
+        "${leaveList?[index]!.firstName} ${leaveList?[index]!.lastName}",
         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
       subtitle: Text(

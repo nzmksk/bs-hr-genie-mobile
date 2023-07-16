@@ -45,10 +45,10 @@ class _SigninFormState extends State<SigninForm> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {
-          showSnackBar(context, state.errorMessage!, Colors.red);
+          showCustomSnackBar(context, state.errorMessage!, Colors.red);
         } else if (state.status == AuthStatus.notLogged) {
         } else if (state.status == AuthStatus.loggedIn) {
-          showSnackBar(
+          showCustomSnackBar(
               context, "You're logged as ${state.email}", Colors.green);
         }
       },

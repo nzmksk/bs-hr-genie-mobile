@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
+import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -29,7 +30,9 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
             cellBorderColor: globalTextColor,
             firstDayOfWeek: 1,
             view: CalendarView.month,
-            dataSource: LeaveDataSource(_getDataSource(state.myLeaveList)),
+            dataSource: LeaveDataSource(state.myLeaveList!
+                .where((element) => element!.applicationStatus == 'approved')
+                .toList()),
             monthViewSettings: MonthViewSettings(
                 showAgenda: true,
                 agendaStyle: const AgendaStyle(
@@ -51,27 +54,10 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
     );
   }
 
-  List<Leave?>? _getDataSource(List<Leave?>? leave) {
-    final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    // leave.add(Leave(
-    //   leaveId: "Annual Leave",
-    //   employeeId: "employeeId",
-    //   leaveTypeId: "Annual Leave",
-    //   startDate: DateTime(2023, 6, 30, 9, 00),
-    //   endDate: DateTime(2023, 7, 2, 13, 00),
-    //   reason: "reason",
-    //   attachment: "attachment",
-    //   applicationStatus: "Pending",
-    //   approvedRejectedBy: "approvedRejectedBy",
-    //   createdAt: DateTime(2023, 6, 30, 9, 00),
-    //   durationType: '',
-    //   durationLength: 3,
-    //   rejectReason: '',
-    // ));
-    return leave;
-  }
+  // List<Leave?>? _getDataSource(List<Leave?>? leave) {
+  //   // leave.add();
+  //   return leave;
+  // }
 }
 
 class LeaveDataSource extends CalendarDataSource {
@@ -81,38 +67,39 @@ class LeaveDataSource extends CalendarDataSource {
     appointments = source;
   }
 
-  // @override
-  // DateTime getStartTime(int index) {
-  //   return _getLeaveData(index).startDate;
-  // }
+  @override
+  DateTime getStartTime(int index) {
+    return DateTime.parse(_getLeaveData(index).startDate!);
+  }
 
-  // @override
-  // DateTime getEndTime(int index) {
-  //   return _getLeaveData(index).endDate;
-  // }
+  @override
+  DateTime getEndTime(int index) {
+    return DateTime.parse(_getLeaveData(index).endDate!);
+  }
 
-  // @override
-  // String getSubject(int index) {
-  //   return _getLeaveData(index).leaveId;
-  // }
+  @override
+  String getSubject(int index) {
+    String id = _getLeaveData(index).leaveTypeId!.toString();
+    return checkLeaveType(id);
+  }
 
   @override
   Color getColor(int index) {
-    // String leaveType = _getLeaveData(index).leaveTypeId;
-    // switch (leaveType) {
-    //   case "Annual Leave":
+    // switch (index) {
+    //   case 1:
     //     return Colors.orange;
-    //   case "Paternity Leave":
+    //   case 3:
     //     return Colors.yellowAccent;
-    //   case "Medical Leave":
+    //   case 2:
     //     return Colors.greenAccent;
-    //   case "Emergency Leave":
+    //   case 4:
     //     return Colors.redAccent;
-    //   case "Unpaid Leave":
+    //   case 5:
     //     return Colors.grey;
     //   default:
-    return Colors.blueGrey;
+    //     return Colors.blueGrey;
     // }
+    return Colors.green.shade800;
   }
 
   @override
