@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -126,7 +128,8 @@ class CustomBadge extends StatelessWidget {
     return BlocBuilder<ApiServiceCubit, ApiServiceState>(
       builder: (context, state) {
         return badges.Badge(
-            showBadge: state.pendingList != null,
+            // ignore: prefer_is_empty
+            showBadge: state.pendingList?.length != 0,
             badgeAnimation: const badges.BadgeAnimation.fade(),
             badgeContent: Text(state.pendingList?.length.toString() ?? ''),
             child: const Icon(Icons.calendar_month));
@@ -141,7 +144,7 @@ BlocBuilder<RoutesCubit, RoutesCubitState> _buildBottomNavigation(
       buildWhen: (previous, current) => previous.index != current.index,
       builder: (context, state) {
         return BottomNavigationBar(
-          onTap: (value) {
+          onTap: (value) async {
             if (state.index != value) {
               context.read<RoutesCubit>().employeeNavBarItem(value);
               //Condition here for manager and employee

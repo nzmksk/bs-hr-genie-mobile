@@ -52,8 +52,8 @@ class _LeaveHistoryState extends State<LeaveHistory> {
 
   @override
   Widget build(BuildContext context) {
-    if (connected) {
-      return NoInternetPage();
+    if (!connected) {
+      return const NoInternetPage();
     }
     return BlocBuilder<ApiServiceCubit, ApiServiceState>(
       builder: (context, state) {
@@ -69,8 +69,8 @@ class _LeaveHistoryState extends State<LeaveHistory> {
         } else {
           state.myLeaveList!.sort((a, b) {
             //sorting in ascending order
-            return DateTime.parse(a!.createdAt!)
-                .compareTo(DateTime.parse(b!.createdAt!));
+            return DateTime.parse(b!.createdAt!)
+                .compareTo(DateTime.parse(a!.createdAt!));
           });
 
           return RefreshIndicator(
@@ -125,6 +125,8 @@ class _LeaveHistoryState extends State<LeaveHistory> {
         ? Colors.red
         : status == "approved"
             ? Colors.green
-            : Colors.amber;
+            : status == "pending"
+                ? Colors.amber
+                : Colors.grey;
   }
 }

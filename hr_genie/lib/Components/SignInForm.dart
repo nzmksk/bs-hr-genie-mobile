@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,12 +8,11 @@ import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/TextField/CustomTextField.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
-import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Controller/Services/StatusMessage.dart';
-import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
+import 'package:hr_genie/View/NoInternetPage.dart';
 import 'package:lottie/lottie.dart';
 
 class SigninForm extends StatefulWidget {
@@ -25,6 +25,7 @@ class SigninForm extends StatefulWidget {
 class _SigninFormState extends State<SigninForm> {
   bool isObscure = true;
   TextEditingController passwordController = TextEditingController();
+  bool connected = true;
 
   @override
   void initState() {
@@ -37,11 +38,23 @@ class _SigninFormState extends State<SigninForm> {
     super.dispose();
   }
 
+  Future<void> checkInternet() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        connected = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //development variables area
     const bool autoFocus = false;
     //development variables area
+    if (!connected) {
+      return const NoInternetPage();
+    }
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.error) {

@@ -68,6 +68,8 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 200),
               child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
                 color: primaryBlack,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -250,7 +252,7 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
   }
 
   Color checkTextColor(LeaveFormState state) {
-    if (state.duration == "Full-Day") {
+    if (state.duration == "full-day") {
       return state.startDate != null && state.endDate != null
           ? Colors.white
           : globalTextColor;

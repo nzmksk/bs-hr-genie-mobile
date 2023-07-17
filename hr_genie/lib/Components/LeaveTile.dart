@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Constants/Color.dart';
@@ -48,6 +47,8 @@ class LeaveTile extends StatelessWidget {
         ? Colors.red
         : status == "approved"
             ? Colors.green
-            : Colors.amber;
+            : status == "pending"
+                ? Colors.amber
+                : Colors.grey;
   }
 }

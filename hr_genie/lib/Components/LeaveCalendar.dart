@@ -5,6 +5,7 @@ import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
+import 'package:hr_genie/View/EmptyMyLeave.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class LeaveCalendar extends StatefulWidget {
@@ -20,6 +21,9 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
     return SafeArea(
       child: BlocBuilder<ApiServiceCubit, ApiServiceState>(
         builder: (context, state) {
+          if (state.myLeaveList == null) {
+            return EmptyMyLeave();
+          }
           return Scaffold(
               body: SfCalendar(
             todayHighlightColor: primaryBlue,

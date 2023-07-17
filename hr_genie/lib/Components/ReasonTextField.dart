@@ -19,30 +19,12 @@ class _ReasonFieldState extends State<ReasonField> {
 
   TextEditingController reasonController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // _focus.addListener(() {
-  //   //   reasonController.clear();
-  //   // });
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   // _focus.removeListener(() {
-  //   //   reasonController.clear();
-  //   // });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LeaveFormCubit, LeaveFormState>(
       builder: (context, state) {
         return CustomListTile(
-          color: state.reason != null
-              ? selectedButtonColor
-              : unselectedButtonColor,
+          color: state.reason != null ? Colors.green : unselectedButtonColor,
           margin: const EdgeInsets.fromLTRB(9, 1, 10, 1),
           title: Text(
             "Reason",
@@ -72,6 +54,8 @@ class _ReasonFieldState extends State<ReasonField> {
             return Container(
               margin: const EdgeInsets.fromLTRB(30, 150, 30, 350),
               child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
                 color: primaryBlack,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -82,7 +66,9 @@ class _ReasonFieldState extends State<ReasonField> {
                         flex: 2,
                         child: LimitedTextField(
                           onchanged: (value) {
-                            context.read<LeaveFormCubit>().inputChecking(value);
+                            context
+                                .read<LeaveFormCubit>()
+                                .inputChecking(value, false);
                           },
                           controller: reasonController,
                         ),

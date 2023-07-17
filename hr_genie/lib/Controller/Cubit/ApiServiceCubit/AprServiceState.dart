@@ -15,6 +15,7 @@ class ApiServiceState extends Equatable {
   ApiServiceStatus status;
   String? errorMsg;
   String? putRequestMsg;
+  bool? successApply;
 
   ApiServiceState(
       {required this.allRequestList,
@@ -25,7 +26,8 @@ class ApiServiceState extends Equatable {
       required this.rejectedList,
       required this.myLeaveList,
       this.errorMsg,
-      this.putRequestMsg});
+      this.putRequestMsg,
+      this.successApply = false});
 
   factory ApiServiceState.initial() {
     return ApiServiceState(
@@ -49,7 +51,8 @@ class ApiServiceState extends Equatable {
       List<Leave?>? rejectedList,
       List<Leave?>? myLeaveList,
       String? errorMsg,
-      String? putRequestMsg}) {
+      String? putRequestMsg,
+      bool? successApply}) {
     return ApiServiceState(
         status: status ?? this.status,
         allRequestList: allRequestList ?? this.allRequestList,
@@ -59,7 +62,8 @@ class ApiServiceState extends Equatable {
         approvedList: approvedList ?? this.approvedList,
         rejectedList: rejectedList ?? this.rejectedList,
         errorMsg: errorMsg ?? this.errorMsg,
-        putRequestMsg: putRequestMsg ?? this.putRequestMsg);
+        putRequestMsg: putRequestMsg ?? this.putRequestMsg,
+        successApply: successApply ?? this.successApply);
   }
 
   @override
@@ -72,6 +76,7 @@ class ApiServiceState extends Equatable {
         rejectedList,
         myLeaveList,
         errorMsg,
-        putRequestMsg
+        putRequestMsg,
+        successApply
       ];
 }

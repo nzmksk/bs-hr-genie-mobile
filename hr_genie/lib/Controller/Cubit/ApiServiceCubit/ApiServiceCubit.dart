@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
@@ -9,64 +10,12 @@ import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ErrorModel.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Model/LeaveQuotaModel.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServiceCubit extends Cubit<ApiServiceState> {
   ApiServiceCubit() : super(ApiServiceState.initial());
-  // final String localhost = "172.20.10.12";
-  // Future<List<Department>> fetchDepartments() async {
-  //   final response =
-  //       await http.get(Uri.parse('http://$localhost:2000/departments'));
-
-  //   if (response.statusCode == 200) {
-  //     final jsonData = json.decode(response.body);
-  //     final List<dynamic> departmentData = jsonData['data'];
-  //     final departments =
-  //         departmentData.map((json) => Department.fromJson(json)).toList();
-  //     return [...departments];
-  //   } else {
-  //     throw Exception('Failed to fetch departments');
-  //   }
-  // }
-
-  // Future<void> addDepartment(Department department) async {
-  //   final url = Uri.parse('http://$localhost:2000/departments/create');
-  //   final jsonData = department.toJson();
-  //   http.Response response = await http.post(
-  //     url,
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: jsonEncode(jsonData),
-  //   );
-  //   if (response.statusCode == 200) {
-  //   } else {}
-  // }
-
-  // Future<List<Employee>> fetchEmployees() async {
-  //   final response =
-  //       await http.get(Uri.parse('http://$localhost:2000/employees'));
-
-  //   if (response.statusCode == 200) {
-  //     final jsonData = json.decode(response.body);
-  //     final List<dynamic> departmentData = jsonData['data'];
-  //     final employees =
-  //         departmentData.map((json) => Employee.fromJson(json)).toList();
-  //     return employees;
-  //   } else {
-  //     throw Exception('Failed to fetch departments');
-  //   }
-  // }
-
-  // Future<void> addEmployee(Employee employee) async {
-  //   final url = Uri.parse('http://$localhost:2000/register');
-  //   final jsonData = employee.toJson();
-  //   http.Response response = await http.post(
-  //     url,
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: jsonEncode(jsonData),
-  //   );
-  //   if (response.statusCode == 200) {
-  //   } else {}
-  // }
 
   Future<void> getLeaveQuota(String accessToken) async {
     http.Response response = await CallApi().fetchLeaveQuota(accessToken);
@@ -74,37 +23,34 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     if (response.statusCode == 200) {
       callLeaveQuota(response);
     } else if (response.statusCode == 400) {
-      final jsonData = jsonDecode(response.body);
-      final Map<String, dynamic> data = jsonData;
-      final error = ErrorModel.fromJson(data);
-
+      ErrorModel error = errorDecode(response);
       printRed("fetchLeaveQuota > ERROR: ${error.errorMsg}");
 
-      if (error.errorMsg ==
-          "Access token expired. Please refresh your token.") {
-        final refreshToken = await CacheStore().getCache('refresh_token');
-        //TODO: refresh token need to work on here
-        // http.Response response = await CallApi().refreshToken(refreshToken!);
-        print(response);
-        if (response.statusCode == 200) {
-          //SUCCESS
-          final jsonData = jsonDecode(response.body)['token'];
-          final String? newToken = jsonData;
-          http.Response newResponse =
-              await CallApi().fetchLeaveQuota(newToken!);
-          callLeaveQuota(newResponse);
-          printGreen("Refreshed Token");
-        } else if (response.statusCode == 401) {
-          //UNAUTHORIZED
-          printRed("Unsuccessful: ${response.statusCode}");
-        } else if (response.statusCode == 403) {
-          //FORBIDDEN
-          printRed("Unsuccessful: ${response.statusCode}");
-        } else if (response.statusCode == 404) {
-          //NOT FOUND
-          printRed("Unsuccessful: ${response.statusCode}");
-        }
-      }
+      // if (error.errorMsg ==
+      //     "Access token expired. Please refresh your token.") {
+      //   final refreshToken = await CacheStore().getCache('refresh_token');
+      //   //TODO: refresh token need to work on here
+      //   // http.Response response = await CallApi().refreshToken(refreshToken!);
+      //   print(response);
+      //   if (response.statusCode == 200) {
+      //     //SUCCESS
+      //     final jsonData = jsonDecode(response.body)['token'];
+      //     final String? newToken = jsonData;
+      //     http.Response newResponse =
+      //         await CallApi().fetchLeaveQuota(newToken!);
+      //     callLeaveQuota(newResponse);
+      //     printGreen("Refreshed Token");
+      //   } else if (response.statusCode == 401) {
+      //     //UNAUTHORIZED
+      //     printRed("Unsuccessful: ${response.statusCode}");
+      //   } else if (response.statusCode == 403) {
+      //     //FORBIDDEN
+      //     printRed("Unsuccessful: ${response.statusCode}");
+      //   } else if (response.statusCode == 404) {
+      //     //NOT FOUND
+      //     printRed("Unsuccessful: ${response.statusCode}");
+      //   }
+      // }
     }
 
     final jsonData = json.decode(response.body);
@@ -115,6 +61,13 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       leaveQuotaList.add(leaveQuota);
     }
     emit(state.copyWith(leaveQuotaList: leaveQuotaList));
+  }
+
+  ErrorModel errorDecode(http.Response response) {
+    final jsonData = jsonDecode(response.body);
+    final Map<String, dynamic> data = jsonData;
+    final error = ErrorModel.fromJson(data);
+    return error;
   }
 
   void callLeaveQuota(http.Response response) {
@@ -154,7 +107,6 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       if (response.statusCode == 200) {
         for (var item in jsonData) {
           Leave request = Leave.fromJson(item);
-          print("Request Duration type: ${request.durationType}");
           allList.add(request);
         }
         pendingList = allList
@@ -169,7 +121,9 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
             .toList();
         rejectedList = allList
             .where(
-              (element) => element.applicationStatus == 'rejected',
+              (element) =>
+                  element.applicationStatus == 'rejected' ||
+                  element.applicationStatus == 'cancelled',
             )
             .toList();
 
@@ -193,6 +147,7 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
             errorMsg: error.errorMsg));
         emit(state.copyWith(status: ApiServiceStatus.initial));
       }
+      printYellow("Loading Request Leaves");
     } catch (e) {
       emit(state.copyWith(
           errorMsg: 'please connect to your server',
@@ -200,17 +155,13 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     }
   }
 
-  Future<void> sendApproval(Leave leaveModel) async {
+  Future<void> responseApplyRequest(
+      Leave leaveModel, String decision, String? rejectReason) async {
     emit(state.copyWith(status: ApiServiceStatus.loading));
-    final accessToken = await CacheStore().getCache('access_token');
-
-    final userDataRes = await CacheStore().getCache('user_data');
-    final jsonData = jsonDecode(userDataRes!);
-    final departmentId = Employee.fromJson(jsonData).departmentId;
-    getRequestLeaves(accessToken!, departmentId);
     try {
-      http.Response response = await CallApi().patchRequest(leaveModel);
-      if (response.statusCode == 201) {
+      http.Response response =
+          await CallApi().patchRequest(leaveModel, decision, rejectReason);
+      if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         final message = jsonData['message'];
         emit(state.copyWith(
@@ -220,13 +171,60 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       } else {
         final jsonData = jsonDecode(response.body);
         final message = jsonData['message'];
-        printRed(message);
+        printRed("${response.statusCode}: ${message}");
         emit(state.copyWith(
             putRequestMsg: message, status: ApiServiceStatus.success));
         emit(state.copyWith(status: ApiServiceStatus.initial));
       }
     } catch (e) {
       print('Error SendApproval: $e');
+    }
+  }
+
+  Future<void> applyLeave(
+      {required String leaveTypeId,
+      required DateTime startDate,
+      required DateTime endDate,
+      required String durationType,
+      required String reason,
+      required String? attachment}) async {
+    printYellow("Applying Leave");
+    emit(state.copyWith(status: ApiServiceStatus.loading));
+    try {
+      http.Response response = await CallApi().postLeavesApp(
+          leaveTypeId: leaveTypeId,
+          startDate: startDate,
+          endDate: endDate,
+          durationType: durationType,
+          reason: reason,
+          attachment: attachment);
+      if (response.statusCode == 201) {
+        final jsonData = jsonDecode(response.body);
+        final message = jsonData['message'];
+        printGreen("${response.statusCode} : $message");
+      } else {
+        final jsonData = jsonDecode(response.body);
+        final message = jsonData['message'];
+        printRed("${response.statusCode} : $message");
+      }
+      emit(
+          state.copyWith(status: ApiServiceStatus.success, successApply: true));
+      Timer.periodic(const Duration(seconds: 2), (timer) {
+        emit(state.copyWith(
+            status: ApiServiceStatus.initial, successApply: false));
+      });
+    } catch (e) {
+      printRed("ERROR applyLeave: $e");
+      emit(state.copyWith(status: ApiServiceStatus.failed));
+      emit(state.copyWith(status: ApiServiceStatus.initial));
+    }
+  }
+
+  bool doneApply() {
+    if (state.successApply!) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomAppBar.dart';
+import 'package:hr_genie/Components/LeaveTileInfo.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:intl/intl.dart';
@@ -40,14 +43,14 @@ class LeaveDetailPage extends StatelessWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: LeaveDetailInfo(
+                child: LeaveTileInfo(
                   label: 'Leave Type',
                   value: checkLeaveType(leaveModel.leaveTypeId!.toString()),
                 ),
               ),
               Expanded(
                 flex: 1,
-                child: LeaveDetailInfo(
+                child: LeaveTileInfo(
                   label: 'Date',
                   value:
                       "${DateFormat.yMMMd('en-US').format(DateTime.parse(leaveModel.startDate!))} to ${DateFormat.yMMMEd('en-US').format(DateTime.parse(leaveModel.endDate!))}",
@@ -55,27 +58,27 @@ class LeaveDetailPage extends StatelessWidget {
               ),
               Expanded(
                 flex: 1,
-                child: LeaveDetailInfo(
+                child: LeaveTileInfo(
                   label: 'Duration',
                   value: '${truncatNum(leaveModel.durationLength)} Days',
                 ),
               ),
               Expanded(
                 flex: 1,
-                child: LeaveDetailInfo(
+                child: LeaveTileInfo(
                   label: 'Reason',
                   value: leaveModel.reason,
                 ),
               ),
               Expanded(
-                child: LeaveDetailInfo(
+                child: LeaveTileInfo(
                   label: 'Attachment',
                   value: leaveModel.attachment,
                 ),
               ),
               Expanded(
                 flex: 1,
-                child: LeaveDetailInfo(
+                child: LeaveTileInfo(
                   label: 'Status',
                   value: capitalize(leaveModel.applicationStatus),
                 ),
@@ -98,7 +101,13 @@ class LeaveDetailPage extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 25, top: 10),
                       label: "Cancel",
                       onPressed: leaveModel.applicationStatus == "pending"
-                          ? () {}
+                          ? () {
+                              context
+                                  .read<ApiServiceCubit>()
+                                  .responseApplyRequest(
+                                      leaveModel, 'cancelled', null);
+                              Navigator.of(context).pop(true);
+                            }
                           : null,
                       buttonColor: Colors.red,
                     ),
@@ -109,40 +118,6 @@ class LeaveDetailPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class LeaveDetailInfo extends StatelessWidget {
-  final String label;
-  final String? value;
-  const LeaveDetailInfo({
-    super.key,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-                margin: const EdgeInsets.only(top: 10), child: Text(label))),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          padding: const EdgeInsets.all(10),
-          width: double.maxFinite,
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: cardColor,
-          ),
-          child: Text(value ?? ""),
-        ),
-      ],
     );
   }
 }
