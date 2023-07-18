@@ -132,7 +132,7 @@ class RequestDetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       const Text(
-                        "You can cancel your leave application during pending only. Otherwise you'll need to inform your manager",
+                        "You can cancel this leave application after approved.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: instructionTextColor, fontSize: 13),
@@ -368,7 +368,6 @@ class RequestDetailPage extends StatelessWidget {
                                 buttonColor: globalTextColor,
                                 label: 'Cancel',
                                 onPressed: () {
-                                  Navigator.of(context).pop(true);
                                   Navigator.of(context).pop(true);
                                 }),
                           ),
