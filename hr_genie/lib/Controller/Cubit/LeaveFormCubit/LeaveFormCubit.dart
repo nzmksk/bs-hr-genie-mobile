@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:hr_genie/Constants/LeaveDuration.dart';
+import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
+import 'package:hr_genie/Controller/Services/CallApi.dart';
+import 'package:http/http.dart' as http;
 
 class LeaveFormCubit extends Cubit<LeaveFormState> {
   LeaveFormCubit() : super(LeaveFormState.initial());
@@ -14,11 +18,10 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
     ));
   }
 
-  void successApply(bool isSuccess) {
-    emit(state.copyWith(successApply: isSuccess));
-    Timer.periodic(const Duration(seconds: 3), (timer) {
-      emit(state.copyWith(successApply: false));
-    });
+  Future<void> emitApplyResponse(String applyResponse) async {
+    emit(state.copyWith(
+      applyResponse: applyResponse,
+    ));
   }
 
   void typeOnChanged(String? type) {
@@ -95,6 +98,47 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
       emit(state.copyWith(startDate: () => startDate, endDate: () => endDate));
       print(
           "VALUE placement, startDat: ${state.startDate}, endDate: ${state.endDate}");
+    }
+  }
+
+  Future<void> applyLeave(
+      {required String leaveTypeId,
+      required DateTime startDate,
+      required DateTime endDate,
+      required String durationType,
+      required String reason,
+      required String? attachment}) async {
+    printYellow("Applying Leave");
+    emit(state.copyWith(status: LeaveStatus.loading));
+    try {
+      http.Response response = await CallApi().postLeavesApp(
+          leaveTypeId: leaveTypeId,
+          startDate: startDate,
+          endDate: endDate,
+          durationType: durationType,
+          reason: reason,
+          attachment: attachment);
+      if (response.statusCode == 201) {
+        final jsonData = jsonDecode(response.body);
+        final message = jsonData['message'];
+        printGreen("${response.statusCode} : $message");
+        emit(state.copyWith(applyResponse: message));
+        emit(state.copyWith(status: LeaveStatus.sent, applyResponse: message));
+      } else {
+        final jsonData = jsonDecode(response.body);
+        final message = jsonData['message'];
+        final error = jsonData['error'];
+        printRed("${response.statusCode} : $message");
+        printRed("${response.statusCode} : $error");
+        emit(state.copyWith(status: LeaveStatus.error, applyResponse: error));
+      }
+      Timer.periodic(const Duration(seconds: 2), (timer) {
+        emit(state.copyWith(status: LeaveStatus.initial));
+      });
+    } catch (e) {
+      printRed("ERROR applyLeave: $e");
+      emit(state.copyWith(status: LeaveStatus.error));
+      emit(state.copyWith(status: LeaveStatus.initial));
     }
   }
 }

@@ -101,11 +101,11 @@ class LeaveDetailPage extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 25, top: 10),
                       label: "Cancel",
                       onPressed: leaveModel.applicationStatus == "pending"
-                          ? () {
-                              context
+                          ? () async {
+                              await context
                                   .read<ApiServiceCubit>()
                                   .responseApplyRequest(
-                                      leaveModel, 'cancelled', null);
+                                      leaveModel, 'cancelled', null, true);
                               Navigator.of(context).pop(true);
                             }
                           : null,

@@ -192,50 +192,6 @@ class _SigninFormState extends State<SigninForm> {
                       state.validPass ? null : MSG.loginPassword.errorMsg,
                   hintText: "Password",
                 ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(200, 5, 0, 0),
-                  child: GestureDetector(
-                      child: Text("Forgot Password?",
-                          style: TextStyle(
-                              // decoration: TextDecoration.underline,
-                              color: Colors.blue[200],
-                              fontSize: 15)),
-                      onTap: () async {
-                        showDialog(
-                            barrierDismissible: false,
-                            barrierColor: Colors.transparent,
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  content: Padding(
-                                    // color: Colors.red,
-                                    padding: const EdgeInsets.all(10),
-
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Lottie.asset(
-                                          'assets/success.json',
-                                          animate: true,
-                                          repeat: false,
-                                        ),
-                                        const Text(
-                                            'Your password update success!\n You will need to login again\n'),
-                                        SubmitButton(
-                                            margin: const EdgeInsets.all(10),
-                                            label: 'OK',
-                                            onPressed: () =>
-                                                Navigator.pop(context))
-                                      ],
-                                    ),
-                                  ));
-                            });
-                      }),
-                ),
                 SubmitButton(
                   margin: const EdgeInsets.fromLTRB(0, 200, 0, 15),
                   label: "Login",

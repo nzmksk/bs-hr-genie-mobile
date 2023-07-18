@@ -16,6 +16,7 @@ class ApiServiceState extends Equatable {
   String? errorMsg;
   String? putRequestMsg;
   bool? successApply;
+  String? applyResponse;
 
   ApiServiceState(
       {required this.allRequestList,
@@ -27,7 +28,8 @@ class ApiServiceState extends Equatable {
       required this.myLeaveList,
       this.errorMsg,
       this.putRequestMsg,
-      this.successApply = false});
+      this.successApply = false,
+      this.applyResponse});
 
   factory ApiServiceState.initial() {
     return ApiServiceState(
@@ -42,17 +44,19 @@ class ApiServiceState extends Equatable {
         putRequestMsg: null);
   }
 
-  ApiServiceState copyWith(
-      {ApiServiceStatus? status,
-      List<LeaveQuota?>? leaveQuotaList,
-      List<Leave?>? allRequestList,
-      List<Leave?>? pendingList,
-      List<Leave?>? approvedList,
-      List<Leave?>? rejectedList,
-      List<Leave?>? myLeaveList,
-      String? errorMsg,
-      String? putRequestMsg,
-      bool? successApply}) {
+  ApiServiceState copyWith({
+    ApiServiceStatus? status,
+    List<LeaveQuota?>? leaveQuotaList,
+    List<Leave?>? allRequestList,
+    List<Leave?>? pendingList,
+    List<Leave?>? approvedList,
+    List<Leave?>? rejectedList,
+    List<Leave?>? myLeaveList,
+    String? errorMsg,
+    String? putRequestMsg,
+    bool? successApply,
+    String? applyResponse,
+  }) {
     return ApiServiceState(
         status: status ?? this.status,
         allRequestList: allRequestList ?? this.allRequestList,
@@ -63,7 +67,8 @@ class ApiServiceState extends Equatable {
         rejectedList: rejectedList ?? this.rejectedList,
         errorMsg: errorMsg ?? this.errorMsg,
         putRequestMsg: putRequestMsg ?? this.putRequestMsg,
-        successApply: successApply ?? this.successApply);
+        successApply: successApply ?? this.successApply,
+        applyResponse: applyResponse ?? this.applyResponse);
   }
 
   @override
@@ -77,6 +82,7 @@ class ApiServiceState extends Equatable {
         myLeaveList,
         errorMsg,
         putRequestMsg,
-        successApply
+        successApply,
+        applyResponse
       ];
 }
