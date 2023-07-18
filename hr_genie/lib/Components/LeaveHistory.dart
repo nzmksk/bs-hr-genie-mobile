@@ -92,9 +92,11 @@ class _LeaveHistoryState extends State<LeaveHistory> {
                     leading: CircleAvatar(
                       backgroundColor: checkColor(index,
                           state.myLeaveList?[index]!.applicationStatus ?? ""),
+                      // child: Text(
+                      //     state.myLeaveList?[index]!.applicationStatus ?? '')
                       child: Icon(
                         checkLeaveTypeTitle(
-                            state.myLeaveList?[index]!.applicationStatus!),
+                            state.myLeaveList?[index]!.applicationStatus),
                         color: globalTextColor,
                       ),
                     ),

@@ -7,6 +7,14 @@ import 'RoutesState.dart';
 
 class RoutesCubit extends Cubit<RoutesCubitState> {
   RoutesCubit() : super(RoutesCubitState.initial());
+  void resetState() {
+    AppRouter.router.go(PAGES.leave.screenPath);
+    emit(RoutesCubitState(
+        status: RouteStatus.initial,
+        bottomNavItems: PAGES.leave.screenName,
+        index: 0));
+  }
+
   void goToLeavePage() async {
     emit(RoutesCubitState(
         status: RouteStatus.loadingLeavePage,
