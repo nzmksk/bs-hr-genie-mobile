@@ -29,7 +29,7 @@ class TimerButton extends StatefulWidget {
 }
 
 class _TimerButtonState extends State<TimerButton> {
-  int time = 5;
+  int time = 3;
   Timer? timer;
   @override
   void initState() {
@@ -72,12 +72,3 @@ class _TimerButtonState extends State<TimerButton> {
     );
   }
 }
-
-// ButtonStyle(
-//             backgroundColor: buttonColor,
-//             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//               RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(20),
-//               ),
-//             ),
-//           )

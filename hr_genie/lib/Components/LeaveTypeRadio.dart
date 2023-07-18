@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Constants/LeaveCategories.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
@@ -25,8 +27,14 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LeaveFormCubit, LeaveFormState>(
+    return BlocBuilder<ApiServiceCubit, ApiServiceState>(
       builder: (context, state) {
+        num? annual = state.leaveQuotaList?[0]!.quota ?? 0;
+        num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
+        num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
+        num? emergency = state.leaveQuotaList?[3]!.quota ?? 0;
+        num? unpaid = state.leaveQuotaList?[4]!.quota ?? 0;
+        String suffix = 'Days remaining';
         return Container(
           height: 230,
           child: Card(
@@ -53,7 +61,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                LEAVES.annual.quota!,
+                                "$annual $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -83,7 +91,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                LEAVES.emergency.quota!,
+                                "$emergency $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -119,7 +127,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                LEAVES.medical.quota!,
+                                "$medical $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -149,7 +157,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                LEAVES.parental.quota!,
+                                "$parental $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -187,7 +195,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                             style: radioTextStyle,
                           ),
                           subtitle: Text(
-                            LEAVES.unpaid.quota!,
+                            "$unpaid $suffix",
                             style: const TextStyle(
                                 fontSize: 12, color: subtitleTextColor),
                           ),

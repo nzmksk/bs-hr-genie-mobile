@@ -90,10 +90,10 @@ class LeaveFormSummary extends StatelessWidget {
                         SummaryTextDisplay(
                           value: state.startDate != null
                               ? startDateParser(state)
-                              : "No Date Selected",
+                              : "",
                         ),
                         SummaryTextDisplay(
-                          value: state.attachment.toString(),
+                          value: state.attachment.toString() ?? '',
                         ),
                       ],
                     ),

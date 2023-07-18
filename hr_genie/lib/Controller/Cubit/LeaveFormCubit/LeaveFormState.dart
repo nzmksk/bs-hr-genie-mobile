@@ -31,6 +31,8 @@ class LeaveFormState extends Equatable {
   final bool thirdStepDone;
   final bool dateStored;
   final LeaveStatus? status;
+  final bool rejectReasonNotEmpty;
+  final bool successApply;
 
   const LeaveFormState(
       {this.firstStepDone = false,
@@ -49,7 +51,9 @@ class LeaveFormState extends Equatable {
       this.isValidReason = false,
       this.isValidLeaveType = false,
       this.dateStored = false,
-      this.status});
+      this.status,
+      this.rejectReasonNotEmpty = false,
+      this.successApply = false});
 
   factory LeaveFormState.initial() {
     return const LeaveFormState(reason: null);
@@ -73,6 +77,8 @@ class LeaveFormState extends Equatable {
     bool? thirdStepDone,
     bool? dateStored,
     LeaveStatus? status,
+    bool? rejectReasonNotEmpty,
+    bool? successApply,
   }) {
     return LeaveFormState(
         leaveType: leaveType != null ? leaveType() : this.leaveType,
@@ -91,7 +97,9 @@ class LeaveFormState extends Equatable {
         secStepDone: secStepDone ?? this.secStepDone,
         thirdStepDone: thirdStepDone ?? this.thirdStepDone,
         dateStored: dateStored ?? this.dateStored,
-        status: status ?? this.status);
+        status: status ?? this.status,
+        rejectReasonNotEmpty: rejectReasonNotEmpty ?? this.rejectReasonNotEmpty,
+        successApply: successApply ?? this.successApply);
   }
 
   @override
@@ -112,6 +120,8 @@ class LeaveFormState extends Equatable {
         secStepDone,
         thirdStepDone,
         dateStored,
-        status
+        status,
+        rejectReasonNotEmpty,
+        successApply
       ];
 }

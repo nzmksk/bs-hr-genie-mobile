@@ -1,9 +1,25 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:hr_genie/Constants/LeaveDuration.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 
 class LeaveFormCubit extends Cubit<LeaveFormState> {
   LeaveFormCubit() : super(LeaveFormState.initial());
+  void resetForm() {
+    emit(state.copyWith(
+      reason: () => null,
+      duration: null,
+      leaveType: () => null,
+    ));
+  }
+
+  void successApply(bool isSuccess) {
+    emit(state.copyWith(successApply: isSuccess));
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      emit(state.copyWith(successApply: false));
+    });
+  }
 
   void typeOnChanged(String? type) {
     emit(state.copyWith(firstStepDone: false));
@@ -12,10 +28,25 @@ class LeaveFormCubit extends Cubit<LeaveFormState> {
     } else {
       emit(state.copyWith(leaveType: () => type, isValidLeaveType: true));
     }
-    print("Running type changed: ${state.leaveType}");
   }
 
-  void inputChecking(String reason) {
+  void inputChecking(String reason, bool rejectReason) {
+    if (rejectReason) {
+      rejectReasonEmit(reason);
+    } else {
+      applyReasonEmit(reason);
+    }
+  }
+
+  void rejectReasonEmit(String reason) {
+    if (reason.isNotEmpty) {
+      emit(state.copyWith(rejectReasonNotEmpty: true));
+    } else {
+      emit(state.copyWith(rejectReasonNotEmpty: false));
+    }
+  }
+
+  void applyReasonEmit(String reason) {
     if (reason.isNotEmpty) {
       emit(state.copyWith(isValidReason: true));
     } else {

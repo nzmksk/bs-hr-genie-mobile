@@ -1,4 +1,5 @@
-import 'dart:async';
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -11,12 +12,11 @@ import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
+import 'package:hr_genie/Controller/Services/CallApi.dart';
 import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:hr_genie/View/DisconnectedServer.dart';
 import 'package:hr_genie/View/EmptyMyLeave.dart';
-
-import '../Model/LeaveModel.dart';
 
 class RequestListTab extends StatefulWidget {
   final String applicationStatus;
@@ -28,11 +28,6 @@ class RequestListTab extends StatefulWidget {
 
 class _RequestListTabState extends State<RequestListTab> {
   @override
-  void initState() {
-    // TODO: Refresh the Request List from API
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ApiServiceCubit, ApiServiceState>(
@@ -59,7 +54,13 @@ class _RequestListTabState extends State<RequestListTab> {
     if (widget.applicationStatus == 'pending') {
       return RefreshIndicator(
         onRefresh: () async {
-          showCustomSnackBar(context, 'Refreshed', cardColor);
+          final accessToken = await CacheStore().getCache('access_token');
+          final userDataRes = await CacheStore().getCache('user_data');
+          final data = jsonDecode(userDataRes!)['data'];
+          final employee = Employee.fromJson(data);
+          final departmentId = employee.departmentId;
+
+          refreshList(accessToken, departmentId);
         },
         child: ListView.builder(
             itemCount: state.pendingList!.length,
@@ -73,7 +74,15 @@ class _RequestListTabState extends State<RequestListTab> {
       );
     } else if (widget.applicationStatus == 'approved') {
       return RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          final accessToken = await CacheStore().getCache('access_token');
+          final userDataRes = await CacheStore().getCache('user_data');
+          final data = jsonDecode(userDataRes!)['data'];
+          final employee = Employee.fromJson(data);
+          final departmentId = employee.departmentId;
+
+          refreshList(accessToken, departmentId);
+        },
         child: ListView.builder(
             itemCount: state.approvedList!.length,
             itemBuilder: (context, index) => LeaveTile(
@@ -86,7 +95,15 @@ class _RequestListTabState extends State<RequestListTab> {
       );
     } else {
       return RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          final accessToken = await CacheStore().getCache('access_token');
+          final userDataRes = await CacheStore().getCache('user_data');
+          final data = jsonDecode(userDataRes!)['data'];
+          final employee = Employee.fromJson(data);
+          final departmentId = employee.departmentId;
+
+          refreshList(accessToken, departmentId);
+        },
         child: ListView.builder(
             itemCount: state.rejectedList!.length,
             itemBuilder: (context, index) => LeaveTile(
@@ -98,5 +115,12 @@ class _RequestListTabState extends State<RequestListTab> {
                 )),
       );
     }
+  }
+
+  void refreshList(String? accessToken, String? departmentId) {
+    context
+        .read<ApiServiceCubit>()
+        .getRequestLeaves(accessToken!, departmentId);
+    showCustomSnackBar(context, 'Refreshed!', cardColor);
   }
 }

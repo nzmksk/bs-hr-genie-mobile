@@ -26,6 +26,8 @@ IconData checkLeaveTypeTitle(String? status) {
       return Icons.check;
     case "rejected":
       return Icons.close;
+    case "cancelled":
+      return Icons.do_not_disturb_alt_sharp;
     default:
       return Icons.question_mark;
   }

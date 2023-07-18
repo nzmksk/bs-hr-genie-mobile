@@ -52,21 +52,13 @@ class Leave {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> _data = new Map<String, dynamic>();
-    _data['firstName'] = firstName;
-    _data['lastName'] = lastName;
     _data['leaveId'] = leaveId;
-    _data['employeeId'] = employeeId;
     _data['leaveTypeId'] = leaveTypeId;
     _data['startDate'] = startDate;
     _data['endDate'] = endDate;
-    _data['durationType'] = durationType;
-    _data['durationLength'] = durationLength;
+    _data['duration'] = durationType;
     _data['reason'] = reason;
     _data['attachment'] = attachment;
-    _data['applicationStatus'] = applicationStatus;
-    _data['createdAt'] = createdAt;
-    _data['approvedRejectedBy'] = approvedRejectedBy;
-    _data['rejectReason'] = rejectReason;
     return _data;
   }
 }

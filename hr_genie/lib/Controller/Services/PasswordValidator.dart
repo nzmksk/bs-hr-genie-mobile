@@ -2,14 +2,16 @@ class PasswordValidatorService {
   static final RegExp _upperCaseRegExp = RegExp(r'[A-Z]');
   static final RegExp _lowerCaseRegExp = RegExp(r'[a-z]');
   static final RegExp _digitRegExp = RegExp(r'\d');
-  static final RegExp _specialCharRegExp = RegExp(r'[-_!@#$%^&*(),.?":{}|<>]');
+  static final RegExp _specialCharRegExp =
+      RegExp(r'[-_!@#=+$%^&*(),.?":{}|<>]');
 
   static bool isStrongPassword(String password) {
     if (password == "" || password.isEmpty) {
       return false;
     }
-    if (password.length < 8) {
-      print("Please password length should be more than 8 Characters");
+    if (password.length < 8 || password.length > 14) {
+      print(
+          "Please password length should be more than 8  and less then 14 Characters");
       return false;
     }
 

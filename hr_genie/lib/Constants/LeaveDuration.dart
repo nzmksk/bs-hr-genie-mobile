@@ -4,11 +4,11 @@ extension LeaveString on LeaveDuration {
   String? get value {
     switch (this) {
       case LeaveDuration.fullDay:
-        return "Full-Day";
+        return "full-day";
       case LeaveDuration.firstHalf:
-        return "First-Half (9:00 AM - 1:00 PM)";
+        return "first-half";
       case LeaveDuration.secondHalf:
-        return "Second-Half (2:00 PM - 6:00)";
+        return "second-half";
       default:
         return null;
     }
