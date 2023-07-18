@@ -4,14 +4,10 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
-import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Controller/Services/CallApi.dart';
-import 'package:hr_genie/Model/EmployeeModel.dart';
 import 'package:hr_genie/Model/ErrorModel.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Model/LeaveQuotaModel.dart';
-import 'package:hr_genie/Routes/AppRoutes.dart';
-import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServiceCubit extends Cubit<ApiServiceState> {
@@ -155,18 +151,19 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     }
   }
 
-  Future<void> responseApplyRequest(
-      Leave leaveModel, String decision, String? rejectReason) async {
+  Future<void> responseApplyRequest(Leave leaveModel, String decision,
+      String? rejectReason, bool isEmployee) async {
     emit(state.copyWith(status: ApiServiceStatus.loading));
     try {
-      http.Response response =
-          await CallApi().patchRequest(leaveModel, decision, rejectReason);
+      http.Response response = await CallApi()
+          .patchRequest(leaveModel, decision, rejectReason, isEmployee);
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         final message = jsonData['message'];
         emit(state.copyWith(
             putRequestMsg: message, status: ApiServiceStatus.success));
         printGreen(message);
+        isDoneCancel(message);
         emit(state.copyWith(status: ApiServiceStatus.initial));
       } else {
         final jsonData = jsonDecode(response.body);
@@ -178,6 +175,14 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       }
     } catch (e) {
       print('Error SendApproval: $e');
+    }
+  }
+
+  bool isDoneCancel(String message) {
+    if (message == 'Leave application successfully submitted.') {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -202,10 +207,13 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
         final jsonData = jsonDecode(response.body);
         final message = jsonData['message'];
         printGreen("${response.statusCode} : $message");
+        emit(state.copyWith(successApply: true, applyResponse: message));
       } else {
         final jsonData = jsonDecode(response.body);
         final message = jsonData['message'];
+        final error = jsonData['error'];
         printRed("${response.statusCode} : $message");
+        printRed("${response.statusCode} : $error");
       }
       emit(
           state.copyWith(status: ApiServiceStatus.success, successApply: true));
@@ -220,11 +228,7 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     }
   }
 
-  bool doneApply() {
-    if (state.successApply!) {
-      return true;
-    } else {
-      return false;
-    }
+  String doneApply() {
+    return state.applyResponse!;
   }
 }

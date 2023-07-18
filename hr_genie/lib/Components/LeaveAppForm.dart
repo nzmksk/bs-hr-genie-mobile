@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +11,9 @@ import 'package:hr_genie/Components/ReasonTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/UploadAttach.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
@@ -50,8 +54,12 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   Widget build(BuildContext context) {
     return BlocConsumer<LeaveFormCubit, LeaveFormState>(
       listener: (context, state) {
-        if (state.successApply) {
-          showCustomSnackBar(context, 'Success apply', Colors.green);
+        if (state.status == LeaveStatus.sent) {
+          showCustomSnackBar(context, state.applyResponse, Colors.green);
+          // context.read<ApiServiceCubit>().doneApply();
+        } else if (state.status == LeaveStatus.error) {
+          showCustomSnackBar(context, state.applyResponse, Colors.red);
+          // context.read<ApiServiceCubit>().doneApply();
         }
         if (currentStep == 0) {
           _selectedDuration = 0;
@@ -313,19 +321,15 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   ) {
     return state.firstStepDone && state.secStepDone && state.thirdStepDone
         ? () async {
-            await context.read<ApiServiceCubit>().applyLeave(
-                leaveTypeId: state.leaveType!,
-                startDate: state.startDate!,
-                endDate: state.endDate!,
-                durationType: state.duration!,
-                reason: state.reason!,
-                attachment: null);
-            context
-                .read<LeaveFormCubit>()
-                .successApply(context.read<ApiServiceCubit>().doneApply());
-            if (state.successApply) {
-              Navigator.of(context).pop(true);
-            }
+            try {
+              await context.read<LeaveFormCubit>().applyLeave(
+                  leaveTypeId: state.leaveType!,
+                  startDate: state.startDate!,
+                  endDate: state.endDate!,
+                  durationType: state.duration!,
+                  reason: state.reason!,
+                  attachment: null);
+            } catch (e) {}
           }
         : null;
   }

@@ -114,6 +114,7 @@ class RequestDetailPage extends StatelessWidget {
                         label: "Cancel",
                         onPressed: () async {
                           await requestDecision(
+                              controller: controller,
                               context: context,
                               title: 'Cancel',
                               decision: 'cancelled',
@@ -148,8 +149,14 @@ class RequestDetailPage extends StatelessWidget {
                               label: "Reject",
                               onPressed: () async {
                                 String? rejectReason;
-                                await rejectDialog(
-                                    context, controller, rejectReason);
+                                requestDecision(
+                                    controller: controller,
+                                    context: context,
+                                    title: 'Reject',
+                                    decision: 'rejected',
+                                    leaveId: leaveModel.leaveId!);
+                                // await rejectDialog(
+                                //     context, controller, rejectReason);
                               },
                               buttonColor: Colors.red,
                             ),
@@ -165,6 +172,7 @@ class RequestDetailPage extends StatelessWidget {
                               label: "Approve",
                               onPressed: () {
                                 requestDecision(
+                                    controller: controller,
                                     leaveId: leaveModel.leaveId!,
                                     title: 'Approve ',
                                     context: context,
@@ -195,7 +203,7 @@ class RequestDetailPage extends StatelessWidget {
             //TODO: put and cancel function here
             context
                 .read<ApiServiceCubit>()
-                .responseApplyRequest(leaveModel, 'cancelled', null);
+                .responseApplyRequest(leaveModel, 'cancelled', null, false);
             Navigator.of(context).pop(true);
             Navigator.of(context).pop(true);
           }
@@ -221,76 +229,77 @@ class RequestDetailPage extends StatelessWidget {
     );
   }
 
-  Future<dynamic> rejectDialog(BuildContext context,
-      TextEditingController controller, String? rejectReason) {
-    return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (_) {
-          return BlocBuilder<LeaveFormCubit, LeaveFormState>(
-            builder: (context, state) {
-              return AlertDialog(
-                actionsPadding:
-                    const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                title: const Text('Reject Reason'),
-                content: SizedBox(
-                  height: 120,
-                  child: LimitedTextField(
-                      onchanged: (value) {
-                        context
-                            .read<LeaveFormCubit>()
-                            .inputChecking(value, true);
-                      },
-                      controller: controller),
-                ),
-                actions: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: SubmitButton(
-                            textColor: primaryBlack,
-                            buttonColor: globalTextColor,
-                            label: 'Cancel',
-                            onPressed: () {
-                              Navigator.pop(context);
-                            }),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                          flex: 1,
-                          child: SubmitButton(
-                              label: 'Proceed',
-                              onPressed: !state.rejectReasonNotEmpty
-                                  ? null
-                                  : () => requestDecision(
-                                      leaveId: leaveModel.leaveId!,
-                                      title: 'Reject ',
-                                      context: context,
-                                      rejectReason: rejectReason,
-                                      // content:
-                                      //     'You will reject this application and this cannot be undo. Proceed?',
-                                      decision: 'rejected'))),
-                    ],
-                  ),
-                ],
-              );
-            },
-          );
-        });
-  }
+  // Future<dynamic> rejectDialog(BuildContext context,
+  //     TextEditingController controller, String? rejectReason) {
+  //   return showDialog(
+  //       barrierDismissible: false,
+  //       context: context,
+  //       builder: (_) {
+  //         return BlocBuilder<LeaveFormCubit, LeaveFormState>(
+  //           builder: (context, state) {
+  //             return AlertDialog(
+  //               actionsPadding:
+  //                   const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+  //               shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(20)),
+  //               title: const Text('Reject Reason'),
+  //               content: SizedBox(
+  //                 height: 120,
+  //                 child: LimitedTextField(
+  //                     onchanged: (value) {
+  //                       context
+  //                           .read<LeaveFormCubit>()
+  //                           .inputChecking(value, true);
+  //                     },
+  //                     controller: controller),
+  //               ),
+  //               actions: [
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: [
+  //                     Expanded(
+  //                       flex: 1,
+  //                       child: SubmitButton(
+  //                           textColor: primaryBlack,
+  //                           buttonColor: globalTextColor,
+  //                           label: 'Cancel',
+  //                           onPressed: () {
+  //                             Navigator.pop(context);
+  //                           }),
+  //                     ),
+  //                     const SizedBox(
+  //                       width: 10,
+  //                     ),
+  //                     Expanded(
+  //                         flex: 1,
+  //                         child: SubmitButton(
+  //                             label: 'Proceed',
+  //                             onPressed: !state.rejectReasonNotEmpty
+  //                                 ? null
+  //                                 : () => requestDecision(
+  //                                     leaveId: leaveModel.leaveId!,
+  //                                     title: 'Reject ',
+  //                                     context: context,
+  //                                     rejectReason: rejectReason,
+  //                                     // content:
+  //                                     //     'You will reject this application and this cannot be undo. Proceed?',
+  //                                     decision: 'rejected'))),
+  //                   ],
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         );
+  //       });
+  // }
 
   Future<dynamic> requestDecision(
       {required BuildContext context,
       required String title,
       required String decision,
       required String leaveId,
+      required TextEditingController controller,
       String? rejectReason}) {
     return showDialog(
         barrierDismissible: false,
@@ -325,11 +334,28 @@ class RequestDetailPage extends StatelessWidget {
                                           : Colors.red)),
                               const TextSpan(text: '?')
                             ]))),
-                    content: const Text(
-                      'This action cannot be undone',
-                      style: TextStyle(color: instructionTextColor),
-                      textAlign: TextAlign.center,
-                    ),
+                    content: decision == 'rejected'
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 120,
+                                child: LimitedTextField(
+                                    onchanged: (value) {
+                                      context
+                                          .read<LeaveFormCubit>()
+                                          .inputChecking(value, true);
+                                    },
+                                    controller: controller),
+                              ),
+                            ],
+                          )
+                        : const Text(
+                            'This action cannot be undone',
+                            style: TextStyle(color: instructionTextColor),
+                            textAlign: TextAlign.center,
+                          ),
                     actions: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -342,7 +368,8 @@ class RequestDetailPage extends StatelessWidget {
                                 buttonColor: globalTextColor,
                                 label: 'Cancel',
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop(true);
                                 }),
                           ),
                           const SizedBox(
@@ -353,14 +380,10 @@ class RequestDetailPage extends StatelessWidget {
                             child: TimerButton(
                               label: 'Yes',
                               onPressed: () async {
-                                //TODO: PUT leave application to reject
-
-                                // printGreen(
-                                //     '"leaveId": ${leaveModel.leaveId},\n"employeeId": ${leaveModel.employeeId},\n"leaveTypeId": ${leaveModel.leaveTypeId},\n"startDate": ${leaveModel.startDate},\n"endDate": ${leaveModel.endDate},\n "duration": ${leaveModel.durationType},\n"durationLength": ${leaveModel.durationLength},\n "reason": ${leaveModel.reason},\n"attachment": ${leaveModel.attachment},\n"applicationStatus": "approved",\n"approvedRejectedBy": null,\n"rejectReason": null');
                                 await context
                                     .read<ApiServiceCubit>()
-                                    .responseApplyRequest(
-                                        leaveModel, decision, rejectReason);
+                                    .responseApplyRequest(leaveModel, decision,
+                                        rejectReason, false);
                                 Navigator.of(context).pop(true);
                                 Navigator.of(context).pop(true);
                               },

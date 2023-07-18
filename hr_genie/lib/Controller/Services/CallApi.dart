@@ -201,11 +201,15 @@ class CallApi {
     return response;
   }
 
-  Future<http.Response> patchRequest(
-      Leave leaveModel, String decision, String? rejectReason) async {
+  Future<http.Response> patchRequest(Leave leaveModel, String decision,
+      String? rejectReason, bool isEmployee) async {
     final accessToken = await CacheStore().getCache('access_token')!;
+    final String employeeEndpoint =
+        '$baseUrl/leaves/cancel/${leaveModel.leaveId}';
+    final String managerEndpoint = '$baseUrl/leaves/${leaveModel.leaveId}';
+
     http.Response response = await http.patch(
-        Uri.parse("$baseUrl/leaves/${leaveModel.leaveId}"),
+        Uri.parse(isEmployee ? employeeEndpoint : managerEndpoint),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${accessToken ?? ""}",
