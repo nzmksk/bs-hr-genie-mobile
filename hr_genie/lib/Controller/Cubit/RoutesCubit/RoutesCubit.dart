@@ -7,6 +7,42 @@ import 'RoutesState.dart';
 
 class RoutesCubit extends Cubit<RoutesCubitState> {
   RoutesCubit() : super(RoutesCubitState.initial());
+  void resetState() {
+    AppRouter.router.go(PAGES.leave.screenPath);
+    emit(RoutesCubitState(
+        status: RouteStatus.initial,
+        bottomNavItems: PAGES.leave.screenName,
+        index: 0));
+  }
+
+  void goToLeavePage() async {
+    emit(RoutesCubitState(
+        status: RouteStatus.loadingLeavePage,
+        bottomNavItems: PAGES.leave.screenName,
+        index: 0));
+
+    try {
+      await AppRouter.router.push(
+        PAGES.leave.screenPath,
+      );
+      emit(RoutesCubitState(
+          status: RouteStatus.success,
+          bottomNavItems: PAGES.leave.screenName,
+          index: 0));
+      emit(RoutesCubitState(
+          status: RouteStatus.initial,
+          bottomNavItems: PAGES.leave.screenName,
+          index: 0));
+      // print("STATUS: ${state.status}");
+    } catch (e) {
+      emit(RoutesCubitState(
+          status: RouteStatus.error,
+          bottomNavItems: PAGES.leave.screenName,
+          index: 0));
+      // print("STATUS: ${state.status}");
+    }
+  }
+
   void goToApplyLeave() async {
     await routeToPage("${PAGES.leave.screenPath}/${PAGES.leaveApp.screenPath}",
         RouteStatus.loadingLeaveApplication);
@@ -16,7 +52,16 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
     await routePassToPage(
         "${PAGES.leave.screenPath}/${PAGES.leaveDetails.screenPath}",
         leaveModel,
-        RouteStatus.loadingLeaveDetails);
+        RouteStatus.loadingLeaveDetails,
+        0);
+  }
+
+  void goToRequestDetail(Leave request) async {
+    await routePassToPage(
+        "${PAGES.request.screenPath}/${PAGES.requestDetails.screenPath}",
+        request,
+        RouteStatus.loadingRequestDetails,
+        1);
   }
 
   Future<void> routeToPage(String location, RouteStatus loading) async {
@@ -46,35 +91,26 @@ class RoutesCubit extends Cubit<RoutesCubitState> {
   }
 
   Future<void> routePassToPage(
-      String location, Leave extra, RouteStatus loading) async {
+      String location, Leave extra, RouteStatus loading, int index) async {
     emit(RoutesCubitState(
-        status: loading, bottomNavItems: PAGES.leave.screenName, index: 0));
+        status: loading, bottomNavItems: PAGES.leave.screenName, index: index));
     try {
       await AppRouter.router.push(location, extra: extra);
       emit(RoutesCubitState(
           status: RouteStatus.success,
           bottomNavItems: PAGES.leave.screenName,
-          index: 0));
+          index: index));
       emit(RoutesCubitState(
           status: RouteStatus.initial,
           bottomNavItems: PAGES.leave.screenName,
-          index: 0));
-      // print("STATUS: ${state.status}");
+          index: index));
     } catch (e) {
       emit(RoutesCubitState(
           status: RouteStatus.error,
           bottomNavItems: PAGES.leave.screenName,
-          index: 0));
-      // print("STATUS: ${state.status}");
+          index: index));
     }
   }
-
-  // void goToRequestBar() {
-  //   emit(RoutesCubitState(
-  //       bottomNavItems: PAGES.request.screenName,
-  //       index: 1,
-  //       status: RouteStatus.initial));
-  // }
 
   void employeeNavBarItem(int index) {
     switch (index) {

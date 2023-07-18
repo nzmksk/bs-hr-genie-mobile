@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
+import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
+import 'package:hr_genie/View/EmptyMyLeave.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class LeaveCalendar extends StatefulWidget {
@@ -14,97 +19,91 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-          body: SfCalendar(
-        todayHighlightColor: primaryBlue,
-        viewHeaderStyle: const ViewHeaderStyle(
-            dayTextStyle: TextStyle(color: globalTextColor)),
-        headerStyle: const CalendarHeaderStyle(
-            textStyle: TextStyle(color: globalTextColor)),
-        cellBorderColor: globalTextColor,
-        firstDayOfWeek: 1,
-        view: CalendarView.month,
-        dataSource: LeaveDataSource(_getDataSource()),
-        monthViewSettings: MonthViewSettings(
-            showAgenda: true,
-            agendaStyle: const AgendaStyle(
-                dateTextStyle: TextStyle(color: globalTextColor),
+      child: BlocBuilder<ApiServiceCubit, ApiServiceState>(
+        builder: (context, state) {
+          if (state.myLeaveList == null) {
+            return EmptyMyLeave();
+          }
+          return Scaffold(
+              body: SfCalendar(
+            todayHighlightColor: primaryBlue,
+            viewHeaderStyle: const ViewHeaderStyle(
                 dayTextStyle: TextStyle(color: globalTextColor)),
-            monthCellStyle: MonthCellStyle(
-                todayBackgroundColor: primaryBlue,
-                textStyle: const TextStyle(
-                  color: globalTextColor,
-                ),
-                leadingDatesTextStyle: TextStyle(color: Colors.grey.shade800),
-                trailingDatesTextStyle: TextStyle(color: Colors.grey.shade800)),
-            appointmentDisplayMode: MonthAppointmentDisplayMode.indicator),
-      )),
+            headerStyle: const CalendarHeaderStyle(
+                textStyle: TextStyle(color: globalTextColor)),
+            cellBorderColor: globalTextColor,
+            firstDayOfWeek: 1,
+            view: CalendarView.month,
+            dataSource: LeaveDataSource(state.myLeaveList!
+                .where((element) => element!.applicationStatus == 'approved')
+                .toList()),
+            monthViewSettings: MonthViewSettings(
+                showAgenda: true,
+                agendaStyle: const AgendaStyle(
+                    dateTextStyle: TextStyle(color: globalTextColor),
+                    dayTextStyle: TextStyle(color: globalTextColor)),
+                monthCellStyle: MonthCellStyle(
+                    todayBackgroundColor: primaryBlue,
+                    textStyle: const TextStyle(
+                      color: globalTextColor,
+                    ),
+                    leadingDatesTextStyle:
+                        TextStyle(color: Colors.grey.shade800),
+                    trailingDatesTextStyle:
+                        TextStyle(color: Colors.grey.shade800)),
+                appointmentDisplayMode: MonthAppointmentDisplayMode.indicator),
+          ));
+        },
+      ),
     );
   }
 
-  List<Leave> _getDataSource() {
-    final List<Leave> leave = <Leave>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    leave.add(Leave(
-      leaveId: "Annual Leave",
-      employeeId: "employeeId",
-      leaveTypeId: "Annual Leave",
-      startDate: DateTime(2023, 6, 30, 9, 00),
-      endDate: DateTime(2023, 7, 2, 13, 00),
-      reason: "reason",
-      attachment: "attachment",
-      applicationStatus: "Pending",
-      approvedRejectedBy: "approvedRejectedBy",
-      createdAt: DateTime(2023, 6, 30, 9, 00),
-      durationType: '',
-      durationLength: 3,
-      rejectReason: '',
-    ));
-    return leave;
-  }
+  // List<Leave?>? _getDataSource(List<Leave?>? leave) {
+  //   // leave.add();
+  //   return leave;
+  // }
 }
 
 class LeaveDataSource extends CalendarDataSource {
   /// Creates a meeting data source, which used to set the appointment
   /// collection to the calendar
-  LeaveDataSource(List<Leave> source) {
+  LeaveDataSource(List<Leave?>? source) {
     appointments = source;
   }
 
   @override
   DateTime getStartTime(int index) {
-    return _getLeaveData(index).startDate;
+    return DateTime.parse(_getLeaveData(index).startDate!);
   }
 
   @override
   DateTime getEndTime(int index) {
-    return _getLeaveData(index).endDate;
+    return DateTime.parse(_getLeaveData(index).endDate!);
   }
 
   @override
   String getSubject(int index) {
-    return _getLeaveData(index).leaveId;
+    String id = _getLeaveData(index).leaveTypeId!.toString();
+    return checkLeaveType(id);
   }
 
   @override
   Color getColor(int index) {
-    String leaveType = _getLeaveData(index).leaveTypeId;
-    switch (leaveType) {
-      case "Annual Leave":
-        return Colors.orange;
-      case "Paternity Leave":
-        return Colors.yellowAccent;
-      case "Medical Leave":
-        return Colors.greenAccent;
-      case "Emergency Leave":
-        return Colors.redAccent;
-      case "Unpaid Leave":
-        return Colors.grey;
-      default:
-        return Colors.blueGrey;
-    }
+    // switch (index) {
+    //   case 1:
+    //     return Colors.orange;
+    //   case 3:
+    //     return Colors.yellowAccent;
+    //   case 2:
+    //     return Colors.greenAccent;
+    //   case 4:
+    //     return Colors.redAccent;
+    //   case 5:
+    //     return Colors.grey;
+    //   default:
+    //     return Colors.blueGrey;
+    // }
+    return Colors.green.shade800;
   }
 
   @override

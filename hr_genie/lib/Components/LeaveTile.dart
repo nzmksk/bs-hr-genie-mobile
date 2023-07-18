@@ -1,23 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:intl/intl.dart';
 
 class LeaveTile extends StatelessWidget {
   final int index;
-  final Color tileColor;
+
   final Function()? onTap;
   const LeaveTile(
-      {super.key,
-      required this.leaveList,
-      required this.index,
-      required this.tileColor,
-      this.onTap});
+      {super.key, required this.leaveList, required this.index, this.onTap});
 
-  final List<Leave> leaveList;
-
+  final List<Leave?>? leaveList;
   @override
   Widget build(BuildContext context) {
     return CustomListTile(
@@ -25,18 +20,18 @@ class LeaveTile extends StatelessWidget {
       onTap: onTap,
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
       leading: CircleAvatar(
-        backgroundColor: tileColor,
-        child: Text(
-          leaveList[index].employeeId[0],
-          style: const TextStyle(fontSize: 20, color: Colors.white),
-        ),
+        backgroundColor:
+            checkColor(index, leaveList?[index]?.applicationStatus ?? ""),
+        child: Icon(checkLeaveTypeTitle(leaveList?[index]?.applicationStatus),
+            color: globalTextColor),
       ),
       title: Text(
-        leaveList[index].employeeId,
+        "${leaveList?[index]!.firstName} ${leaveList?[index]!.lastName}",
         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
-        " ${DateFormat.yMMMd('en_US').format(leaveList[index].startDate)} - ${DateFormat.yMMMd('en_US').format(leaveList[index].endDate)}",
+        // '',
+        " ${DateFormat.yMMMd('en_US').format(DateTime.parse(leaveList![index]!.startDate!))} - ${DateFormat.yMMMd('en_US').format(DateTime.parse(leaveList![index]!.endDate!))}",
         style: const TextStyle(fontSize: 12),
       ),
       trailing: const Icon(
@@ -45,5 +40,15 @@ class LeaveTile extends StatelessWidget {
       ),
       color: cardColor,
     );
+  }
+
+  MaterialColor checkColor(int index, String status) {
+    return status == "rejected"
+        ? Colors.red
+        : status == "approved"
+            ? Colors.green
+            : status == "pending"
+                ? Colors.amber
+                : Colors.grey;
   }
 }

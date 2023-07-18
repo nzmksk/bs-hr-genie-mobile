@@ -7,29 +7,82 @@ enum ApiServiceStatus { initial, loading, success, failed }
 class ApiServiceState extends Equatable {
   // final String? endpoint;
   List<LeaveQuota?>? leaveQuotaList;
-  List<Leave?>? leaveRequestList;
+  List<Leave?>? allRequestList;
+  List<Leave?>? pendingList;
+  List<Leave?>? approvedList;
+  List<Leave?>? rejectedList;
   List<Leave?>? myLeaveList;
+  ApiServiceStatus status;
+  String? errorMsg;
+  String? putRequestMsg;
+  bool? successApply;
+  String? applyResponse;
 
   ApiServiceState(
-      {required this.leaveQuotaList,
-      required this.leaveRequestList,
-      required this.myLeaveList});
+      {required this.allRequestList,
+      required this.leaveQuotaList,
+      required this.status,
+      required this.pendingList,
+      required this.approvedList,
+      required this.rejectedList,
+      required this.myLeaveList,
+      this.errorMsg,
+      this.putRequestMsg,
+      this.successApply = false,
+      this.applyResponse});
 
   factory ApiServiceState.initial() {
     return ApiServiceState(
-        leaveQuotaList: null, leaveRequestList: null, myLeaveList: null);
+        status: ApiServiceStatus.initial,
+        allRequestList: null,
+        leaveQuotaList: null,
+        pendingList: null,
+        myLeaveList: null,
+        approvedList: null,
+        rejectedList: null,
+        errorMsg: null,
+        putRequestMsg: null);
   }
 
-  ApiServiceState copyWith(
-      {List<LeaveQuota?>? leaveQuotaList,
-      List<Leave?>? leaveApprovalList,
-      List<Leave?>? myLeaveList}) {
+  ApiServiceState copyWith({
+    ApiServiceStatus? status,
+    List<LeaveQuota?>? leaveQuotaList,
+    List<Leave?>? allRequestList,
+    List<Leave?>? pendingList,
+    List<Leave?>? approvedList,
+    List<Leave?>? rejectedList,
+    List<Leave?>? myLeaveList,
+    String? errorMsg,
+    String? putRequestMsg,
+    bool? successApply,
+    String? applyResponse,
+  }) {
     return ApiServiceState(
+        status: status ?? this.status,
+        allRequestList: allRequestList ?? this.allRequestList,
         leaveQuotaList: leaveQuotaList ?? this.leaveQuotaList,
-        leaveRequestList: leaveApprovalList ?? this.leaveRequestList,
-        myLeaveList: myLeaveList ?? this.myLeaveList);
+        pendingList: pendingList ?? this.pendingList,
+        myLeaveList: myLeaveList ?? this.myLeaveList,
+        approvedList: approvedList ?? this.approvedList,
+        rejectedList: rejectedList ?? this.rejectedList,
+        errorMsg: errorMsg ?? this.errorMsg,
+        putRequestMsg: putRequestMsg ?? this.putRequestMsg,
+        successApply: successApply ?? this.successApply,
+        applyResponse: applyResponse ?? this.applyResponse);
   }
 
   @override
-  List<Object?> get props => [leaveQuotaList, leaveRequestList, myLeaveList];
+  List<Object?> get props => [
+        status,
+        leaveQuotaList,
+        allRequestList,
+        pendingList,
+        approvedList,
+        rejectedList,
+        myLeaveList,
+        errorMsg,
+        putRequestMsg,
+        successApply,
+        applyResponse
+      ];
 }

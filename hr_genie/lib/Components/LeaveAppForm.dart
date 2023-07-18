@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Components/LeaveFormSummary.dart';
 import 'package:hr_genie/Components/LeaveTypeRadio.dart';
 import 'package:hr_genie/Components/PickDate_Reason.dart';
@@ -8,8 +11,14 @@ import 'package:hr_genie/Components/ReasonTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/UploadAttach.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Constants/PrintColor.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
+import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
+import 'package:hr_genie/Routes/AppRoutes.dart';
+import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:intl/intl.dart';
 
 class LeaveAppForm extends StatefulWidget {
@@ -45,6 +54,14 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
   Widget build(BuildContext context) {
     return BlocConsumer<LeaveFormCubit, LeaveFormState>(
       listener: (context, state) {
+        if (state.status == LeaveStatus.sent) {
+          showCustomSnackBar(context, state.applyResponse, Colors.green);
+          Navigator.of(context).pop(true);
+          // context.read<RoutesCubit>().goToLeavePage();
+        } else if (state.status == LeaveStatus.error) {
+          showCustomSnackBar(context, state.applyResponse, Colors.red);
+          // context.read<ApiServiceCubit>().doneApply();
+        }
         if (currentStep == 0) {
           _selectedDuration = 0;
           context.read<LeaveFormCubit>().setDateTime(null);
@@ -212,7 +229,7 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                       Expanded(
                         flex: 1,
                         child: ElevatedButton(
-                          onPressed: state.duration == "Full-Day"
+                          onPressed: state.duration == "full-day"
                               ? null
                               : () {
                                   context.read<LeaveFormCubit>().durationSelected(
@@ -240,7 +257,7 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
                       Expanded(
                         flex: 1,
                         child: ElevatedButton(
-                          onPressed: state.duration == "Full-Day"
+                          onPressed: state.duration == "full-day"
                               ? null
                               : () {
                                   context.read<LeaveFormCubit>().durationSelected(
@@ -300,14 +317,26 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
     ];
   }
 
-  Function()? validateForm(LeaveFormState state) {
+  Function()? validateForm(
+    LeaveFormState state,
+  ) {
     return state.firstStepDone && state.secStepDone && state.thirdStepDone
-        ? () {}
+        ? () async {
+            try {
+              await context.read<LeaveFormCubit>().applyLeave(
+                  leaveTypeId: state.leaveType!,
+                  startDate: state.startDate!,
+                  endDate: state.endDate!,
+                  durationType: state.duration!,
+                  reason: state.reason!,
+                  attachment: null);
+            } catch (e) {}
+          }
         : null;
   }
 
   Color? checkTileColor(LeaveFormState state) {
-    if (state.duration == "Full-Day") {
+    if (state.duration == "full-day") {
       return state.startDate != null && state.endDate != null
           ? primaryBlue
           : unselectedButton;

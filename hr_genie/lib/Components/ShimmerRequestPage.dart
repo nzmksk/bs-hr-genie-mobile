@@ -4,8 +4,8 @@ import 'package:shimmer/shimmer.dart';
 
 import '../Constants/Color.dart';
 
-class ShimmerLeavePage extends StatelessWidget {
-  const ShimmerLeavePage({
+class ShimmerRequest extends StatelessWidget {
+  const ShimmerRequest({
     super.key,
   });
 
@@ -22,36 +22,16 @@ class ShimmerLeavePage extends StatelessWidget {
         direction: ShimmerDirection.ttb,
         baseColor: Colors.white24,
         highlightColor: Colors.grey,
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              width: 400,
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              width: 400,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(25),
-              ),
-            ),
-            const ShimmerListTile(),
-            const ShimmerListTile(),
-            const ShimmerListTile(),
+            ShimmerListTile(),
+            ShimmerListTile(),
+            ShimmerListTile(),
+            ShimmerListTile(),
+            ShimmerListTile(),
+            ShimmerListTile(),
           ],
         ),
       ),

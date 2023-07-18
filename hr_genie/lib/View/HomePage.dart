@@ -1,16 +1,25 @@
+// ignore_for_file: unrelated_type_equality_checks
+
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hr_genie/Components/BottomNavBarWithRoutes.dart';
 import 'package:hr_genie/Constants/Color.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
+import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:badges/badges.dart' as badges;
+
+import '../Model/EmployeeModel.dart';
 
 class HomePage extends StatefulWidget {
   final Widget screen;
@@ -46,10 +55,7 @@ class _HomePageState extends State<HomePage> {
     ),
     BottomNavigationBarRoute(
       initialLocation: PAGES.request.screenPath,
-      icon: const badges.Badge(
-          badgeAnimation: badges.BadgeAnimation.fade(),
-          badgeContent: Text('3'),
-          child: Icon(Icons.calendar_month)),
+      icon: const CustomBadge(),
       label: 'Request',
     ),
     BottomNavigationBarRoute(
@@ -61,9 +67,40 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getRequestLeaveList(context);
   }
 
-  Future<void> checkRole() async {}
+  Future<void> getRequestLeaveList(BuildContext context) async {
+    context.read<LeaveFormCubit>().resetForm();
+    final accessToken = await CacheStore().getCache('access_token');
+    final userDataRes = await CacheStore().getCache('user_data');
+
+    final jsonData = json.decode(userDataRes!);
+    final Map<String, dynamic> data = jsonData['data'];
+    final employee = Employee.fromJson(data);
+    final isManager = await getUser();
+
+    if (accessToken != null && isManager) {
+      context
+          .read<ApiServiceCubit>()
+          .getRequestLeaves(accessToken, employee.departmentId);
+    }
+  }
+
+  Future<bool> getUser() async {
+    final userDataRes = await CacheStore().getCache('user_data');
+    if (userDataRes != null) {
+      final jsonData = json.decode(userDataRes);
+      final Map<String, dynamic> data = jsonData['data'];
+      final employee = Employee.fromJson(data);
+      final bool isManager = employee.employeeRole == 'manager';
+      return isManager;
+    } else {
+      print("NotLogged: User Data is null");
+      return false;
+    }
+  }
+  // Future<void> checkRole() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +120,33 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+class CustomBadge extends StatelessWidget {
+  const CustomBadge({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ApiServiceCubit, ApiServiceState>(
+      builder: (context, state) {
+        return badges.Badge(
+            // ignore: prefer_is_empty
+            showBadge: state.pendingList?.length != 0,
+            badgeAnimation: const badges.BadgeAnimation.fade(),
+            badgeContent: Text(state.pendingList?.length.toString() ?? ''),
+            child: const Icon(Icons.calendar_month));
+      },
+    );
+  }
+}
+
 BlocBuilder<RoutesCubit, RoutesCubitState> _buildBottomNavigation(
         mContext, List<BottomNavigationBarRoute> tabs) =>
     BlocBuilder<RoutesCubit, RoutesCubitState>(
       buildWhen: (previous, current) => previous.index != current.index,
       builder: (context, state) {
         return BottomNavigationBar(
-          onTap: (value) {
+          onTap: (value) async {
             if (state.index != value) {
               context.read<RoutesCubit>().employeeNavBarItem(value);
               //Condition here for manager and employee

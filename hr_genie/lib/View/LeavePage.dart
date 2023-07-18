@@ -1,10 +1,11 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomAppBar.dart';
 import 'package:hr_genie/Components/LeaveTabs.dart';
 import 'package:hr_genie/Components/NameCard.dart';
-import 'package:hr_genie/Components/RequestCountCard.dart';
 import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
@@ -13,13 +14,16 @@ import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class LeavePage extends StatelessWidget {
-  const LeavePage({super.key});
+  LeavePage({super.key});
+
+  bool connected = true;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RoutesCubit, RoutesCubitState>(
       builder: (context, state) {
         printYellow("State: ${state.status}");
+
         if (state.status == RouteStatus.initial) {
           return SafeArea(
             child: Scaffold(
