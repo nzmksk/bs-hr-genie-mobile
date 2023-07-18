@@ -76,8 +76,9 @@ class _LeaveHistoryState extends State<LeaveHistory> {
           return RefreshIndicator(
             onRefresh: () async {
               final accessToken = await CacheStore().getCache('access_token');
-              context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
+              await context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
               context.read<AuthCubit>().fetchUserData();
+              print("REFRESHED INDICATOR");
             },
             child: ListView.builder(
                 itemCount: state.myLeaveList?.length,
@@ -92,11 +93,9 @@ class _LeaveHistoryState extends State<LeaveHistory> {
                     leading: CircleAvatar(
                       backgroundColor: checkColor(index,
                           state.myLeaveList?[index]!.applicationStatus ?? ""),
-                      // child: Text(
-                      //     state.myLeaveList?[index]!.applicationStatus ?? '')
                       child: Icon(
                         checkLeaveTypeTitle(
-                            state.myLeaveList?[index]!.applicationStatus),
+                            state.myLeaveList?[index]!.applicationStatus!),
                         color: globalTextColor,
                       ),
                     ),

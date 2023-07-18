@@ -92,11 +92,11 @@ class _ProfileCardState extends State<ProfileCard> {
                     ),
                     BlocBuilder<ApiServiceCubit, ApiServiceState>(
                       builder: (context, state) {
-                        num? annual = state.leaveQuotaList?[0]!.quota ?? 0;
+                        String? annual = "${state.leaveQuotaList?[0]!.quota}";
                         // num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
                         // num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
 
-                        num? total = annual;
+                        num? total = num.parse(annual);
                         num? used = 0;
                         num? available = total - used;
                         return Padding(

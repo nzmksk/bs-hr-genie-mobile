@@ -1,6 +1,6 @@
 class LeaveQuota {
   String? leaveType;
-  num? quota;
+  String? quota;
 
   LeaveQuota({this.leaveType, this.quota});
 

@@ -29,11 +29,11 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
   Widget build(BuildContext context) {
     return BlocBuilder<ApiServiceCubit, ApiServiceState>(
       builder: (context, state) {
-        num? annual = state.leaveQuotaList?[0]!.quota ?? 0;
-        num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
-        num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
-        num? emergency = state.leaveQuotaList?[3]!.quota ?? 0;
-        num? unpaid = state.leaveQuotaList?[4]!.quota ?? 0;
+        String? annual = state.leaveQuotaList?[0]!.quota ?? "0";
+        String? medical = state.leaveQuotaList?[1]!.quota ?? "0";
+        String? parental = state.leaveQuotaList?[2]!.quota ?? "0";
+        String? emergency = state.leaveQuotaList?[3]!.quota ?? "0";
+        String? unpaid = state.leaveQuotaList?[4]!.quota ?? "0";
         String suffix = 'Days remaining';
         return Container(
           height: 230,

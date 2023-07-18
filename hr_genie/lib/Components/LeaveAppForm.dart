@@ -56,8 +56,7 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
       listener: (context, state) {
         if (state.status == LeaveStatus.sent) {
           showCustomSnackBar(context, state.applyResponse, Colors.green);
-          Navigator.of(context).pop(true);
-          // context.read<RoutesCubit>().goToLeavePage();
+          // context.read<ApiServiceCubit>().doneApply();
         } else if (state.status == LeaveStatus.error) {
           showCustomSnackBar(context, state.applyResponse, Colors.red);
           // context.read<ApiServiceCubit>().doneApply();

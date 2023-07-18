@@ -12,7 +12,6 @@ import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
-import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesState.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
@@ -71,7 +70,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getRequestLeaveList(BuildContext context) async {
-    context.read<LeaveFormCubit>().resetForm();
     final accessToken = await CacheStore().getCache('access_token');
     final userDataRes = await CacheStore().getCache('user_data');
 

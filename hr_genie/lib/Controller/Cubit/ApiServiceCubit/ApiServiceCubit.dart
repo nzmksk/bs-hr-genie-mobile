@@ -21,32 +21,6 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
     } else if (response.statusCode == 400) {
       ErrorModel error = errorDecode(response);
       printRed("fetchLeaveQuota > ERROR: ${error.errorMsg}");
-
-      // if (error.errorMsg ==
-      //     "Access token expired. Please refresh your token.") {
-      //   final refreshToken = await CacheStore().getCache('refresh_token');
-      //   //TODO: refresh token need to work on here
-      //   // http.Response response = await CallApi().refreshToken(refreshToken!);
-      //   print(response);
-      //   if (response.statusCode == 200) {
-      //     //SUCCESS
-      //     final jsonData = jsonDecode(response.body)['token'];
-      //     final String? newToken = jsonData;
-      //     http.Response newResponse =
-      //         await CallApi().fetchLeaveQuota(newToken!);
-      //     callLeaveQuota(newResponse);
-      //     printGreen("Refreshed Token");
-      //   } else if (response.statusCode == 401) {
-      //     //UNAUTHORIZED
-      //     printRed("Unsuccessful: ${response.statusCode}");
-      //   } else if (response.statusCode == 403) {
-      //     //FORBIDDEN
-      //     printRed("Unsuccessful: ${response.statusCode}");
-      //   } else if (response.statusCode == 404) {
-      //     //NOT FOUND
-      //     printRed("Unsuccessful: ${response.statusCode}");
-      //   }
-      // }
     }
 
     final jsonData = json.decode(response.body);
