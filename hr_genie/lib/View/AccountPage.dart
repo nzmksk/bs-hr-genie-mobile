@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
+import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 
@@ -14,162 +15,167 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(),
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 150,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF282828),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(5000),
-                        bottomRight: Radius.circular(5000),
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      height: 150,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF282828),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(5000),
+                          bottomRight: Radius.circular(5000),
+                        ),
                       ),
                     ),
-                  ),
-                  Center(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 40),
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => const ProfilePictureScreen(
-                                      imageAsset: 'assets/logo.png',
+                    Center(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 40),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const ProfilePictureScreen(
+                                        imageAsset: 'assets/logo.png',
+                                      ),
                                     ),
+                                  );
+                                },
+                                child: const Hero(
+                                  tag: 'profile_picture',
+                                  child: CircleAvatar(
+                                    radius: 80,
+                                    backgroundImage: AssetImage(
+                                      'assets/logo.png',
+                                    ), // Replace with your own image asset
                                   ),
-                                );
-                              },
-                              child: const Hero(
-                                tag: 'profile_picture',
-                                child: CircleAvatar(
-                                  radius: 80,
-                                  backgroundImage: AssetImage(
-                                    'assets/logo.png',
-                                  ), // Replace with your own image asset
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              right: 5,
-                              bottom: 10,
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF2A3C98),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    CommunityMaterialIcons.pencil,
-                                    color: Colors.white,
-                                    size: 20,
+                              Positioned(
+                                right: 5,
+                                bottom: 10,
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF2A3C98),
+                                    shape: BoxShape.circle,
                                   ),
-                                  onPressed: () {
-                                    // Add your logic here
-                                  },
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      CommunityMaterialIcons.pencil,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      // Add your logic here
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'John Doe', // Replace with the user's name
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Software Engineer', // Replace with the user's occupation
-                          style:
-                              TextStyle(fontSize: 18, color: Colors.grey[600]),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.logout,
-                        color: Colors.white,
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            '${state.userData!.firstName} ${state.userData!.lastName}', // Replace with the user's name
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            state.userData?.position ??
+                                '', // Replace with the user's occupation
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[600]),
+                          ),
+                        ],
                       ),
-                      onPressed: () {
-                        // Add your logout logic here
-                      },
                     ),
-                  ),
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Text(
-                        "Profile Page",
-                        style: TextStyle(
-                          fontSize: 20, // Replace with the desired font size
-                          fontWeight: FontWeight.w400,
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.logout,
                           color: Colors.white,
                         ),
+                        onPressed: () {
+                          // Add your logout logic here
+                        },
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              const RoundedField(
-                icon: CommunityMaterialIcons.email,
-                label: 'Email',
-                value: 'johndoe@example.com', // Replace with the user's email
-              ),
-              const RoundedField(
-                icon: CommunityMaterialIcons.card_account_details,
-                label: 'NRIC',
-                value: '980911105256', // Replace with the user's phone number
-              ),
-              const RoundedField(
-                icon: CommunityMaterialIcons.briefcase,
-                label: 'Department',
-                value:
-                    'Department of Quality Assurance', // Replace with the user's department
-              ),
-              const RoundedField(
-                icon: CommunityMaterialIcons.phone,
-                label: 'Phone',
-                value:
-                    '+1 123-456-7890', // Replace with the user's phone number
-              ),
-              const RoundedField(
-                icon: CommunityMaterialIcons.gender_male_female,
-                label: 'Gender',
-                value: 'Male', // Replace with the user's gender
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              SubmitButton(
-                label: "Log Out",
-                onPressed: () {
-                  context.read<AuthCubit>().signOut(context);
-                  AppRouter.router.go(PAGES.login.screenPath);
-                },
-              ),
-              const SizedBox(height: 16),
-            ],
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                        child: Text(
+                          "Profile Page",
+                          style: TextStyle(
+                            fontSize: 20, // Replace with the desired font size
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                RoundedField(
+                  icon: CommunityMaterialIcons.email,
+                  label: 'Email',
+                  value: state.userData?.email! ??
+                      '', // Replace with the user's email
+                ),
+                RoundedField(
+                  icon: CommunityMaterialIcons.card_account_details,
+                  label: 'NRIC',
+                  value: state.userData?.nric! ?? '',
+                ),
+                RoundedField(
+                  icon: CommunityMaterialIcons.briefcase,
+                  label: 'Department',
+                  value: state.userData?.departmentId! ??
+                      '', // Replace with the user's department
+                ),
+                RoundedField(
+                  icon: CommunityMaterialIcons.phone,
+                  label: 'Phone',
+                  value: state.userData?.phone ??
+                      '', // Replace with the user's phone number
+                ),
+                RoundedField(
+                  icon: CommunityMaterialIcons.gender_male_female,
+                  label: 'Gender',
+                  value: state.userData?.gender ??
+                      '', // Replace with the user's gender
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                SubmitButton(
+                  label: "Log Out",
+                  onPressed: () {
+                    context.read<AuthCubit>().signOut(context);
+                    AppRouter.router.go(PAGES.login.screenPath);
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
