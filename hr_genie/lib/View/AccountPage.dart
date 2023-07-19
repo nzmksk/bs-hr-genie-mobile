@@ -4,7 +4,10 @@ import 'dart:ui';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
+import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
@@ -170,6 +173,26 @@ class AccountPage extends StatelessWidget {
                     context.read<AuthCubit>().signOut(context);
                     AppRouter.router.go(PAGES.login.screenPath);
                   },
+                ),
+                BlocListener<ApiServiceCubit, ApiServiceState>(
+                  listener: (context, state) {
+                    if (state.refreshedToken!) {
+                      showCustomSnackBar(context, 'Successfully refreshed',
+                          Colors.green.shade800);
+                    } else if (!state.refreshedToken!) {
+                      showCustomSnackBar(context, 'Not able to refreshed',
+                          Colors.red.shade800);
+                    }
+                  },
+                  child: ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<ApiServiceCubit>().refreshToken();
+                      },
+                      icon: const Icon(Icons.refresh),
+                      label: const Text(
+                        'refresh token',
+                        style: TextStyle(fontSize: 10),
+                      )),
                 ),
                 const SizedBox(height: 16),
               ],

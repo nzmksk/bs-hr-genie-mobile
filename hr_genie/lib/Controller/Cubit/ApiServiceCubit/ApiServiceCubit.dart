@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Services/CallApi.dart';
@@ -13,6 +12,16 @@ import 'package:http/http.dart' as http;
 
 class ApiServiceCubit extends Cubit<ApiServiceState> {
   ApiServiceCubit() : super(ApiServiceState.initial());
+
+  Future<void> refreshToken() async {
+    http.Response response = await CallApi().callRefreshToken();
+
+    if (response.statusCode == 200) {
+      emit(state.copyWith(refreshedToken: true));
+    } else {
+      emit(state.copyWith(refreshedToken: false));
+    }
+  }
 
   Future<void> getLeaveQuota(String accessToken) async {
     emit(state.copyWith(status: ApiServiceStatus.loading));
@@ -29,6 +38,8 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
         status: ApiServiceStatus.failed,
         errorMsg: error.errorMsg,
       ));
+      if (error.errorMsg ==
+          'Access token expired. Please refresh your token.') {}
       emit(state.copyWith(status: ApiServiceStatus.initial));
     } else {
       ErrorModel error = errorDecode(response);

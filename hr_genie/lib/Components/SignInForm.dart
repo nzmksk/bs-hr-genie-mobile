@@ -120,12 +120,9 @@ class _SigninFormState extends State<SigninForm> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Basic dialog title'),
+                              title: const Text('Information'),
                               content: const Text(
-                                'A dialog is a type of modal window that\n'
-                                'appears in front of app content to\n'
-                                'provide critical information, or prompt\n'
-                                'for a decision to be made.',
+                                'Please input your email and password that is registered with the application',
                               ),
                               actions: <Widget>[
                                 TextButton(
@@ -133,17 +130,7 @@ class _SigninFormState extends State<SigninForm> {
                                     textStyle:
                                         Theme.of(context).textTheme.labelLarge,
                                   ),
-                                  child: const Text('Disable'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    textStyle:
-                                        Theme.of(context).textTheme.labelLarge,
-                                  ),
-                                  child: const Text('Enable'),
+                                  child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

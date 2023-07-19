@@ -55,49 +55,6 @@ class CallApi {
     return employee;
   }
 
-// TODO: Make this function dynamic instead of static
-  Future<http.StreamedResponse?> refreshToken(
-      {required http.Request originalRequest}) async {
-    final refreshToken = await CacheStore().getCache('refresh_token');
-
-    if (refreshToken != null) {
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-        "Cookie": refreshToken,
-      };
-
-      http.Response response = await http.post(
-        Uri.parse('$baseUrl/refresh_token'),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        //SUCCESS
-        final rawCookie = response.headers['set-cookie'];
-        final jsonData = jsonDecode(response.body)['token'];
-        final String newToken = jsonData;
-
-        if (rawCookie != null) {
-          await CacheStore().setCache('refresh_token', rawCookie);
-        }
-        await CacheStore().setCache('access_token', newToken);
-
-        // TODO: Call the original request
-        http.StreamedResponse newResponse =
-            await http.Client().send(originalRequest);
-        printGreen("Refreshed Token");
-        return newResponse;
-      } else {
-        //UNAUTHORIZED
-        // TODO: Clear all cache and redirect user to login page
-        printRed("Unsuccessful: ${response.statusCode}");
-        return null;
-      }
-    }
-    printRed('refresh token is not found');
-    return null;
-  }
-
   void callLeaveQuota(http.Response response) {
     final jsonData = jsonDecode(response.body)['data'];
     List<LeaveQuota> quotaList = [];
@@ -118,41 +75,6 @@ class CallApi {
       Uri.parse('$baseUrl/leaves/quota'),
       headers: headers,
     );
-    return response;
-  }
-
-  Future<http.StreamedResponse> httpRequest(
-      {required String method,
-      required String endpoint,
-      String? accessToken,
-      Map<String, dynamic>? requestBody}) async {
-    // TODO: change this address to env
-    String? baseUrl = dotenv.env['baseUrl'];
-
-    Map<String, String> requestHeader = {
-      "Content-Type": "application/json",
-      "Authorization": accessToken ?? "",
-    };
-
-    http.Request request = http.Request(method, Uri.parse('$baseUrl$endpoint'));
-    request.headers.addAll(requestHeader);
-
-    if (requestBody != null) {
-      request.body = jsonEncode(requestBody);
-    }
-
-    http.StreamedResponse response = await http.Client().send(request);
-
-    String jsonBody = await response.stream.bytesToString();
-    Map<String, dynamic> responseBody = jsonDecode(jsonBody);
-    if (response.statusCode == 400 &&
-        responseBody['error'] ==
-            'Access token expired. Please refresh your token.') {
-      // TODO: call refresh_token endpoint
-      http.StreamedResponse? refreshResponse =
-          await refreshToken(originalRequest: request);
-      if (refreshResponse != null) {}
-    }
     return response;
   }
 
@@ -262,5 +184,15 @@ class CallApi {
       default:
         return null;
     }
+  }
+
+  Future<http.Response> callRefreshToken() async {
+    final refreshToken = await CacheStore().getCache('refresh_token');
+    http.Response response =
+        await http.post(Uri.parse('$baseUrl/refresh_token'), headers: {
+      "Content-Type": "application/json",
+      "Cookie": refreshToken!,
+    });
+    return response;
   }
 }

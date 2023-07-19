@@ -129,12 +129,22 @@ class CustomBadge extends StatelessWidget {
       builder: (context, state) {
         return badges.Badge(
             // ignore: prefer_is_empty
-            showBadge: state.pendingList?.length != 0,
+            showBadge: checkPending(state),
             badgeAnimation: const badges.BadgeAnimation.fade(),
             badgeContent: Text(state.pendingList?.length.toString() ?? ''),
             child: const Icon(Icons.calendar_month));
       },
     );
+  }
+
+  bool checkPending(ApiServiceState state) {
+    if (state.pendingList?.length == 0) {
+      return false;
+    } else if (state.pendingList?.length == null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 
