@@ -21,7 +21,7 @@ This project aims to develop a mobile application using Flutter, implementing be
 6. Run `flutter run` to launch the application on the device or emulator.
    
 ## Backend Installation
-1. Download the backend from the [Backend-Client Side Repository](https://github.com/nzmksk/bs-hr-genie-server).
+1. Download the backend from the [Backend-Server Side Repository](https://github.com/nzmksk/bs-hr-genie-server).
 2. Follow the instructions in the backend repository's README to set up and run the backend server.
 3. Update the necessary API endpoints in the Flutter project to connect to the running backend server.
 
