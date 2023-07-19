@@ -11,10 +11,8 @@ import 'package:hr_genie/Components/ReasonTextField.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Components/UploadAttach.dart';
 import 'package:hr_genie/Constants/Color.dart';
-
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
-
 import 'package:intl/intl.dart';
 
 class LeaveAppForm extends StatefulWidget {
@@ -52,6 +50,7 @@ class _LeaveAppFormState extends State<LeaveAppForm> {
       listener: (context, state) {
         if (state.status == LeaveStatus.sent) {
           showCustomSnackBar(context, state.applyResponse, Colors.green);
+          Navigator.of(context).pop();
           // context.read<ApiServiceCubit>().doneApply();
         } else if (state.status == LeaveStatus.error) {
           showCustomSnackBar(context, state.applyResponse, Colors.red);
