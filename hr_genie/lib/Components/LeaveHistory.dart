@@ -61,19 +61,19 @@ class _LeaveHistoryState extends State<LeaveHistory> {
         if (state.status == ApiServiceStatus.failed) {
           showCustomSnackBar(context, state.errorMsg, Colors.red);
         } else if (state.status == ApiServiceStatus.success) {
-          showCustomSnackBar(
-              context, "Successfully fetch", Colors.green.shade800);
+          // showCustomSnackBar(
+          //     context, "Successfully fetch", Colors.green.shade800);
         }
       },
       builder: (context, state) {
-        print("STATUS: ${state.status}");
+        // print("MYLEAVE: ${state.myLeaveList?.length}");
         if (state.status == ApiServiceStatus.loading) {
           return ShimmerLoading(screenName: PAGES.request.screenName);
         } else if (state.status == ApiServiceStatus.failed) {
           return Center(
               child: DisconnectedServer(errorMsg: state.errorMsg ?? ''));
         }
-        if (state.myLeaveList == null) {
+        if (state.myLeaveList == null || state.myLeaveList!.length == 0) {
           return const EmptyMyLeave();
         } else {
           state.myLeaveList!.sort((a, b) {
@@ -86,8 +86,9 @@ class _LeaveHistoryState extends State<LeaveHistory> {
             onRefresh: () async {
               final accessToken = await CacheStore().getCache('access_token');
               await context.read<ApiServiceCubit>().getLeaveQuota(accessToken!);
+              await context.read<ApiServiceCubit>().getMyLeaves(accessToken);
+
               context.read<AuthCubit>().fetchUserData();
-              print("REFRESHED INDICATOR");
             },
             child: ListView.builder(
                 itemCount: state.myLeaveList?.length,

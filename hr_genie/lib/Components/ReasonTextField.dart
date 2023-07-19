@@ -52,7 +52,7 @@ class _ReasonFieldState extends State<ReasonField> {
         return BlocBuilder<LeaveFormCubit, LeaveFormState>(
           builder: (context, state) {
             return Container(
-              margin: const EdgeInsets.fromLTRB(30, 150, 30, 350),
+              margin: const EdgeInsets.fromLTRB(30, 50, 30, 350),
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -60,7 +60,7 @@ class _ReasonFieldState extends State<ReasonField> {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         flex: 2,

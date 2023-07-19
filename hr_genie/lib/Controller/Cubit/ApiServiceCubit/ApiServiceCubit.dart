@@ -26,7 +26,9 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       ErrorModel error = errorDecode(response);
       printRed("fetchLeaveQuota > ERROR: ${error.errorMsg}");
       emit(state.copyWith(
-          status: ApiServiceStatus.failed, errorMsg: error.errorMsg));
+        status: ApiServiceStatus.failed,
+        errorMsg: error.errorMsg,
+      ));
       emit(state.copyWith(status: ApiServiceStatus.initial));
     } else {
       ErrorModel error = errorDecode(response);
@@ -70,11 +72,16 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
 
     final jsonData = jsonDecode(response.body)['data'];
     List<Leave> leaveList = [];
-    for (var item in jsonData) {
-      Leave leave = Leave.fromJson(item);
-      leaveList.add(leave);
+
+    if (response.statusCode == 200) {
+      for (var item in jsonData) {
+        Leave leave = Leave.fromJson(item);
+        leaveList.add(leave);
+      }
+      emit(state.copyWith(myLeaveList: leaveList));
+    } else if (response.statusCode == 404) {
+      emit(state.copyWith(myLeaveList: leaveList));
     }
-    emit(state.copyWith(myLeaveList: leaveList));
   }
 
   Future<void> getRequestLeaves(
