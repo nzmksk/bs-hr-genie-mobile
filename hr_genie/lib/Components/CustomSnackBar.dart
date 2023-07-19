@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 void showCustomSnackBar(BuildContext context, String? content, Color color) {
   final snackBar = SnackBar(
+    duration: const Duration(seconds: 2),
     // margin: const EdgeInsets.fromLTRB(20, 0, 20, 660),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),

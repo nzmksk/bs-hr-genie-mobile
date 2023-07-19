@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Constants/PrintColor.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Services/CallApi.dart';
@@ -14,13 +15,26 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
   ApiServiceCubit() : super(ApiServiceState.initial());
 
   Future<void> getLeaveQuota(String accessToken) async {
+    emit(state.copyWith(status: ApiServiceStatus.loading));
     http.Response response = await CallApi().fetchLeaveQuota(accessToken);
 
     if (response.statusCode == 200) {
       callLeaveQuota(response);
+      emit(state.copyWith(status: ApiServiceStatus.success));
+      emit(state.copyWith(status: ApiServiceStatus.initial));
     } else if (response.statusCode == 400) {
       ErrorModel error = errorDecode(response);
       printRed("fetchLeaveQuota > ERROR: ${error.errorMsg}");
+      emit(state.copyWith(
+          status: ApiServiceStatus.failed, errorMsg: error.errorMsg));
+      emit(state.copyWith(status: ApiServiceStatus.initial));
+    } else {
+      ErrorModel error = errorDecode(response);
+      printRed(
+          "fetchLeaveQuota > ERROR:${response.statusCode} ${error.errorMsg}");
+      emit(state.copyWith(
+          status: ApiServiceStatus.failed, errorMsg: error.errorMsg));
+      emit(state.copyWith(status: ApiServiceStatus.initial));
     }
 
     final jsonData = json.decode(response.body);

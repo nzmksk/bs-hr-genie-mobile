@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
+import 'package:hr_genie/Components/CustomSnackBar.dart';
 import 'package:hr_genie/Components/ShimmerLoading.dart';
 import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
@@ -55,7 +56,15 @@ class _LeaveHistoryState extends State<LeaveHistory> {
     if (!connected) {
       return const NoInternetPage();
     }
-    return BlocBuilder<ApiServiceCubit, ApiServiceState>(
+    return BlocConsumer<ApiServiceCubit, ApiServiceState>(
+      listener: (context, state) {
+        if (state.status == ApiServiceStatus.failed) {
+          showCustomSnackBar(context, state.errorMsg, Colors.red);
+        } else if (state.status == ApiServiceStatus.success) {
+          showCustomSnackBar(
+              context, "Successfully fetch", Colors.green.shade800);
+        }
+      },
       builder: (context, state) {
         print("STATUS: ${state.status}");
         if (state.status == ApiServiceStatus.loading) {
