@@ -3,7 +3,7 @@
 A comprehensive README for the project
 
 ## Summary
-This project aims to develop a mobile application using Flutter, implementing best practices and industry-standard techniques. The project follows the Model-View-Controller (MVC) architecture style and incorporates efficient routing navigation, error handling, and form validation using Cubit.
+This project aims to develop a mobile application using Flutter, implementing best practices and industry-standard techniques. The project follows the Model-View-Controller (MVC) architecture style and incorporates efficient routing navigation, error handling, and form validation using Cubit. HR Genie is a Leave application for employees and managers to manage their leave (annual leave, emergency leave, parental leave, &, etc) to make it easier to access with hassle-free. With this idea, we don't have to send an email anymore.
 
 ## Features
 - MVC Architecture: The project is structured following the Model-View-Controller architectural pattern, ensuring separation of concerns and maintainability.
@@ -15,14 +15,14 @@ This project aims to develop a mobile application using Flutter, implementing be
 ## Installation
 1. Clone the repository.
 2. Open the project in your preferred Flutter development environment.
-3. Create an `.env` file and write `exprot baseUrl="YOUR_BASEURL:2000"` write your own IP address if you're using physical phone otherwise just type `localhost`
+3. Create a `.env` file and write `export baseUrl="YOUR_BASEURL:2000"` Write your IP address if you're using a physical phone otherwise type `localhost`
 4. Run `flutter pub get` to fetch the required dependencies.
 5. Connect a physical device or start an emulator.
 6. Run `flutter run` to launch the application on the device or emulator.
    
 ## Backend Installation
 1. Download the backend from the [Backend-Server Side Repository](https://github.com/nzmksk/bs-hr-genie-server).
-2. Follow the instructions in the backend repository's README to set up and run the backend server.
+2. Follow the instructions in the backend repository's README to set up and run the server.
 3. Update the necessary API endpoints in the Flutter project to connect to the running backend server.
 
 ## Usage
@@ -47,7 +47,7 @@ We would like to express our heartfelt gratitude to the mentors and organizers o
 We would like to express our gratitude to the Flutter community for their invaluable resources and support during the development of this project.
 
 ## Contact
-For any inquiries or feedback, please contact [hanasrullahhalim@gmail.com](mailto:hanasrullahhalim@gmail.com).
+If you have any questions or feedback, please contact [hanasrullahhalim@gmail.com](mailto:hanasrullahhalim@gmail.com).
 - Flutter Developer: Hansrullah Halim  [@anasrul03](https://github.com/anasrul03)
 - Back-end Developer: Hafiz Zabba  [@nzmksk](https://github.com/nzmksk)
 
