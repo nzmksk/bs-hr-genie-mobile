@@ -49,7 +49,7 @@ We would like to express our gratitude to the Flutter community for their invalu
 ## Contact
 For any inquiries or feedback, please contact [hanasrullahhalim@gmail.com](mailto:hanasrullahhalim@gmail.com).
 - Flutter Developer: Hansrullah Halim  [@anasrul03](https://github.com/anasrul03)
-- Back-end Developer: Hafiz Zabba  [@nzmksk]((https://github.com/nzmksk))
+- Back-end Developer: Hafiz Zabba  [@nzmksk](https://github.com/nzmksk)
 
 ## Conclusion
 This README provides a comprehensive overview of the project, highlighting its architecture, file organization, navigation system, and key features such as error handling and form validation. By following the installation instructions and exploring the provided usage guidelines, users can experience the application's functionality firsthand. Contributions to the project are welcomed, and all necessary information for contributing is outlined in the README.
