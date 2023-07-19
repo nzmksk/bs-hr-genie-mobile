@@ -52,88 +52,119 @@ class _ProfileCardState extends State<ProfileCard> {
             "UserData: ${state.userData?.firstName} ${state.userData?.lastName}");
 
         return SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            width: 400,
-            height: 170,
-            child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                color: cardColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: primaryBlue,
-                        radius: 30,
-                        child: Text(
-                          state.userData?.firstName![0] ?? "",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 40),
-                        ),
-                      ),
-                      title: Text(
-                        "$firstName $lastName",
-                        style: const TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        state.userData?.position ?? "",
-                        style: const TextStyle(
-                            fontSize: 14, color: subtitleTextColor),
-                      ),
-                    ),
-                    const Divider(
-                      color: globalTextColor,
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                    BlocBuilder<ApiServiceCubit, ApiServiceState>(
-                      builder: (context, state) {
-                        String annual = state.leaveQuotaList?[0]!.quota ?? '';
-                        // num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
-                        // num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
-
-                        // num? total = num.parse(annual);
-                        String? used =
-                            state.leaveQuotaList?[0]!.usedLeave ?? '';
-                        // num? available = total - used;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 9.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: CountLeaveComponent(
-                                  title: 'Available',
-                                  count: truncatNum(annual),
-                                  countColor: Colors.red,
-                                ),
-                              ),
-                              // Expanded(
-                              //   child: CountLeaveComponent(
-                              //     title: 'Total',
-                              //     count: total,
-                              //     countColor: globalTextColor,
-                              //   ),
-                              // ),
-                              Expanded(
-                                child: CountLeaveComponent(
-                                  title: 'Used',
-                                  count: truncatNum(used),
-                                  countColor: globalTextColor,
-                                ),
-                              )
-                            ],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                ),
+                width: 200,
+                height: 170,
+                child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    color: cardColor,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ListTile(
+                          isThreeLine: true,
+                          title: CircleAvatar(
+                            backgroundColor: primaryBlue,
+                            radius: 30,
+                            child: Text(
+                              state.userData?.firstName![0] ?? "",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 40),
+                            ),
                           ),
-                        );
-                      },
-                    )
-                  ],
-                )),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  "$firstName",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  state.userData!.position ?? 'Not Stated',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+              BlocBuilder<ApiServiceCubit, ApiServiceState>(
+                builder: (context, state) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                          margin: const EdgeInsets.only(right: 20),
+                          width: 150,
+                          height: 85,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            color: primaryBlue,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  const Text("Available"),
+                                  Text(
+                                    truncatNum(
+                                        state.leaveQuotaList?[0]!.quota ?? '0'),
+                                    style: const TextStyle(fontSize: 35),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                      Container(
+                          margin: const EdgeInsets.only(right: 20),
+                          width: 150,
+                          height: 85,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            color: cardColor,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  const Text("Used"),
+                                  Text(
+                                    truncatNum(
+                                        state.leaveQuotaList?[0]!.usedLeave ??
+                                            '0'),
+                                    style: const TextStyle(
+                                        fontSize: 35, color: subtitleTextColor),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ))
+                    ],
+                  );
+                },
+              )
+            ],
           ),
         );
       },

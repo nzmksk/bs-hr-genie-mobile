@@ -30,7 +30,18 @@ class _RequestListTabState extends State<RequestListTab> {
   @override
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ApiServiceCubit, ApiServiceState>(
+    return BlocConsumer<ApiServiceCubit, ApiServiceState>(
+      listener: (context, state) async {
+        if (state.status == ApiServiceStatus.success) {
+          final accessToken = await CacheStore().getCache('access_token');
+          final userDataRes = await CacheStore().getCache('user_data');
+          final data = jsonDecode(userDataRes!)['data'];
+          final employee = Employee.fromJson(data);
+          final departmentId = employee.departmentId;
+
+          // refreshList(accessToken, departmentId);
+        }
+      },
       builder: (context, state) {
         print("STATUS: ${state.status}");
         if (state.status == ApiServiceStatus.loading) {

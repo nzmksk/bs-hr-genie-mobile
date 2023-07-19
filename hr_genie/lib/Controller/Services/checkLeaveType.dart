@@ -38,6 +38,8 @@ String truncatNum(String? durationLength) {
   if (duration == duration.roundToDouble()) {
     duration = duration.round();
     return '$duration';
+  } else if (durationLength == null) {
+    return '0';
   } else {
     return '${duration.toStringAsFixed(1)}';
   }

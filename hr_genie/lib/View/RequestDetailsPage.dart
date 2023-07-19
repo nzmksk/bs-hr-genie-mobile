@@ -73,7 +73,7 @@ class RequestDetailPage extends StatelessWidget {
                 ),
                 LeaveTileInfo(
                   label: 'Duration',
-                  value: '${truncatNum(leaveModel.durationLength)} Days',
+                  value: '${leaveModel.durationLength} Days',
                 ),
                 LeaveTileInfo(
                   label: 'Reason',

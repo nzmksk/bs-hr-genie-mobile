@@ -65,8 +65,8 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
 
   Future<void> getRequestLeaves(
       String accessToken, String? departmentId) async {
+    emit(state.copyWith(status: ApiServiceStatus.loading));
     try {
-      emit(state.copyWith(status: ApiServiceStatus.loading));
       http.Response response = await CallApi().fetchRequestLeaves(departmentId);
       final jsonData = jsonDecode(response.body)['data'];
       List<Leave> pendingList = [];
@@ -122,6 +122,7 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       emit(state.copyWith(
           errorMsg: 'please connect to your server',
           status: ApiServiceStatus.failed));
+      emit(state.copyWith(status: ApiServiceStatus.initial));
     }
   }
 
@@ -144,7 +145,7 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
         final message = jsonData['message'];
         printRed("${response.statusCode}: ${message}");
         emit(state.copyWith(
-            putRequestMsg: message, status: ApiServiceStatus.success));
+            putRequestMsg: message, status: ApiServiceStatus.failed));
         emit(state.copyWith(status: ApiServiceStatus.initial));
       }
     } catch (e) {
