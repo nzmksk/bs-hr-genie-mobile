@@ -61,9 +61,15 @@ dependencies:
   lottie: ^2.4.0
   flutter_svg: ^2.0.7
   connectivity_plus: ^4.0.1
+  flutter_launcher_icons: ^0.13.1
 
+
+flutter_icons:
+  android: true
+  adaptive_icon_background: "#2A3C98"
+  image_path: "assets/logo_black_crop.png"
 flutter_native_splash:
-  color: "#FFFFFF"
+  color: "#242424"
   image: assets/logo.png
   android_12: 
     image: assets/logo.png
