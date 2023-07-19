@@ -66,7 +66,7 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
         return BlocBuilder<LeaveFormCubit, LeaveFormState>(
           builder: (context, state) {
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 200),
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 150),
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -74,7 +74,7 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SfDateRangePicker(
                         todayHighlightColor: primaryBlue,

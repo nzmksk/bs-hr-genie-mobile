@@ -35,11 +35,11 @@ IconData checkLeaveTypeTitle(String? status) {
 
 String truncatNum(String? durationLength) {
   var duration = num.parse(durationLength!);
-  if (duration > 0.5) {
-    duration = duration.truncate();
+  if (duration == duration.roundToDouble()) {
+    duration = duration.round();
     return '$duration';
   } else {
-    return '$duration';
+    return '${duration.toStringAsFixed(1)}';
   }
 }
 

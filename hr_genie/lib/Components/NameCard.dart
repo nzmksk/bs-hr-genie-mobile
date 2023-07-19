@@ -9,6 +9,7 @@ import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthCubit.dart';
 import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Controller/Services/CachedStation.dart';
+import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -92,13 +93,14 @@ class _ProfileCardState extends State<ProfileCard> {
                     ),
                     BlocBuilder<ApiServiceCubit, ApiServiceState>(
                       builder: (context, state) {
-                        String? annual = "${state.leaveQuotaList?[0]!.quota}";
+                        String annual = state.leaveQuotaList?[0]!.quota ?? '';
                         // num? medical = state.leaveQuotaList?[1]!.quota ?? 0;
                         // num? parental = state.leaveQuotaList?[2]!.quota ?? 0;
 
-                        num? total = num.parse(annual);
-                        num? used = 0;
-                        num? available = total - used;
+                        // num? total = num.parse(annual);
+                        String? used =
+                            state.leaveQuotaList?[0]!.usedLeave ?? '';
+                        // num? available = total - used;
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 9.0),
                           child: Row(
@@ -107,21 +109,21 @@ class _ProfileCardState extends State<ProfileCard> {
                               Expanded(
                                 child: CountLeaveComponent(
                                   title: 'Available',
-                                  count: available,
+                                  count: truncatNum(annual),
                                   countColor: Colors.red,
                                 ),
                               ),
-                              Expanded(
-                                child: CountLeaveComponent(
-                                  title: 'Total',
-                                  count: total,
-                                  countColor: globalTextColor,
-                                ),
-                              ),
+                              // Expanded(
+                              //   child: CountLeaveComponent(
+                              //     title: 'Total',
+                              //     count: total,
+                              //     countColor: globalTextColor,
+                              //   ),
+                              // ),
                               Expanded(
                                 child: CountLeaveComponent(
                                   title: 'Used',
-                                  count: used,
+                                  count: truncatNum(used),
                                   countColor: globalTextColor,
                                 ),
                               )

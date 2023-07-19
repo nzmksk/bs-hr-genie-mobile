@@ -10,6 +10,7 @@ import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
+import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 
 class LeaveTypeRadio extends StatefulWidget {
   const LeaveTypeRadio({Key? key}) : super(key: key);
@@ -61,7 +62,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                "$annual $suffix",
+                                "${truncatNum(annual)} $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -91,7 +92,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                "$emergency $suffix",
+                                "${truncatNum(emergency)} $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -127,7 +128,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                "$medical $suffix",
+                                "${truncatNum(medical)} $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -157,7 +158,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                                 style: radioTextStyle,
                               ),
                               subtitle: Text(
-                                "$parental $suffix",
+                                "${truncatNum(parental)} $suffix",
                                 style: const TextStyle(
                                     fontSize: 12, color: subtitleTextColor),
                               ),
@@ -195,7 +196,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
                             style: radioTextStyle,
                           ),
                           subtitle: Text(
-                            "$unpaid $suffix",
+                            "${truncatNum(unpaid)} $suffix",
                             style: const TextStyle(
                                 fontSize: 12, color: subtitleTextColor),
                           ),
