@@ -111,7 +111,8 @@ class AccountPage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          // Add your logout logic here
+                          context.read<AuthCubit>().signOut(context);
+                          AppRouter.router.go(PAGES.login.screenPath);
                         },
                       ),
                     ),
