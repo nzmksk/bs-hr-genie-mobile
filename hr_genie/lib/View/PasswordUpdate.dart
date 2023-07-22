@@ -45,8 +45,9 @@ class _PasswordUpdateFormState extends State<PasswordUpdateForm>
     return BlocConsumer<UpdatePasswordCubit, UpdatePasswordState>(
       listener: (context, state) {
         if (state.status == UpdatePasswordStatus.success) showSuccessDialog();
-        if (state.status == UpdatePasswordStatus.loading)
+        if (state.status == UpdatePasswordStatus.loading) {
           printYellow('LOADING');
+        }
         if (state.status == UpdatePasswordStatus.error) print("error");
       },
       builder: (context, state) {

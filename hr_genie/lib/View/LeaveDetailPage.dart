@@ -18,7 +18,7 @@ class LeaveDetailPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(90),
+            preferredSize: const Size.fromHeight(90),
             child: Column(
               children: [
                 const CustomAppBar(title: "Leave Review"),

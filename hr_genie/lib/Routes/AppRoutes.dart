@@ -1,11 +1,9 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hr_genie/Controller/Cubit/RoutesCubit/RoutesCubit.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
-import 'package:hr_genie/View/AccountDetailPage.dart';
 import 'package:hr_genie/View/AccountPage.dart';
 import 'package:hr_genie/View/HomePage.dart';
 import 'package:hr_genie/View/LeaveApplication.dart';
@@ -17,8 +15,6 @@ import 'package:hr_genie/View/PasswordUpdate.dart';
 import 'package:hr_genie/View/RequestDetailsPage.dart';
 import 'package:hr_genie/View/RequestPage.dart';
 import 'package:hr_genie/View/SplashScreen.dart';
-import 'package:hr_genie/View/TestPage.dart';
-import 'package:hr_genie/View/TestPage2.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -63,7 +59,7 @@ class AppRouter {
             path: PAGES.request.screenPath,
             name: PAGES.request.screenName,
             pageBuilder: (context, state) {
-              return NoTransitionPage(child: const RequestPage());
+              return const NoTransitionPage(child: RequestPage());
             },
             routes: [
               GoRoute(

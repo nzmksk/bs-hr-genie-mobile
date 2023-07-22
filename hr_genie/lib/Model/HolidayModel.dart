@@ -9,9 +9,9 @@ class Holiday {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['response'] = response.toJson();
-    return _data;
+    final data = <String, dynamic>{};
+    data['response'] = response.toJson();
+    return data;
   }
 }
 
@@ -29,9 +29,9 @@ class Response {
   get statusCode => null;
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['holidays'] = holidays.map((e) => e.toJson()).toList();
-    return _data;
+    final data = <String, dynamic>{};
+    data['holidays'] = holidays.map((e) => e.toJson()).toList();
+    return data;
   }
 }
 
@@ -73,18 +73,18 @@ class Holidays {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['name'] = name;
-    _data['description'] = description;
-    _data['country'] = country.toJson();
-    _data['date'] = date.toJson();
-    _data['type'] = type;
-    _data['primary_type'] = primaryType;
-    _data['canonical_url'] = canonicalUrl;
-    _data['urlid'] = urlid;
-    _data['locations'] = locations;
-    _data['states'] = states;
-    return _data;
+    final data = <String, dynamic>{};
+    data['name'] = name;
+    data['description'] = description;
+    data['country'] = country.toJson();
+    data['date'] = date.toJson();
+    data['type'] = type;
+    data['primary_type'] = primaryType;
+    data['canonical_url'] = canonicalUrl;
+    data['urlid'] = urlid;
+    data['locations'] = locations;
+    data['states'] = states;
+    return data;
   }
 }
 
@@ -102,10 +102,10 @@ class Country {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['name'] = name;
-    return _data;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    return data;
   }
 }
 
@@ -123,10 +123,10 @@ class Date {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['iso'] = iso;
-    _data['datetime'] = datetime.toJson();
-    return _data;
+    final data = <String, dynamic>{};
+    data['iso'] = iso;
+    data['datetime'] = datetime.toJson();
+    return data;
   }
 }
 
@@ -147,11 +147,11 @@ class Datetime {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['year'] = year;
-    _data['month'] = month;
-    _data['day'] = day;
-    return _data;
+    final data = <String, dynamic>{};
+    data['year'] = year;
+    data['month'] = month;
+    data['day'] = day;
+    return data;
   }
 }
 
@@ -166,7 +166,7 @@ class States {
   late final int id;
   late final String abbrev;
   late final String name;
-  late final Null exception;
+  late final void exception;
   late final String iso;
 
   States.fromJson(Map<String, dynamic> json) {
@@ -178,12 +178,12 @@ class States {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['abbrev'] = abbrev;
-    _data['name'] = name;
-    _data['exception'] = exception;
-    _data['iso'] = iso;
-    return _data;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['abbrev'] = abbrev;
+    data['name'] = name;
+    data['exception'] = exception;
+    data['iso'] = iso;
+    return data;
   }
 }

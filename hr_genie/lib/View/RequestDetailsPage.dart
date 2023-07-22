@@ -14,11 +14,8 @@ import 'package:hr_genie/Constants/Color.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
-import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 import 'package:hr_genie/Model/LeaveModel.dart';
-import 'package:hr_genie/Routes/AppRoutes.dart';
-import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
@@ -119,7 +116,6 @@ class RequestDetailPage extends StatelessWidget {
                               title: 'Cancel',
                               decision: 'cancelled',
                               leaveId: leaveModel.leaveId!);
-                          ;
                         },
                         buttonColor: Colors.red,
                       ),

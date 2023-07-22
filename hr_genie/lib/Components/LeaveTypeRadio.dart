@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api, avoid_print
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Constants/Color.dart';
@@ -8,7 +7,6 @@ import 'package:hr_genie/Constants/LeaveCategories.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/ApiServiceCubit.dart';
 import 'package:hr_genie/Controller/Cubit/ApiServiceCubit/AprServiceState.dart';
 import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormCubit.dart';
-import 'package:hr_genie/Controller/Cubit/LeaveFormCubit/LeaveFormState.dart';
 import 'package:hr_genie/Controller/Services/LeaveCategory.dart';
 import 'package:hr_genie/Controller/Services/checkLeaveType.dart';
 
@@ -36,7 +34,7 @@ class _LeaveTypeRadioState extends State<LeaveTypeRadio> {
         String? emergency = state.leaveQuotaList?[3]!.quota ?? "0";
         String? unpaid = state.leaveQuotaList?[4]!.quota ?? "0";
         String suffix = 'Days remaining';
-        return Container(
+        return SizedBox(
           height: 230,
           child: Card(
             color: cardColor,

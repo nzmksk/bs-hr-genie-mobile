@@ -10,9 +10,9 @@ class LeaveCategory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['leave_type_id'] = this.leaveTypeId;
-    data['leave_type_name'] = this.leaveTitle;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['leave_type_id'] = leaveTypeId;
+    data['leave_type_name'] = leaveTitle;
     return data;
   }
 }

@@ -72,7 +72,7 @@ class _LeaveHistoryState extends State<LeaveHistory> {
           return Center(
               child: DisconnectedServer(errorMsg: state.errorMsg ?? ''));
         }
-        if (state.myLeaveList == null || state.myLeaveList!.length == 0) {
+        if (state.myLeaveList == null || state.myLeaveList!.isEmpty) {
           return const EmptyMyLeave();
         } else {
           state.myLeaveList!.sort((a, b) {

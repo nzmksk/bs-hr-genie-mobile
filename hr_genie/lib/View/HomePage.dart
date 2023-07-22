@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -138,7 +137,7 @@ class CustomBadge extends StatelessWidget {
   }
 
   bool checkPending(ApiServiceState state) {
-    if (state.pendingList?.length == 0) {
+    if (state.pendingList.isEmpty) {
       return false;
     } else if (state.pendingList?.length == null) {
       return false;

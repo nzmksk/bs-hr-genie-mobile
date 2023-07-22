@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 String checkLeaveType(String? leaveId) {
@@ -41,7 +40,7 @@ String truncatNum(String? durationLength) {
   } else if (durationLength == null) {
     return '0';
   } else {
-    return '${duration.toStringAsFixed(1)}';
+    return duration.toStringAsFixed(1);
   }
 }
 

@@ -175,7 +175,7 @@ class ApiServiceCubit extends Cubit<ApiServiceState> {
       } else {
         final jsonData = jsonDecode(response.body);
         final message = jsonData['message'];
-        printRed("${response.statusCode}: ${message}");
+        printRed("${response.statusCode}: $message");
         emit(state.copyWith(
             putRequestMsg: message, status: ApiServiceStatus.failed));
         emit(state.copyWith(status: ApiServiceStatus.initial));

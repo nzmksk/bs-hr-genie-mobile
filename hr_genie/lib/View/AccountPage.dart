@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'dart:ui';
 // import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:community_material_icon/community_material_icon.dart';
@@ -14,7 +13,7 @@ import 'package:hr_genie/Routes/AppRoutes.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 
 class AccountPage extends StatelessWidget {
-  const AccountPage({Key? key});
+  const AccountPage({super.key, Key? key});
 
   @override
   Widget build(BuildContext context) {

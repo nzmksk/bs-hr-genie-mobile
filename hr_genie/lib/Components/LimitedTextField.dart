@@ -7,7 +7,7 @@ class LimitedTextField extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode? focus;
 
-  LimitedTextField(
+  const LimitedTextField(
       {Key? key,
       this.maxLength = 255,
       required this.onchanged,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_genie/Components/SubmitButton.dart';
 import 'package:hr_genie/Routes/AppRoutes.dart';
-import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:lottie/lottie.dart';
 
 class SuccessDialog extends StatelessWidget {

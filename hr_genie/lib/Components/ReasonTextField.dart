@@ -15,7 +15,7 @@ class ReasonField extends StatefulWidget {
 }
 
 class _ReasonFieldState extends State<ReasonField> {
-  FocusNode _focus = FocusNode();
+  final FocusNode _focus = FocusNode();
 
   TextEditingController reasonController = TextEditingController();
 

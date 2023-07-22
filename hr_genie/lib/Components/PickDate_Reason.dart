@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print, deprecated_member_use
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomListTile.dart';
@@ -100,8 +99,8 @@ class _PickDateReasonRowState extends State<PickDateReasonRow> {
                                 .setRangeDate(start, end);
                             // print("Selected Date: $selectedDates");
                             print(
-                                "Start Date: ${_startDate} = ${state.startDate}");
-                            print("End Date: ${_endDate} = ${state.endDate}");
+                                "Start Date: $_startDate = ${state.startDate}");
+                            print("End Date: $_endDate = ${state.endDate}");
                           }
                         },
                         enablePastDates: false,

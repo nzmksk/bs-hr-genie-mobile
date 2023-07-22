@@ -51,5 +51,6 @@ extension LeaveCatergoriesList on LEAVES {
         return "22 days left";
       default:
     }
+    return null;
   }
 }

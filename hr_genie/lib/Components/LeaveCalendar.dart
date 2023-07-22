@@ -22,7 +22,7 @@ class _LeaveCalendarState extends State<LeaveCalendar> {
       child: BlocBuilder<ApiServiceCubit, ApiServiceState>(
         builder: (context, state) {
           if (state.myLeaveList == null) {
-            return EmptyMyLeave();
+            return const EmptyMyLeave();
           }
           return Scaffold(
               body: SfCalendar(

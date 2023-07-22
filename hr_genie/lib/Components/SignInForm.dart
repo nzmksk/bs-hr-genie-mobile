@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_genie/Components/CustomSnackBar.dart';
@@ -13,7 +12,6 @@ import 'package:hr_genie/Controller/Cubit/AuthCubit/AuthState.dart';
 import 'package:hr_genie/Controller/Services/StatusMessage.dart';
 import 'package:hr_genie/Routes/RoutesUtils.dart';
 import 'package:hr_genie/View/NoInternetPage.dart';
-import 'package:lottie/lottie.dart';
 
 class SigninForm extends StatefulWidget {
   const SigninForm({super.key});

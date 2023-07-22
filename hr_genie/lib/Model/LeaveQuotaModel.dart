@@ -12,9 +12,9 @@ class LeaveQuota {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['leaveType'] = this.leaveType;
-    data['quota'] = this.quota;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['leaveType'] = leaveType;
+    data['quota'] = quota;
     return data;
   }
 }

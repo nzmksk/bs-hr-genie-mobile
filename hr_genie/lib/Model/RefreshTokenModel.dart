@@ -12,9 +12,9 @@ class RefreshToken {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['message'] = message;
-    _data['token'] = token;
-    return _data;
+    final data = <String, dynamic>{};
+    data['message'] = message;
+    data['token'] = token;
+    return data;
   }
 }
